@@ -1,0 +1,63 @@
+{% extends "backOffice.html.twig" %}
+{% block leftNavBar %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="index3.html" class="nav-link">Centre de partage</a>
+        </li>
+    </ul>
+{% endblock%}
+{% block cards %}
+    <div class="content-wrapper">
+    <div class="container-fluid">
+    </br>
+    <center>
+        <form method="post" action="{{ path('triDocuments') }}" >
+            <select name="niveauKey" id="niveauKey" class="border">
+                <option disabled selected> -- Sélectionnez un niveau -- </option>
+                {% for n in niveaux %}
+                    <option>{{ n.id }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="matiereKey" id="matiereKey" class="border">
+                <option disabled selected> -- Sélectionnez une matière -- </option>
+                {% for m in matieres %}
+                    <option>{{ m.id }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-info">Rechercher</button>
+        </form>
+    </center>
+
+    </br>
+    <center>
+        <table class="table table-striped">
+            <thead>
+            <th></th>
+            <th></th>
+            <th>Niveau</th>
+            <th>Matière</th>
+            <th>Fichier</th>
+            <th>Date d'insertion</th>
+            <th>Propriétaire</th>
+            <th>Supprimer</th>
+            </thead>
+            <tr {% for d in documents %}>
+                <td></td>
+                <td></td>
+                <td>{{ d.niveau.id }}</td>
+                <td>{{ d.matiere.id }}</td>
+                <td><a href="{{ path('afficheDocument',{'id':d.id})}}">{{ d.nom }}</a> </td>
+                <td>{{ d.dateinsert }}</td>
+                <td>{{ d.proprietaire }}</td>
+                <td><a href="{{ path("suppDocument",{'id':d.id}) }}" class="btn btn-danger">Supprimer</a></td>
+            </tr {% endfor %}>
+        </table>
+    </center>
+    </br>
+    </div>
+    </div>
+{% endblock %}
