@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EmploiRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,6 +20,7 @@ class Emploi
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="le titre est requi")
      */
     private $title;
 
@@ -72,4 +74,5 @@ class Emploi
 
         return $this;
     }
+
 }

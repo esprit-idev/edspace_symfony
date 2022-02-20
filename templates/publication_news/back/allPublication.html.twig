@@ -1,0 +1,41 @@
+{% extends "backOffice.html.twig" %}
+
+{% block leftNavBar %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ path('emploi') }}" class="nav-link">Les propositions des emplois</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block cards %}
+    <div class="content-wrapper"> <!-- don't delete this line-->
+        <div class="container-fluid"> <!-- don't delete this line-->
+            <div class="row pb-4 pl-2 pr-2 pt-4 d-flex justify-content-between">
+                <div class=""><h3 class="">La liste des publication news</h3> </div>
+                <div class=""><a href="{{ path('addPublication')}}" class="btn btn-primary"> ajouter une publication </a></div>
+            </div>
+            <div class="row">
+            {% for pub in publications %}
+            <div class="p-4">
+            <div class="card" style="width: 18rem;">
+              <img src="/documents/666.png" class="card-img-top" alt="...">
+                <div class="card-body pe-auto">
+                    <h5 class="card-title">{{pub.title}}</h5>
+                    <p class="card-text" style="white-space: nowrap;
+                                                overflow: hidden;
+                                                text-overflow: ellipsis">{{pub.content}}</p>
+                    <a href="{{ path('updatePublication',{'id':pub.id}) }}" class="card-link btn btn-success">Modifier</a>
+                    <a href="{{ path('deletePublication',{'id':pub.id}) }}" class="card-link btn btn-danger">supprimer</a>
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}

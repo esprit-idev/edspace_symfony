@@ -47,4 +47,11 @@ class PublicationNewsRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findStudentsByEmailASC(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager
+                    ->createQuery('SELECT p FROM App\Entity\PublicationNews p ORDER BY p.name ASC');
+        return $query->getResult();
+    }
 }

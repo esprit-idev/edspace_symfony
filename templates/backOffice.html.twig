@@ -166,8 +166,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="#" class="brand-link">
-            <i class="nav-icon fas fa-graduation-cap"></i>
-            <span class="brand-text font-weight-light">EdSpace</span>
+            <img src="/logo1.svg"/>
         </a>
 
         <!-- Sidebar -->
@@ -188,7 +187,7 @@
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ path('allPublications') }}" class="nav-link">
                             <i class="nav-icon fas fa-table"></i>
                             <p>
                                 Tableau d'affichage
@@ -258,10 +257,18 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ path('allemploi') }}" class="nav-link">
                             <i class="nav-icon fas fa-bullhorn"></i>
                             <p>
                                 Propositions d'emploi
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('allCategoriesNews') }}" class="nav-link">
+                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <p>
+                                Categorie de news
                             </p>
                         </a>
                     </li>
@@ -437,8 +444,6 @@
 <script src="{{ asset('backOffice/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('backOffice/dist/js/adminlte.js') }}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('backOffice/dist/js/demo.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backOffice/dist/js/pages/dashboard.js') }}"></script>
 </body>
