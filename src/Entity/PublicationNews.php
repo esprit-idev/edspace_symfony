@@ -30,7 +30,7 @@ class PublicationNews
 
     /**
      * @ORM\ManyToOne(targetEntity=CategorieNews::class, inversedBy="publicationNews")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $categorieNews;
 

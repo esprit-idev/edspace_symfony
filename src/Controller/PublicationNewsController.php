@@ -119,4 +119,20 @@ class PublicationNewsController extends AbstractController
         return $this->redirectToRoute('allPublications');
 
     }
+    /**
+     * @Route("/search", name="search")
+     */
+    public function searchPublicationByDate(Request $request, PublicationNewsRepository $repo){
+
+        $templateName = 'publication_news/back/searchAllPublication.html.twig';
+        $publications = $repo->findAll();
+        if($request->isMethod('POST')){
+            $publicationTitle = $request->get('publicationTitle');
+            $publications = $repo->findBy(array('title' => $publicationTitle));
+        }
+        return $this->render($templateName,[
+            'controller_name' => 'PublicationNewsController',
+            array('publications' => $publications)
+            ]);
+    }
 }

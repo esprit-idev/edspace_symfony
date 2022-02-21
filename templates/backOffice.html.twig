@@ -51,6 +51,7 @@
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             <!-- Navbar Search -->
+            {% block searchbar %}
             <li class="nav-item">
                 <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                     <i class="fas fa-search"></i>
@@ -71,7 +72,7 @@
                     </form>
                 </div>
             </li>
-
+            {% endblock searchbar %}
             <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">

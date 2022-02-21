@@ -34,6 +34,12 @@ class Emploi
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=CategorieEmploi::class, inversedBy="emplois")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $categoryName;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -73,6 +79,21 @@ class Emploi
         $this->date = $date;
 
         return $this;
+    }
+
+    public function getCategoryName(): ?CategorieEmploi
+    {
+        return $this->categoryName;
+    }
+
+    public function setCategoryName(?CategorieEmploi $categoryName): self
+    {
+        $this->categoryName = $categoryName;
+
+        return $this;
+    }
+    public function __toString() {
+        return $this->name;
     }
 
 }

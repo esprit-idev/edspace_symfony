@@ -73,7 +73,7 @@
                     {% for emploi in emplois %}   
                         <div class="col-lg-4 col-8">      
                             <div class="portfolio-thumb mb-5 shadow p-3 bg-white rounded" data-aos="fade-up">
-                                <a href="{{ path('oneEmploi', {'id': emploi.id}) }}" class="image-popup">
+                                <a href="{{ path('oneEmploi', {'id': emploi.id, 'emploiTitle' : emploi.title}) }}" class="image-popup">
                                     <img src="/frontOffice/images/edspace.png" class="img-fluid portfolio-image" alt="">
                                 </a>
                                 <div class="portfolio-info">                     
@@ -82,7 +82,7 @@
                                                 overflow: hidden;
                                                 text-overflow: ellipsis">{{emploi.content}}</p>
                                     <p class="btn btn-secondary btn-sm">{{emploi.date.format('d/m/y')}}</p>
-                                    <p class="btn btn-secondary btn-sm">job type</p>
+                                    <p class="btn btn-secondary btn-sm">{{emploi.categoryName}}</p>
                                 </div>
                             </div>
                         </div>

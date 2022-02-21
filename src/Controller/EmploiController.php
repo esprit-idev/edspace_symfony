@@ -29,7 +29,7 @@ class EmploiController extends AbstractController
     public function allEmploi(EmploiRepository $repo): Response
     {
         
-        $user=0;
+        $user=1;
         $templateName = 'emploi/back/allEmploi.html.twig';
         if($user == 1){
             $templateName = 'emploi/front/allEmploi_FO.html.twig';
@@ -49,9 +49,9 @@ class EmploiController extends AbstractController
      */
     public function OneEmploi($id, EmploiRepository $repo): Response
     {
-        $user=0;
+        $user=1;
         $templateName = 'emploi/back/unEmploi.html.twig';
-        if($user == 0){
+        if($user == 1){
             $templateName = 'emploi/front/unEmploi_FO.html.twig';
         }
         $emploi = $repo->find($id);
@@ -60,6 +60,7 @@ class EmploiController extends AbstractController
             'emploi_title' => $emploi->getTitle(),
             'emploi_date' =>$emploi->getDate(),
             'emploi_content' => $emploi->getContent(),
+            'emploi_category' => $emploi->getCategoryName()
         ]);
     }
 

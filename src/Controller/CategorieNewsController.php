@@ -17,7 +17,7 @@ class CategorieNewsController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('categorie_news/index.html.twig', [
+        return $this->render('categorie_news/back/index.html.twig', [
             'controller_name' => 'CategorieNewsController',
         ]);
     }
@@ -29,7 +29,7 @@ class CategorieNewsController extends AbstractController
     public function allCategories(CategorieNewsRepository $repo): Response
     {
         $categories = $repo->findAll();
-        return $this->render('categorie_news/allCategories.html.twig', [
+        return $this->render('categorie_news/back/allCategories.html.twig', [
             'controller_name' => 'CategorieNewsController',
             'categories' => $categories,
         ]);
@@ -66,7 +66,7 @@ class CategorieNewsController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('allCategoriesNews');
         }
-        return $this->render('categorie_news/addCategory.html.twig', [
+        return $this->render('categorie_news/back/addCategory.html.twig', [
             'form_title' => 'Ajouter une categorie de News',
             'form_add' => $form->createView(),
             'categories' => $categories,
@@ -89,7 +89,7 @@ class CategorieNewsController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('allCategoriesNews');
         }
-        return $this->render('categorie_news/updateCategory.html.twig', [
+        return $this->render('categorie_news/back/updateCategory.html.twig', [
             'form_title' => 'Modifier une categorie',
             'form_add' => $form->createView(),
         ]);

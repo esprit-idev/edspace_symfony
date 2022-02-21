@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\CategorieEmploi;
+use App\Form\CategorieEmploiFormType;
+use App\Repository\CategorieEmploiRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class CategorieEmploiController extends AbstractController
+{
+    /**
+     * @Route("/categorie/emploi", name="categorie_emploi")
+     */
+    public function index(): Response
+    {
+        return $this->render('categorie_emploi/index.html.twig', [
+            'controller_name' => 'CategorieEmploiController',
+        ]);
+    }
+
+     /**
+     * @Route("/allcategoriesemploi", name="allCategoriesEmploi")
+     */
+    public function allCategories(CategorieEmploiRepository $repo): Response
+    {
+        $categories = $repo->findAll();
+        return $this->render('categorie_emploi/allCategories.html.twig', [
+            'controller_name' => 'CategorieEmploiController',
+            'categories' => $categories,
+        ]);
+    }
+
+    # add categorie
+
+    /**
+     * @Route("/addcategorieemploi", name="addCategoryEmploi")
+     */
+    public function AddCategory(Request $request, CategorieEmploiRepository $repo): Response
+    {
+        $categories = $repo->findAll();
+        $category = new CategorieEmploi();
+        $form = $this->createForm(CategorieEmploiFormType::class,$category);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($category);
+            $entityManager->flush();
+            return $this->redirectToRoute('allCategoriesEmploi');
+        }
+        return $this->render('categorie_emploi/addCategory.html.twig', [
+            'form_title' => 'Ajouter une categorie de Emploi',
+            'form_add' => $form->createView(),
+            'categories' => $categories,
+
+        ]);
+    }
+
+    # update categorie
+
+    /**
+     * @Route("/updateCategoryemploi/{id}", name="updateCategoryEmploi")
+     */
+    public function UpdateCategory(Request $request, $id, CategorieEmploiRepository $repo): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $category = $repo->find($id);
+        $form = $this->createForm(CategorieEmploiFormType::class, $category);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager->flush();
+            return $this->redirectToRoute('allCategoriesEmploi');
+        }
+        return $this->render('categorie_emploi/updateCategory.html.twig', [
+            'form_title' => 'Modifier une categorie',
+            'form_add' => $form->createView(),
+        ]);
+    }
+
+    #delete cat
+
+    /**
+     * @param $id
+     * @Route("/deleteCategoryEmploi/{id}", name="deleteCategoryEmploi")
+     */
+    public function DeleteCategory($id, CategorieEmploiRepository $repo): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $category = $repo->find($id);
+        $entityManager->remove($category);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('allCategoriesEmploi');
+
+    }
+}
