@@ -21,8 +21,6 @@
     </li>
 {% endblock %}
 
-
-
 {% block slider %}
 
     <section class=" slider_section position-relative">
@@ -56,7 +54,58 @@
 
 {% block custom %}
     </br>
-   {{ form(f,{'attr':{'novalidate':'novalidate'}}) }}
+    <center>
+        <form method="post" action="{{ path('listDocuments',{'role':1}) }}" >
+            <select name="niveauKey" id="niveauKey" class="border">
+                <option disabled selected> -- Sélectionnez un niveau -- </option>
+                {% for n in niveaux %}
+                    <option>{{ n.id }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-secondary">Afficher les documents</button>
+        </form>
+    </center>
+    </br>
+    <center>
+        {% set cuEt="Meriam2" %}
+        <table class="table table-striped">
+            <thead>
+            <th></th>
+            <th></th>
+            <th>Niveau</th>
+            <th>Matière</th>
+            <th>Fichier</th>
+            <th>Date d'insertion</th>
+            <th>Propriétaire</th>
+            <th>Modifier</th>
+            <th>Supprimer</th>
+            <th>Partager</th>
+            <th>Signaler</th>
+            <th>Epingler</th>
+            <th></th>
+            </thead>
+            <tr {% for d in documents %}>
+                <td></td>
+                <td></td>
+                <td>{{ d.niveau.id }}</td>
+                <td>{{ d.matiere.id }}</td>
+                <td><a href="{{ path('afficheDocument',{'id':d.id})}}">{{ d.nom }}</a> </td>
+                <td>{{ d.dateinsert }}</td>
+                <td>{{ d.proprietaire }}</td>
+                {% if cuEt==d.proprietaire %}
+                    <td><a href="{{ path("modifDocument",{'id':d.id}) }}" class="btn btn-outline-info">Modifier</a></td>
+                    <td><a href="{{ path("suppDocument",{'id':d.id,'role':1}) }}" class="btn btn-outline-danger">Supprimer</a>
+                {% else %}
+                    <td>-</td>
+                    <td>-</td>
+                {% endif %}
+                <td><a href="#" class="btn btn-outline-success">Partager</a>
+                <td><a href="#" class="btn btn-outline-warning">Signaler</a>
+                <td><a href="#" class="btn btn-outline-info">Epingler</a></td>
+                <td></td>
+            </tr {% endfor %}>
+        </table>
+    </center>
     </br>
 {% endblock %}
 
@@ -80,4 +129,3 @@
 
 {% block contact %}
 {% endblock %}
-

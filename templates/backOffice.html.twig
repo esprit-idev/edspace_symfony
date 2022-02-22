@@ -214,7 +214,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href={# {{ path('ajoutNiveau') }} #} class="nav-link">
+                                <a href= {{ path('ajoutNiveau') }} class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Niveaux</p>
                                 </a>
@@ -226,7 +226,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href={# {{ path('ajoutMatiere') }} #} class="nav-link">
+                                <a href={{ path('ajoutMatiere') }} class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Matières</p>
                                 </a>
@@ -275,7 +275,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href={# {{ path('listDocuments') }} #} class="nav-link">
+                        <a href={{ path('choixNiveau',{'role':0}) }} class="nav-link">
                             <i class="nav-icon far fa-folder"></i>
                             <p>
                                 Centre de partage

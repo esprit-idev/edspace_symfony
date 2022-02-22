@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DocumentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -59,6 +61,12 @@ class Document
      * @Assert\NotBlank(message="Le choix d'un niveau est requis")
      */
     private $niveau;
+
+
+    public function __construct()
+    {
+        $this->matieres=new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -136,6 +144,7 @@ class Document
 
         return $this;
     }
+
 
     public function getNiveau(): ?Niveau
     {

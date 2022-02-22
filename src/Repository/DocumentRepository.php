@@ -57,17 +57,40 @@ class DocumentRepository extends ServiceEntityRepository
             ->getResult();
     }*/
 
-    function TriByNiveauMatiere($niveau,$matiere){
+    function TriByNiveauMatiere($matiere){
         return $this->createQueryBuilder('d')
-            ->join('d.niveau','n')
-            ->addSelect('n')
             ->join('d.matiere','m')
             ->addSelect('m')
             ->where('m.id =:idM')
-            ->andWhere('n.id =:idN')
             ->setParameter('idM',$matiere)
-            ->setParameter('idN',$niveau)
             ->getQuery()
             ->getResult();
+    }
+
+    function FindNiveaux(){
+        $niveaux=array();
+        $docIds= $this->createQueryBuilder('d')
+            ->getQuery()
+            ->getResult();
+        foreach ($docIds as $item){
+            array_push($niveaux,$item->getNiveau());
+        }
+        $niveaux=array_unique($niveaux);
+        return $niveaux;
+    }
+
+    function FindMatieres($niveau){
+        $matieres=array();
+        $docIds= $this->createQueryBuilder('d')
+            ->where('d.niveau =:idN')
+            ->setParameter('idN',$niveau)
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        foreach ($docIds as $item){
+            array_push($matieres,$item->getMatiere());
+        }
+        $matieres=array_unique($matieres);
+        return $matieres;
     }
 }

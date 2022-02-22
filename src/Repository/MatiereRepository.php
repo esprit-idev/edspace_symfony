@@ -47,4 +47,17 @@ class MatiereRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    function FindMatieres($niveau){
+        $matieres=array();
+        $matieresIds= $this->createQueryBuilder('m')
+            ->where('m.niveau =:n')
+            ->setParameter('n',$niveau)
+            ->getQuery()
+            ->getResult();
+        foreach ($matieresIds as $item){
+            array_push($matieres,$item->getId());
+        }
+        return $matieres;
+    }
 }

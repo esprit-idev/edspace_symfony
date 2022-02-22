@@ -11,6 +11,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DocumentType extends AbstractType
@@ -23,25 +26,23 @@ class DocumentType extends AbstractType
                     'label' => "Nom du document ",
                 ])
             ->add('fichier',FileType::class,[
+                'data_class' => null,
                 'label'=> 'Choisissez votre document '
             ])
             ->add('niveau',
                 EntityType::class,[
-                'class'=>Niveau::class,
+                    'class'=>Niveau::class,
                     'choice_label'=>'id',
                     'placeholder'=>'-- Sélectionnez un niveau --',
                     'label' => "Niveau d'étude ",
-            ])
+                ])
             ->add('matiere',
                 EntityType::class,[
                     'class'=>Matiere::class,
                     'choice_label'=>'id',
                     'placeholder'=>'-- Sélectionnez une matière --',
                     'label' => 'Nom de la matière ',
-                ])
-            ->add('upload',
-                SubmitType::class)
-        ;
+                ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

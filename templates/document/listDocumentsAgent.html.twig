@@ -2,10 +2,11 @@
 {% block leftNavBar %}
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                <i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="index3.html" class="nav-link">Centre de partage</a>
+            <a href={{ path('choixNiveau',{'role':0}) }} class="nav-link">Centre de partage</a>
         </li>
     </ul>
 {% endblock%}
@@ -14,13 +15,7 @@
     <div class="container-fluid">
     </br>
     <center>
-        <form method="post" action="{{ path('triDocuments') }}" >
-            <select name="niveauKey" id="niveauKey" class="border">
-                <option disabled selected> -- Sélectionnez un niveau -- </option>
-                {% for n in niveaux %}
-                    <option>{{ n.id }}</option>
-                {% endfor %}
-            </select>
+        <form method="post" action="{{ path('listDocuments',{'role':0}) }}" >
 
             <select name="matiereKey" id="matiereKey" class="border">
                 <option disabled selected> -- Sélectionnez une matière -- </option>
@@ -53,7 +48,7 @@
                 <td><a href="{{ path('afficheDocument',{'id':d.id})}}">{{ d.nom }}</a> </td>
                 <td>{{ d.dateinsert }}</td>
                 <td>{{ d.proprietaire }}</td>
-                <td><a href="{{ path("suppDocument",{'id':d.id}) }}" class="btn btn-danger">Supprimer</a></td>
+                <td><a href="{{ path("suppDocument",{'id':d.id,'role':0}) }}" class="btn btn-danger">Supprimer</a></td>
             </tr {% endfor %}>
         </table>
     </center>
