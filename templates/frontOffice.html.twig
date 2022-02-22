@@ -12,7 +12,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Joson</title>
+    <title>{% block title %}Joson {% endblock %}</title>
 
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
@@ -198,7 +198,6 @@
 </section>
 {% endblock %}
 <!-- end special section -->
-
 <!-- about section -->
 {% block about %}
 <section class="about_section layout_padding">

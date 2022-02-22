@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ClubPubRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=ClubPubRepository::class)
@@ -18,12 +20,13 @@ class ClubPub
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime",nullable=true)
      */
     private $pubDate;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=1000, nullable=false)
+     * @Assert\NotBlank(message="Le champ 'Description' ne peut pas etre vide.")
      */
     private $pubDescription;
 
@@ -37,6 +40,7 @@ class ClubPub
      * @ORM\JoinColumn(nullable=false)
      */
     private $club;
+
 
     public function getId(): ?int
     {
@@ -87,6 +91,18 @@ class ClubPub
     public function setClub(?Club $club): self
     {
         $this->club = $club;
+
+        return $this;
+    }
+
+    public function getTemp(): ?\DateTimeInterface
+    {
+        return $this->temp;
+    }
+
+    public function setTemp(\DateTimeInterface $temp): self
+    {
+        $this->temp = $temp;
 
         return $this;
     }

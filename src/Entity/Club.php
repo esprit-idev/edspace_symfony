@@ -6,6 +6,8 @@ use App\Repository\ClubRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=ClubRepository::class)
@@ -21,6 +23,7 @@ class Club
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champ 'Nom du club' ne peut pas etre vide.")
      */
     private $clubNom;
 
@@ -28,12 +31,14 @@ class Club
 
     /**
      * @ORM\Column(type="string", length=1000, nullable=true)
+     * @Assert\NotBlank(message="Le champ 'Description' ne peut pas etre vide.")
      */
     private $clubDescription;
 
     /**
      * @ORM\ManyToOne(targetEntity=CategorieClub::class,inversedBy="clubs")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @Assert\NotBlank(message="Le champ 'Catégorie' ne peut pas etre vide.")
      */
     private $clubCategorie;
 
@@ -43,7 +48,8 @@ class Club
     private $clubPubs;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=User::class)
+     * @Assert\NotBlank(message="Le champ 'Email du responsable' ne peut pas etre vide.")
      */
     private $clubResponsable;
 
@@ -62,7 +68,7 @@ class Club
         return $this->clubNom;
     }
 
-    public function setClubNom(string $clubNom): self
+    public function setClubNom(?string $clubNom): self
     {
         $this->clubNom = $clubNom;
 

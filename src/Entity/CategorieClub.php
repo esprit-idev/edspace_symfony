@@ -3,7 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\CategorieClubRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 /**
  * @ORM\Entity(repositoryClass=CategorieClubRepository::class)
@@ -19,6 +23,7 @@ class CategorieClub
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champ 'Catégorie' ne peut pas etre vide.")
      */
     private $categorieNom;
 
@@ -37,7 +42,7 @@ class CategorieClub
         return $this->categorieNom;
     }
 
-    public function setCategorieNom(string $categorieNom): self
+    public function setCategorieNom(?string $categorieNom): self
     {
         $this->categorieNom = $categorieNom;
 

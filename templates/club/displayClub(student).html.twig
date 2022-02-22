@@ -1,0 +1,141 @@
+{% extends 'frontOffice.html.twig' %}
+{% block title %}
+    CLUBS {% endblock %}
+{% block header %}
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" {# href="index.html" #}>
+                    <img src="{{ asset('logo.png') }}"
+                         width="300px">
+                    <span></span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
+                    <ul class="navbar-nav  ml-auto">
+                        <li class="nav-item ">
+                            {% block nav %}
+                            <a class="nav-link" {# href="index.html" #}>Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" {# href="about.html" #}> About </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" {# href="course.html" #}> Courses </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('displayClub') }}"> Clubs </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" {# href="contact.html" #}>Contact us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" {# href="login.html" #}>Login</a>
+                        </li>
+                        {% endblock %}
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- end header section -->
+{% endblock %}
+{% block slider %}
+
+    <!-- slider section -->
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            RUBRIQUE CLUBS
+                                        </h1>
+                                        <p>
+                                            La vie associative est un atout pour les élèves ingénieurs de Sup'Com. Le
+                                            plan de la formation d’ingénieur accorde en effet une importance capitale
+                                            aux activités extra-scolaires et par suite leur consacre un créneau horaire
+                                            honorable. Cette importance émane en toute évidence du rôle primordial de la
+                                            vie associative dans l’initiation de l’élève ingénieur Sup'Comien aux enjeux
+                                            de la vie professionnelle
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end slider section -->
+{% endblock %}
+{% block special %}
+    </br>
+    <div class="container">
+
+        {% set i = 1 %}
+
+        {% for c in clubs %}
+
+        <div id="accordion">
+            <div class="card ">
+                <div class="card-header btn bg-info" id="heading{{ i }}">
+                    <h2 class="mb-0" align="center" >
+                        <button class="btn text-white font-weight-bolder  " data-toggle="collapse" data-target="#collapse{{i}}" aria-expanded="true" aria-controls="collapse{{ i }}">
+                            {{ c.clubNom }}
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="collapse{{ i }}" class="collapse hide" aria-labelledby="heading{{i}}" data-parent="#accordion" align="center">
+
+                    <img width="250px" align="center"
+                         src={{ asset('club.png') }}>
+                    <h5 align="center">Catégorie : {{ c.clubCategorie.categorieNom }}</h5>
+                    <div class="card-body">
+                        {{ c.clubDescription }}
+                    </div>
+                    <h5>
+                        <button class=" btn btn-success"> <a href="{{ path('displayPubClub',{'id':c.id,'idpub':c.id}) }}" class="text text-white">Consulter</a> </button>
+                    </h5>
+                </div>
+            </div>
+        </div>
+            {% set i = i + 1 %}
+        {% endfor %}
+    </div>
+    </br>
+
+{% endblock %}
+{% block about %}
+{% endblock %}
+{% block course %}
+{% endblock %}
+{% block login %}
+{% endblock %}
+{% block event %}
+
+{% endblock %}
+{% block client %}
+{% endblock %}
+{% block contact %}
+{% endblock %}
+
+
+
+
+
+

@@ -19,22 +19,21 @@ class ClubPubRepository extends ServiceEntityRepository
         parent::__construct($registry, ClubPub::class);
     }
 
+
     // /**
     //  * @return ClubPub[] Returns an array of ClubPub objects
     //  */
-    /*
-    public function findByExampleField($value)
+/*
+    public function findAllOrdredByDate($value)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
             ->orderBy('c.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
-    }
-    */
+    }*/
+
 
     /*
     public function findOneBySomeField($value): ?ClubPub

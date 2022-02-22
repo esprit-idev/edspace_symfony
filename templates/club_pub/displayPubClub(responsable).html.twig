@@ -1,0 +1,301 @@
+{% extends 'frontOffice.html.twig' %}
+{% block title %}
+    RUBRIQUE CLUB {{ nom }}{% endblock %}
+
+{% block header %}
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" {# href="index.html" #}>
+                    <h3>
+                        EdSpace
+                    </h3>
+                    <span></span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
+                    <ul class="navbar-nav  ml-auto">
+                        <li class="nav-item ">
+                            {% block nav %}
+                            <a class="nav-link" {# href="index.html" #}>Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" {# href="about.html" #}> About </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" {# href="course.html" #}> Courses </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('displayClub') }}"> Clubs </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" {# href="contact.html" #}>Contact us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" {# href="login.html" #}>Login</a>
+                        </li>
+                        {% endblock %}
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- end header section -->
+{% endblock %}
+{% block slider %}
+
+    <!-- slider section -->
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            RUBRIQUE CLUB {{ nom }}
+
+                                        </h1>
+                                        <p>
+                                            {{ descClub }}
+                                        </p>
+                                        <button class="btn btn-dark" data-toggle="modal" data-target="#updatepubdesc">
+                                            Modifier la description
+                                        </button>
+
+                                        <div class="modal fade" id="updatepubdesc" tabindex="-1" role="dialog"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <script language="JavaScript">
+                                                        function validateForm(f) {
+                                                            if (f.value === "") {
+                                                                alert("Club description can't be empty!");
+                                                                return false;
+                                                            } else
+                                                                return true;
+                                                        }
+
+                                                        //-->
+                                                    </script>
+                                                    <form name="myForm" method="post"
+                                                          action="{{ path('updateClub',{'id':idclub}) }} "
+                                                          onSubmit="return validateForm(myForm.descClub)">
+                                                        <div class="modal-body">
+                                                            <h5 class="modal-title text-dark">
+                                                                <label for="desc">
+                                                                <textarea type="text" id="descClub" name="descClub"
+                                                                          cols="70" rows="5">
+                                                                    {{ descClub }}
+                                                                 </textarea>
+                                                                </label>
+
+
+                                                            </h5>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+
+                                                            <div>
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-dismiss="modal">Non
+                                                                </button>
+                                                                <button class="btn btn-success" name="up">Modifier
+                                                                </button>
+                                                            </div>
+
+                                                        </div>
+                                                    </form>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end slider section -->
+{% endblock %}
+{% block special %}
+    </br>
+    </br>
+    </br>
+
+    <div class="container login_form">
+        <div class="d-flex justify-content-center">
+            <div class="container container-fluid ">
+                {{ form(formPub,{'attr': {'novalidate': 'novalidate'}} ) }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+
+
+    <div class="container">
+        {% if pubs is empty %}
+            <p align="center">Pas de publications. </p>
+        {% endif %}
+        {% for c in pubs %}
+
+            <div class="card card-info contain">
+                <div class="card-header bg-gray-light ">
+                    <h4><a href="{{ path('displayClub') }}" class="text-dark">
+                            <img class="rounded-circle" width="50px" height="50px"
+                                 src={{ asset("/documents/666.png") }}> {{ c.club.clubNom|upper }}
+                        </a></h4>
+                </div>
+                <div class="card-body bg-gray-light">
+                    <p class="card-text">{{ c.pubDescription }}</p>
+                    <div align="right">
+
+                    </div>
+
+                </div>
+                <div class="card-footer bg-gray-light text-dark" align="left">
+                    <div>
+                        <div class="sameline">
+                            Publié le {{ c.pubDate|date ('Y-m-d') }}.
+                        </div>
+                        <div class="sameline2">
+                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    data-target="#exampleModal{{ c.id }}">Supprimer
+                            </button>
+                            <button class="btn btn-dark" data-toggle="modal" data-target="#updatepub{{ c.id }}">
+                                Modifier
+                            </button>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+            </br>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal{{ c.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer
+                                la publication?</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                            <form ACTION="{{ path("deletePubClub",{'id':c.id,'idclub':idclub}) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-------->
+            <div class="modal fade" id="updatepub{{ c.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+
+                        <form name="myForm2" method="post"
+                              action="{{ path('updatePubClub',{'idpub':c.id ,'idclub':idclub}) }}"
+                              onSubmit="return validateForm(myForm2.desc)">
+
+                            <div class="modal-body">
+                                <h5 class="modal-title text-dark">
+                                    <label for="desc">
+                                    </label>
+                                    <textarea type="text" id="desc" name="desc" cols="70"
+                                              rows="5">{{ c.pubDescription }}
+                                </textarea>
+
+                                </h5>
+
+                            </div>
+                            <div class="modal-footer">
+
+                                <div>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                                    <button class="btn btn-success" name="up">Modifier</button>
+                                </div>
+
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    </br>
+
+    <style>form.a {
+            display: inline; /* the default for span */
+            width: 100px;
+            height: 100px;
+            padding: 5px;
+        }</style>
+    <style>div.sameline {
+            display: inline-block;
+            margin-right: 710px;
+        }
+
+        }
+    </style>
+    <style>div.sameline2 {
+            display: inline-block;
+        }
+    </style>
+
+
+
+{% endblock %}
+{% block about %}
+{% endblock %}
+{% block course %}
+{% endblock %}
+{% block login %}
+{% endblock %}
+{% block event %}
+{% endblock %}
+{% block client %}
+{% endblock %}
+{% block contact %}
+{% endblock %}
+
+
+
+

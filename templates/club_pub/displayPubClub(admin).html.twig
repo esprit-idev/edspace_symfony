@@ -1,0 +1,75 @@
+{% extends "backOffice.html.twig" %}
+{% block leftNavBar %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Rubrique Club {{ nom }} </a>
+        </li>
+    </ul>
+{% endblock%}
+{% block cards %}
+    </br>
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <div class="container-fluid">
+                {% if pubs is empty %}
+                    <p align="center">Pas de publications. </p>
+                {% endif %}
+                {% for c in pubs %}
+
+                    <div class="card card-info contain">
+                        <div class="card-header bg-gray-dark ">
+                            <h4><a href="{{ path('displayClub') }}" class="text-white">
+                                    <img class="rounded-circle" width="50px" height="50px" src={{ asset("/documents/666.png") }}> {{ c.club.clubNom|upper }}
+                                </a></h4>
+                        </div>
+                        <div class="card-body table-dark">
+                            <p class="card-text">{{ c.pubDescription }}</p>
+                            <div align="right">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ c.id }}">Supprimer</button>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal{{ c.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+
+                                        <div class="modal-body">
+                                            <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer la publication?</h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                                            <form ACTION="{{ path("deletePubClub",{'id':c.id,'idclub':idclub}) }}" class="a" >
+                                                <button class="btn btn-danger" >Supprimer</button>
+                                            </form>                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer bg-gray-dark text-white" align="right">
+                            Publié le {{ c.pubDate|date ('Y-m-d') }}.
+                        </div>
+                    </div>
+                    </br>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

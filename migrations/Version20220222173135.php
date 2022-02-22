@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220216215507 extends AbstractMigration
+final class Version20220222173135 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -23,8 +23,8 @@ final class Version20220216215507 extends AbstractMigration
         $this->addSql('CREATE TABLE categorie_club (id INT AUTO_INCREMENT NOT NULL, categorie_nom VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE categorie_news (id INT AUTO_INCREMENT NOT NULL, cat_name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE classe (id INT AUTO_INCREMENT NOT NULL, niveau_id VARCHAR(255) NOT NULL, classe VARCHAR(255) NOT NULL, INDEX IDX_8F87BF96B3E9C81 (niveau_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE club (id INT AUTO_INCREMENT NOT NULL, club_categorie_id INT NOT NULL, club_responsable_id INT DEFAULT NULL, club_nom VARCHAR(255) NOT NULL, club_description VARCHAR(1000) DEFAULT NULL, INDEX IDX_B8EE3872C6414FDD (club_categorie_id), UNIQUE INDEX UNIQ_B8EE38729F742DA1 (club_responsable_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE club_pub (id INT AUTO_INCREMENT NOT NULL, club_id INT NOT NULL, pub_date DATE NOT NULL, pub_description VARCHAR(1000) DEFAULT NULL, pub_file LONGBLOB DEFAULT NULL, INDEX IDX_F9261C9C61190A32 (club_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE club (id INT AUTO_INCREMENT NOT NULL, club_categorie_id INT DEFAULT NULL, club_responsable_id INT DEFAULT NULL, club_nom VARCHAR(255) NOT NULL, club_description VARCHAR(1000) DEFAULT NULL, INDEX IDX_B8EE3872C6414FDD (club_categorie_id), UNIQUE INDEX UNIQ_B8EE38729F742DA1 (club_responsable_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE club_pub (id INT AUTO_INCREMENT NOT NULL, club_id INT NOT NULL, pub_date DATETIME DEFAULT NULL, pub_description VARCHAR(1000) NOT NULL, pub_file LONGBLOB DEFAULT NULL, INDEX IDX_F9261C9C61190A32 (club_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE document (id INT AUTO_INCREMENT NOT NULL, matiere_id VARCHAR(255) NOT NULL, niveau_id VARCHAR(255) NOT NULL, nom VARCHAR(255) NOT NULL, date_insert VARCHAR(255) NOT NULL, proprietaire VARCHAR(255) NOT NULL, fichier LONGBLOB NOT NULL, type VARCHAR(255) NOT NULL, INDEX IDX_D8698A76F46CD258 (matiere_id), INDEX IDX_D8698A76B3E9C81 (niveau_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE emploi (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, content VARCHAR(255) NOT NULL, date DATE NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE matiere (id VARCHAR(255) NOT NULL, niveau_id VARCHAR(255) NOT NULL, INDEX IDX_9014574AB3E9C81 (niveau_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
