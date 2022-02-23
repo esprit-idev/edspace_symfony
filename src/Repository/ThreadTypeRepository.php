@@ -47,4 +47,17 @@ class ThreadTypeRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findDisplay(){
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT t
+            FROM App\Entity\ThreadType t
+            WHERE t.display = :t
+            '
+        )->setParameter('t', '0');
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
 }

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Joson</title>
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
+</head>
+
+<body>
+<div class="hero_area">
+    <!-- header section strats -->
+    {% block header %}
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" href="#">
+                    <h3>
+                        Joson
+                    </h3>
+                    <span> college</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
+                    <ul class="navbar-nav  ml-auto">
+                        {% block nav %}
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Tableau d'affichage</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/thread">Forum<span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href={# {{ path('displayClub') }} #}>Clubs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Offres d'emploi</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href={# {{ path('listDocuments') }} #}>Centre de partage</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Mon profile</a>
+                            </li>
+                        {% endblock %}
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+    {% endblock %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container bootdey">
+<div class="col-md-12 bootstrap snippets">
+<div class="panel">
+  <div class="panel-body">
+     
+    <div class="mar-top clearfix">
+      <div class="row" style="padding-left : 150px">
+            <form action="{{ path('reponse_new', {'id': thread.id}) }}" method ="post" novalidate='novalidate'>
+            {{form_start(form,{'attr': {'novalidate': 'novalidate'}})}}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+                <button class="btn btn-outline-dark" style="margin-left : 700px" type="submit">{{ button_label|default('Save') }}</button>
+            {{ form_end(form) }}
+            </form>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+    <!-- Newsfeed Content -->
+    <!--===================================================-->
+    <div class="media-block">
+      <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://bootdey.com/img/Content/avatar/avatar1.png"></a>
+      <div class="media-body">
+        <div class="mar-btm">
+        
+          <a href="#" class="btn text-bold media-heading box-inline">{{thread.user.prenom}} {{thread.user.name}}</a>
+          
+          <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> {{thread.postDate ? thread.postDate|date('H:i:s y-m-d') : ''}}</p>
+        </div>
+        <p>{{thread.question}} <a href="{{ path('thread_edit', {'id': thread.id}) }}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+</svg></a></p>
+        
+        <div class="pad-ver">
+          <div class="btn-group">
+            <a class="btn btn-sm btn-default btn-hover-success" href="#"><i class="fa fa-thumbs-up"></i></a>
+            <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>
+          </div>
+          <a class="btn btn-sm btn-default btn-hover-primary" href="#">Comment</a>
+        </div>
+        <hr>
+
+        <!-- Comments -->
+        {% for thread in reponses %}
+        <div>
+          <div class="media-block">
+            <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://bootdey.com/img/Content/avatar/avatar2.png"></a>
+            <div class="media-body">
+              <div class="mar-btm">
+                <a href="#" class="btn text-semibold media-heading box-inline">{{thread.user.prenom}} {{thread.user.name}}</a>
+                <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> - {{thread.replyDate ? thread.replyDate|date('y-m-d H:i:s ') : ''}}</p>
+              </div>
+              <p>{{thread.reply}}</p>
+              <div class="pad-ver">
+                <div class="btn-group">
+                  <a class="btn btn-sm btn-default btn-hover-success active" href="#"><i class="fa fa-thumbs-up"></i> You Like it</a>
+                  <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i class="fa fa-thumbs-down"></i></a>
+                </div>
+                <a class="btn btn-sm btn-default btn-hover-primary" href="#">Comment</a>
+              </div>
+              <hr>
+            </div>
+          </div>
+        {% endfor %}
+          
+  </div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+<style>
+body{
+    margin-top:20px;
+    background:#ebeef0;
+}
+
+.img-sm {
+    width: 46px;
+    height: 46px;
+}
+
+.panel {
+    box-shadow: 0 2px 0 rgba(0,0,0,0.075);
+    border-radius: 0;
+    border: 0;
+    margin-bottom: 15px;
+}
+
+.panel .panel-footer, .panel>:last-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.panel .panel-heading, .panel>:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.panel-body {
+    padding: 25px 20px;
+}
+
+
+.media-block .media-left {
+    display: block;
+    float: left
+}
+
+.media-block .media-right {
+    float: right
+}
+
+.media-block .media-body {
+    display: block;
+    overflow: hidden;
+    width: auto
+}
+
+.middle .media-left,
+.middle .media-right,
+.middle .media-body {
+    vertical-align: middle
+}
+
+.thumbnail {
+    border-radius: 0;
+    border-color: #e9e9e9
+}
+
+.tag.tag-sm, .btn-group-sm>.tag {
+    padding: 5px 10px;
+}
+
+.tag:not(.label) {
+    background-color: #fff;
+    padding: 6px 12px;
+    border-radius: 2px;
+    border: 1px solid #cdd6e1;
+    font-size: 12px;
+    line-height: 1.42857;
+    vertical-align: middle;
+    -webkit-transition: all .15s;
+    transition: all .15s;
+}
+.text-muted, a.text-muted:hover, a.text-muted:focus {
+    color: #acacac;
+}
+.text-sm {
+    font-size: 0.9em;
+}
+.text-5x, .text-4x, .text-5x, .text-2x, .text-lg, .text-sm, .text-xs {
+    line-height: 1.25;
+}
+
+.btn-trans {
+    background-color: transparent;
+    border-color: transparent;
+    color: #929292;
+}
+
+.btn-icon {
+    padding-left: 9px;
+    padding-right: 9px;
+}
+
+.btn-sm, .btn-group-sm>.btn, .btn-icon.btn-sm {
+    padding: 5px 10px !important;
+}
+
+.mar-top {
+    margin-top: 15px;
+}
+
+</style>

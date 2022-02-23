@@ -266,58 +266,14 @@
                         </a>
                     </li>
                     <li class="nav-header">SUIVI</li>
-                    
-
-
-
-
-
-
-
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-graduation-cap"></i>
+                            <i class="nav-icon far fa-comments"></i>
                             <p>
                                 Forum
-                                <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href= '{{ path('thread_index') }}' class="nav-link">
-                                    <i class="fas fa-arrow-right"></i>
-                                    <p>Check Forum</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href='{{ path('thread_type_index') }}' class="nav-link">
-                                   <i class="fas fa-arrow-right"></i>
-                                    <p>Topics</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href='{{ path('threads_admin') }}' class="nav-link">
-                                    <i class="fas fa-arrow-right"></i>
-                                    <p>Manage Threads</p>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     <li class="nav-item">
                         <a href={# {{ path('listDocuments') }} #} class="nav-link">
                             <i class="nav-icon far fa-folder"></i>
@@ -348,7 +304,6 @@
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
                             <li class="breadcrumb-item active">Dashboard v1</li>
-                            <li class="breadcrumb-item active">Threads</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -450,6 +405,32 @@
     </aside>
     <!-- /.control-sidebar -->
 </div>
+
+
+{% block title %}ThreadType{% endblock %}
+
+{% block body %}
+    <h1>ThreadType</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ thread_type.id }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ thread_type.content }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('thread_type_index') }}">back to list</a>
+
+    <a href="{{ path('thread_type_edit', {'id': thread_type.id}) }}">edit</a>
+
+    {{ include('thread_type/_delete_form.html.twig') }}
+{% endblock %}
 <!-- ./wrapper -->
 
 <!-- jQuery -->
