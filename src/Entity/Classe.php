@@ -36,7 +36,7 @@ class Classe
     private $niveau;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="classe", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="classe", orphanRemoval=false)
      */
     private $users;
 
@@ -131,6 +131,18 @@ class Classe
                 $user->setClasse(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */ 
+    public function setId($id)
+    {
+        $this->id = $id;
 
         return $this;
     }

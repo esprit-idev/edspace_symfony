@@ -1,0 +1,145 @@
+{% extends 'backOffice.html.twig' %}
+{% block leftNavBar %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="index3.html" class="nav-link">Classes</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block cards %}
+
+<div class="content-wrapper">
+<div class="container-fluid">
+  <div class="bg-modal">
+    <div class="modal-content">
+      <div class="close">+</div> 
+      <h3> Metter a jour une classe :</h3> 
+      <form id="form" action="" method="post">
+                          <div class="col-md-12">
+                          <label for="inputClasse" class="form-label">Id :</label>
+                          <input type="text" value="" class="form-control id" name="id" id="id" readonly>
+                          </div>
+
+                          <div class="col-md-12">
+                          <label for="inputClasse" class="form-label">Classe :</label>
+                          <input type="text" name="classe" value="" class="form-control classe" id="Classe">
+                          <div class="d-flex justify-content-center">
+                          <div class="icon">
+                          <i class="fas fa-check-circle"></i>
+                          <i class="fas fa-exclamation-circle"></i>
+                          </div>  
+                          <small class="s"></small>
+                          </div>
+                          </div>
+                          <div class="col-md-12 n">
+                          <label for="inputNiveau" class="form-label">Niveau :</label>
+                          <br>
+                          <select name="niveau" id="niveau" class="col-md-12" >
+                          <option id="selected"  class="niveau" value ="" selected></option>
+                          {% for n in niveau %}
+                        <option value="{{n.id}}">{{n.id}}</option>
+                        {% endfor %}
+                      </select >
+                        </div>
+                        <br>
+                        <div class="col-12">
+                        <button type="submit" id="save" class="btn btn-primary">Enregistrer</button>
+                        </div>
+            </form>
+    </div>
+
+
+
+
+
+        <div class="modal-content1">
+      <div class="close1">+</div> 
+      <h3> Creation d'une classe :</h3> 
+    <br>
+      <form id="form2" action="addclaase" method="post">
+
+                          <div class="col-md-12">
+                          <label for="inputClasse" class="form-label">Classe :</label>
+                          <input type="text" name="classe" value="" class="form-control classe" id="Classe2">
+
+                          <div class="d-flex justify-content-center">
+                          <div class="icon">
+                          <i class="fas fa-check-circle"></i>
+                          <i class="fas fa-exclamation-circle"></i>
+                          </div>  
+                          <small class="s"></small>
+                          </div>
+                          </div>
+                          
+                          <div class="col-md-12">
+                          <label for="inputNiveau" class="form-label">Niveau :</label>
+                          <br>
+                          <select name="niveau" id="niveau2" class="col-md-12" >
+                          <option id="selected"  class="niveau" value ="" selected></option>
+                          {% for n in niveau %}
+                        <option value="{{n.id}}">{{n.id}}</option>
+                        {% endfor %}
+                      </select >
+                      <small class="s"></small>
+                        </div>
+              <br>
+                        <div class="col-12">
+                        <button type="submit" id="save" class="btn btn-primary">Enregistrer</button>
+                        </div>
+            </form>
+    </div>
+
+
+
+  </div>
+  <br>
+                     <div class="d-flex justify-content-between bt">
+                              <div class="new">
+                                <a href="{{ path('ajoutNiveau') }}"  class="btn btn-primary btn-lg">Ajouter un niveau</a>
+                            </div>
+                            <div class="new">
+                                <a href="#" id="19" class="btn btn-primary btn-lg">Ajouter une classe</a>
+                            </div>
+                        </div>
+
+              
+
+
+
+
+    <table class="table table-striped">
+        <thead>
+            <th></th>
+            <th>Id</th>
+            <th>Niveau</th>
+            <th>classe</th>
+            <th>Modifier</th>
+            <th>List des etudiants</th>
+            <th>Supprimer</th>
+        </thead>
+        {% for n in classes %}
+        <tr class="a-item">
+            <td></td>
+            <td class="id">{{ n.id }}</td>
+            <td class="niveau">{{n.niveau.id}}</td>
+            <td class="classe">{{n.classe}}</td>
+            <td id="{{ n.id }}" class="c-item"><a href="#">
+                 <i class="fas fa-list"></i> </a></td>
+
+            <td class=""><a href="{{ path('classtoetudiant', {'id': n.id }) }}">
+                <i class="fas fa-user-plus"></i> </a></td>
+
+            <td class="t-item" id="{{ n.id }}"><a href="{{ path('suppClasse', {'id': n.id }) }}">
+                  <i  class="fas fa-trash-alt"></i> </a></td>
+        </tr >
+        {% endfor %}
+
+    </table>
+</div>
+</div>
+
+
+{% endblock %}

@@ -56,7 +56,7 @@ class User
 
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $classe;
 
@@ -65,9 +65,15 @@ class User
      */
     private $threads;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="user")
+     */
+    private $message;
+
     public function __construct()
     {
         $this->threads = new ArrayCollection();
+        $this->message = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +201,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($thread->getUser() === $this) {
                 $thread->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessage(): Collection
+    {
+        return $this->message;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->message->contains($message)) {
+            $this->message[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->message->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
             }
         }
 

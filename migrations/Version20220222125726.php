@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220216215507 extends AbstractMigration
+final class Version20220222125726 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,7 +28,7 @@ final class Version20220216215507 extends AbstractMigration
         $this->addSql('CREATE TABLE document (id INT AUTO_INCREMENT NOT NULL, matiere_id VARCHAR(255) NOT NULL, niveau_id VARCHAR(255) NOT NULL, nom VARCHAR(255) NOT NULL, date_insert VARCHAR(255) NOT NULL, proprietaire VARCHAR(255) NOT NULL, fichier LONGBLOB NOT NULL, type VARCHAR(255) NOT NULL, INDEX IDX_D8698A76F46CD258 (matiere_id), INDEX IDX_D8698A76B3E9C81 (niveau_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE emploi (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, content VARCHAR(255) NOT NULL, date DATE NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE matiere (id VARCHAR(255) NOT NULL, niveau_id VARCHAR(255) NOT NULL, INDEX IDX_9014574AB3E9C81 (niveau_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE message (id INT AUTO_INCREMENT NOT NULL, classe_id INT DEFAULT NULL, content VARCHAR(255) NOT NULL, post_date DATE NOT NULL, INDEX IDX_B6BD307F8F5EA509 (classe_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE message (id INT AUTO_INCREMENT NOT NULL, classe_id INT DEFAULT NULL, user_id INT DEFAULT NULL, content VARCHAR(255) NOT NULL, post_date DATE NOT NULL, INDEX IDX_B6BD307F8F5EA509 (classe_id), INDEX IDX_B6BD307FA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE niveau (id VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE publication_news (id INT AUTO_INCREMENT NOT NULL, categorie_news_id INT NOT NULL, content VARCHAR(255) DEFAULT NULL, owner VARCHAR(255) NOT NULL, date DATE NOT NULL, INDEX IDX_162B189DEA27F702 (categorie_news_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE reponse (id INT AUTO_INCREMENT NOT NULL, thread_id INT NOT NULL, reply VARCHAR(255) NOT NULL, reply_date DATETIME NOT NULL, display TINYINT(1) NOT NULL, INDEX IDX_5FB6DEC7E2904019 (thread_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -43,6 +43,7 @@ final class Version20220216215507 extends AbstractMigration
         $this->addSql('ALTER TABLE document ADD CONSTRAINT FK_D8698A76B3E9C81 FOREIGN KEY (niveau_id) REFERENCES niveau (id)');
         $this->addSql('ALTER TABLE matiere ADD CONSTRAINT FK_9014574AB3E9C81 FOREIGN KEY (niveau_id) REFERENCES niveau (id)');
         $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307F8F5EA509 FOREIGN KEY (classe_id) REFERENCES classe (id)');
+        $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307FA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE publication_news ADD CONSTRAINT FK_162B189DEA27F702 FOREIGN KEY (categorie_news_id) REFERENCES categorie_news (id)');
         $this->addSql('ALTER TABLE reponse ADD CONSTRAINT FK_5FB6DEC7E2904019 FOREIGN KEY (thread_id) REFERENCES thread (id)');
         $this->addSql('ALTER TABLE thread ADD CONSTRAINT FK_31204C8374F664DA FOREIGN KEY (thread_type_id) REFERENCES thread_type (id)');
@@ -65,6 +66,7 @@ final class Version20220216215507 extends AbstractMigration
         $this->addSql('ALTER TABLE reponse DROP FOREIGN KEY FK_5FB6DEC7E2904019');
         $this->addSql('ALTER TABLE thread DROP FOREIGN KEY FK_31204C8374F664DA');
         $this->addSql('ALTER TABLE club DROP FOREIGN KEY FK_B8EE38729F742DA1');
+        $this->addSql('ALTER TABLE message DROP FOREIGN KEY FK_B6BD307FA76ED395');
         $this->addSql('ALTER TABLE thread DROP FOREIGN KEY FK_31204C83A76ED395');
         $this->addSql('DROP TABLE categorie_club');
         $this->addSql('DROP TABLE categorie_news');
