@@ -47,25 +47,6 @@ class DocumentRepository extends ServiceEntityRepository
         ;
     }
     */
-    /*function TriByNiveauMatiere($niveau,$matiere){
-        return $this->createQueryBuilder('d')
-            ->where('d.matiere like ?1')
-            ->andWhere('d.niveau like ?2')
-            ->setParameter('1',$matiere)
-            ->setParameter('2',$niveau)
-            ->getQuery()
-            ->getResult();
-    }*/
-
-    function TriByNiveauMatiere($matiere){
-        return $this->createQueryBuilder('d')
-            ->join('d.matiere','m')
-            ->addSelect('m')
-            ->where('m.id =:idM')
-            ->setParameter('idM',$matiere)
-            ->getQuery()
-            ->getResult();
-    }
 
     function FindNiveaux(){
         $niveaux=array();
@@ -92,5 +73,41 @@ class DocumentRepository extends ServiceEntityRepository
         }
         $matieres=array_unique($matieres);
         return $matieres;
+    }
+
+    public function IncrementCountSignal(Document $document): void
+    {
+        $this
+            ->createQueryBuilder('s')
+            ->update()
+            ->set('s.signalements', 's.signalements + 1')
+            ->where('s.id = :id')
+            ->setParameter('id', $document->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function DecrementCountSignal(Document $document): void
+    {
+        $this
+            ->createQueryBuilder('s')
+            ->update()
+            ->set('s.signalements', 0)
+            ->where('s.id = :id')
+            ->setParameter('id', $document->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    function FindDocSignales(){
+        $documents=array();
+        $document= $this->createQueryBuilder('d')
+            ->where('d.signalements>0')
+            ->getQuery()
+            ->getResult();
+        foreach ($document as $item){
+            array_push($documents,$item);
+        }
+        return $documents;
     }
 }

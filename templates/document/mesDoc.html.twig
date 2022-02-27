@@ -14,14 +14,12 @@
         <a class="nav-link" href="contact.html">Offres d'emploi</a>
     </li>
     <li class="nav-item active">
-        <a class="nav-link" href="listDocuments">Centre de partage</a>
+        <a class="nav-link" href={{ path('choixNiveau',{'role':1}) }}>Centre de partage</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="event.html">Mon profile</a>
     </li>
 {% endblock %}
-
-
 
 {% block slider %}
 
@@ -43,6 +41,8 @@
                                             Centre de partage
                                         </h1>
                                         <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
+                                        <a href={{ path('mesDoc') }}> Mes documents </a>
+                                        <a href={{ path('mesFavoris') }}> Mes favoris </a>
                                     </div>
                                 </div>
                             </div>
@@ -55,9 +55,37 @@
 {% endblock %}
 
 {% block custom %}
-    </br>
-<h1 align="center">Aucunn document n'a été trouvé</h1>
-    </br>
+</br>
+<center>
+    <table class="table table-striped">
+        <thead>
+        <th></th>
+        <th></th>
+        <th>Niveau</th>
+        <th>Matière</th>
+        <th>Fichier</th>
+        <th>Date d'insertion</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        </thead>
+        <tr {% for d in documents %}>
+            <td></td>
+            <td></td>
+            <td>{{ d.niveau.id }}</td>
+            <td>{{ d.matiere.id }}</td>
+            <td><a href="{{ path('afficheDocument',{'id':d.id})}}">{{ d.nom }}</a> </td>
+            <td>{{ d.dateinsert }}</td>
+            <td><a href="{{ path("modifDocument",{'id':d.id}) }}" class="btn btn-outline-info"><i class="fas fa-pen"></i></a></td>
+            <td><a href="{{ path("suppDocument",{'id':d.id,'role':1}) }}" class="btn btn-outline-danger"><i class="fas fa-trash"></i></a>
+            <td><a href="#" class="btn btn-outline-success"><i class="fas fa-share"></i></a>
+            <td></td>
+        </tr {% endfor %}>
+    </table>
+</center>
+</br>
 {% endblock %}
 
 {% block special %}
@@ -65,7 +93,6 @@
 
 {% block about %}
 {% endblock %}
-
 
 {% block course %}
 {% endblock %}
@@ -81,4 +108,3 @@
 
 {% block contact %}
 {% endblock %}
-

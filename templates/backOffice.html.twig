@@ -275,12 +275,27 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href={{ path('choixNiveau',{'role':0}) }} class="nav-link">
+                        <a href="#" class="nav-link">
                             <i class="nav-icon far fa-folder"></i>
                             <p>
                                 Centre de partage
+                                <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href={{ path('choixNiveau',{'role':0}) }} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Liste des documents</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href={{ path('listDocumentsSignales') }} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Documents signalés</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>

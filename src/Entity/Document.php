@@ -62,10 +62,21 @@ class Document
      */
     private $niveau;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $signalements;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="document", orphanRemoval=true)
+     */
+    private $documentFavoris;
+
 
     public function __construct()
     {
         $this->matieres=new ArrayCollection();
+        $this->documentFavoris = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,6 +165,48 @@ class Document
     public function setNiveau(?Niveau $niveau): self
     {
         $this->niveau = $niveau;
+
+        return $this;
+    }
+
+    public function getSignalements(): ?int
+    {
+        return $this->signalements;
+    }
+
+    public function setSignalements(int $signalements): self
+    {
+        $this->signalements = 0;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocumentFavoris>
+     */
+    public function getDocumentFavoris(): Collection
+    {
+        return $this->documentFavoris;
+    }
+
+    public function addDocumentFavori(DocumentFavoris $documentFavori): self
+    {
+        if (!$this->documentFavoris->contains($documentFavori)) {
+            $this->documentFavoris[] = $documentFavori;
+            $documentFavori->setDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocumentFavori(DocumentFavoris $documentFavori): self
+    {
+        if ($this->documentFavoris->removeElement($documentFavori)) {
+            // set the owning side to null (unless already changed)
+            if ($documentFavori->getDocument() === $this) {
+                $documentFavori->setDocument(null);
+            }
+        }
 
         return $this;
     }

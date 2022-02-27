@@ -46,7 +46,7 @@
                     <td><a href="{{ path('afficheDocument',{'id':d.id})}}">{{ d.nom }}</a> </td>
                     <td>{{ d.dateinsert }}</td>
                     <td>{{ d.proprietaire }}</td>
-                    <td><a href="{{ path("suppDocument",{'id':d.id,'role':0}) }}" class="btn btn-danger">Supprimer</a></td>
+                    <td><a href="{{ path("suppDocument",{'id':d.id,'role':0}) }}" class="btn btn-outline-danger" onclick="return confirm('Supprimer ce document')"><i class="fas fa-trash"></i></a>
                 </tr {% endfor %}>
             </table>
         </center>

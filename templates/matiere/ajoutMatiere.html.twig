@@ -27,8 +27,8 @@
         <td></td>
         <td>{{ m.id }}</td>
         <td>{{ m.niveau.id }}</td>
-        <td><a href="{{ path("modifMatiere",{'id':m.id}) }}" class="btn btn-info">Modifier</a></td>
-        <td><a href="{{ path("suppMatiere",{'id':m.id}) }}" class="btn btn-danger">Supprimer</a></td>
+        <td><a href="{{ path("modifMatiere",{'id':m.id}) }}" class="btn btn-outline-info"><i class="fas fa-pen"></i></a></td>
+        <td><a href="{{ path("suppMatiere",{'id':m.id}) }}" class="btn btn-outline-danger"><i class="fas fa-trash"></i></a></td>
     </tr {% endfor %}>
 </table>
     </div>

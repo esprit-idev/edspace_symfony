@@ -1,5 +1,11 @@
+{#
+<title>Partager le document via email</title>
+<input type="text">email@example.com</input>
+<input type="text">object</input>
+<input type="text">body</input>
+<input type="file" value="{{ fic }}">
+<button onclick="history.back()">share</button> #}
 {% extends "frontOffice.html.twig" %}
-
 {% block nav %}
     <li class="nav-item">
         <a class="nav-link" href="index.html">Tableau d'affichage<span class="sr-only">(current)</span></a>
@@ -20,9 +26,6 @@
         <a class="nav-link" href="event.html">Mon profile</a>
     </li>
 {% endblock %}
-
-
-
 {% block slider %}
 
     <section class=" slider_section position-relative">
@@ -57,9 +60,8 @@
 {% endblock %}
 
 {% block custom %}
-    </br>
-   {{ form(f,{'attr':{'novalidate':'novalidate'}}) }}
-    </br>
+    {{ destination }}
+    {{ subject }}
 {% endblock %}
 
 {% block special %}
@@ -82,4 +84,3 @@
 
 {% block contact %}
 {% endblock %}
-

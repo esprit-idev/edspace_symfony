@@ -15,8 +15,9 @@
     <div class="container-fluid">
     </br>
     <center>
+        <div class="row d-flex justify-content-center">
+            <div>
         <form method="post" action="{{ path('listDocuments',{'role':0}) }}" >
-
             <select name="matiereKey" id="matiereKey" class="border">
                 <option disabled selected> -- Sélectionnez une matière -- </option>
                 {% for m in matieres %}
@@ -25,6 +26,11 @@
             </select>
             <button class="btn btn-info">Rechercher</button>
         </form>
+        </div>
+        <div>
+        <a href="{{ path('choixNiveau',{'role':0}) }}" class="btn btn-link">Réinitialiser</a>
+        </div>
+        </div>
     </center>
 
     </br>
@@ -48,7 +54,7 @@
                 <td><a href="{{ path('afficheDocument',{'id':d.id})}}">{{ d.nom }}</a> </td>
                 <td>{{ d.dateinsert }}</td>
                 <td>{{ d.proprietaire }}</td>
-                <td><a href="{{ path("suppDocument",{'id':d.id,'role':0}) }}" class="btn btn-danger">Supprimer</a></td>
+                <td><a href="{{ path("suppDocument",{'id':d.id,'role':0}) }}" class="btn btn-outline-danger" onclick="return confirm('Supprimer ce document')"><i class="fas fa-trash"></i></a>
             </tr {% endfor %}>
         </table>
     </center>

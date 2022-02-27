@@ -33,7 +33,7 @@ class Matiere
     /**
      * @ORM\ManyToOne(targetEntity=Niveau::class, inversedBy="matieres")
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank(message="Le nom de la matière est requis")
+     * @Assert\NotBlank(message="Le choix du niveau est requis")
      */
     private $niveau;
 

@@ -65,9 +65,15 @@ class User
      */
     private $threads;
 
+    /**
+     * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $documentsFavoris;
+
     public function __construct()
     {
         $this->threads = new ArrayCollection();
+        $this->documentsFavoris = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +201,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($thread->getUser() === $this) {
                 $thread->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocumentFavoris>
+     */
+    public function getDocumentsFavoris(): Collection
+    {
+        return $this->documentsFavoris;
+    }
+
+    public function addDocumentsFavori(DocumentFavoris $documentsFavori): self
+    {
+        if (!$this->documentsFavoris->contains($documentsFavori)) {
+            $this->documentsFavoris[] = $documentsFavori;
+            $documentsFavori->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocumentsFavori(DocumentFavoris $documentsFavori): self
+    {
+        if ($this->documentsFavoris->removeElement($documentsFavori)) {
+            // set the owning side to null (unless already changed)
+            if ($documentsFavori->getUser() === $this) {
+                $documentsFavori->setUser(null);
             }
         }
 
