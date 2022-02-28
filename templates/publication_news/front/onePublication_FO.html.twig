@@ -67,26 +67,37 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-8 col-10 mx-auto">
-                            <h2 class="mb-3 animated fadeIn" data-aos="fade-up">{{publication_title}}</h2>
-                            <p class="me-4" data-aos="fade-up">{{publication_content}}</p>
+                            <h2 class="mb-3" data-aos="fade-up">{{publication_title}}</h2>
                             <div class="clearfix my-4 mt-lg-0 mt-5">
-                                <div class="col-md-6 float-md-end mb-3 ms-md-3" data-aos="fade-up">
+                                <div class="col-md-6 float-md-right mb-3 ms-md-3" data-aos="fade-up">
                                     <figure class="figure">
-                                        <img src="images/news/jean-philippe-delberghe-MmanXAs1sKw-unsplash.jpeg" class="img-fluid news-image" alt="">
+                                        <img src="{{ asset('images/') ~ publication_image}}" class="img-fluid news-image" alt="">
 
                                         <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
                                     </figure>
                                 </div>
+                                <p class="me-4" data-aos="fade-up">{{publication_content}}</p>
                             </div>
-
                             <div class="social-share d-flex mt-5">
                                 <span class="mr-4">Share this article:</span>
                                 <a href="#" class="social-share-icon bi-facebook"></a>
                                 <a href="#" class="social-share-icon bi-twitter mx-3" ></a>
                                 <a href="#" class="social-share-icon bi-envelope"></a>
-                            </div>
                         </div>
-
+                        <div class="social-share d-flex flex-row mt-4">
+                                <a href="#" class="social-share-icon bi-hand-thumbs-up p-2" type="button">{{likes}} J'aimes</a>
+                                <a href="#" class="social-share-icon bi-chat p-2">{{comments}} Commentaires</a>
+                                <a href="#" class="social-share-icon bi-eye  p-2">{{views}} Vues</a>
+                        </div>
+                        <div class="social-share d-flex flex-column mt-5">
+                                <div><span class="mr-4">Commentaires</span></div>
+                                <div class="input-group">
+                                    <input type="text" class="form-control"  />
+                                    <input type="submit" value="poster" class="btn btn-outline-secondary"/>
+                                </div>
+                        </div>
+                        
+                        </div>
                     </div>
                 </div>
             </section>

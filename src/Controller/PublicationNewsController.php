@@ -2,34 +2,73 @@
 
 namespace App\Controller;
 
+use App\Entity\CategorieNews;
 use App\Entity\PublicationNews;
 use App\Form\PublicationNewsFormType;
+use App\Repository\CategorieNewsRepository;
 use App\Repository\PublicationNewsRepository;
+use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 class PublicationNewsController extends AbstractController
-{
-    
-        
+{      
     /**
      * @Route("/publication", name="publication")
      */
-    public function index(): Response
+    public function index(PublicationNewsRepository $repo, ChartBuilderInterface $chartBuilder, CategorieNewsRepository $catRepo): Response
     {
-        return $this->render('publication_news/back/index.html.twig', [
+        $publications = $repo->findAll();
+        $categories = $catRepo->findAll();
+        $pubNum = $repo->CountPublications();
+        $pubs = array();
+        $arrayCategoryName = array();
+        Foreach($categories as $category){
+            array_push($arrayCategoryName, $category->getCategoryName());
+            array_push($pubs, $category->getId());
+        }
+        $chart = $chartBuilder->createChart(Chart::TYPE_PIE);
+        $chart->setData([
+            'labels' => $arrayCategoryName,
+            'datasets' => [
+                [
+                    'label' => 'My First dataset',
+                    'backgroundColor' => [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    'borderColor' => 'rgb(255, 255, 255)',
+                    'data' => $pubs,
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                    'suggestedMax' => 100,
+                ],
+            ],
+        ]);
+        return $this->render('/home.html.twig', [
             'controller_name' => 'PublicationNewsController',
+            'publications' => $pubNum,
+            'chart' => $chart,
         ]);
     }
     /**
      * @Route("/allpublications", name="allPublications")
      */
-    public function allPubs(PublicationNewsRepository $repo): Response
+    public function allPubs(PublicationNewsRepository $repo, CategorieNewsRepository $catRepo, Request $request): Response
     {
-        $user=0;
+        $user=1;
         $templateName = 'publication_news/back/allPublication.html.twig';
+        $categories = $catRepo->findAll();
         $publications = $repo->findAll();
         if($user == 1){
             $templateName = 'publication_news/front/allPublication_FO.html.twig';
@@ -37,6 +76,7 @@ class PublicationNewsController extends AbstractController
         return $this->render($templateName, [
             'controller_name' => 'PublicationNewsController',
             'publications' => $publications,
+            'categories' =>$categories,
         ]);
     }
 
@@ -46,19 +86,28 @@ class PublicationNewsController extends AbstractController
      * @param $id
      * @Route("/unepublication/{id}", name="onePublication")
      */
-    public function OnePublication($id, PublicationNewsRepository $repo): Response
+    public function OnePublication($id, PublicationNewsRepository $repo, Request $request): Response
     {
-        $user=0;
+        $user=1;
         $templateName = 'publication_news/back/onePublication.html.twig';
         $publication = $repo->find($id);
+        $likes = $publication->getLikes();
+        if($request->isMethod("POST")){
+            // $likesID= $request->get('like');
+            $likes=$repo->incrementCount($id);
+        }
         if($user == 1){
             $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }
         return $this->render($templateName, [
             'publications' => $publication,
             'publication_title' => $publication->getTitle(),
-            'publication_category' =>$publication->getCategorieNews()->getCatName(),
+            'publication_category' =>$publication->getCategoryName(),
             'publication_content' => $publication->getContent(),
+            'publication_image' => $publication->getImage()->getName(),
+            'likes' => $likes,
+            'comments' =>$publication->getComments(),
+            'views' =>$publication->getVues(),
         ]);
     }
      # add a publication
@@ -72,6 +121,15 @@ class PublicationNewsController extends AbstractController
         $form = $this->createForm(PublicationNewsFormType::class,$publication);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $path = $this->getParameter('kernel.project_dir').'/public/images';
+            $image = $publication->getImage();
+            /** @var UploadedFile $file */
+            $file = $image->getFile();
+            if(!empty($file)){
+                $imageName = md5(uniqid()).'.'.$file->guessExtension();
+                $file->move($path, $imageName);
+                $image->setName($imageName);
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($publication);
             $entityManager->flush();
@@ -97,6 +155,12 @@ class PublicationNewsController extends AbstractController
         $form = $this->createForm(PublicationNewsFormType::class,$publication);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $path = $this->getParameter('kernel.project_dir').'/public/images';
+            $image = $publication->getImage();
+            $file = $image->getFile();
+            $imageName = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move($path, $imageName);
+            $image->setName($imageName);
             $entityManager->flush();
             return $this->redirectToRoute('allPublications');
         }
@@ -120,19 +184,37 @@ class PublicationNewsController extends AbstractController
 
     }
     /**
-     * @Route("/search", name="search")
+     * @Route("/allpublications/search", name="search")
      */
-    public function searchPublicationByDate(Request $request, PublicationNewsRepository $repo){
+    public function searchPublication(Request $request, PublicationNewsRepository $repo){
 
-        $templateName = 'publication_news/back/searchAllPublication.html.twig';
+        $templateName = 'publication_news/back/allPublication.html.twig';
         $publications = $repo->findAll();
         if($request->isMethod('POST')){
             $publicationTitle = $request->get('publicationTitle');
-            $publications = $repo->findBy(array('title' => $publicationTitle));
+            if($publicationTitle !== ''){
+                $publications = $repo->SearchByTitle($publicationTitle);
+            }
+            
         }
-        return $this->render($templateName,[
-            'controller_name' => 'PublicationNewsController',
-            array('publications' => $publications)
-            ]);
+        return $this->render($templateName, array('publications' => $publications));
+    }
+
+    /**
+     * @Route("/allpublications/searchByCat", name="searchByCat")
+     */
+    public function searchPubByCategoryName(Request $request, PublicationNewsRepository $repo, CategorieNewsRepository $catRepo){
+
+        $templateName = 'publication_news/front/allPublication_FO.html.twig';
+        $publications = $repo->findAll();
+        // $publication= $repo->find($id);
+        $categories = $catRepo->findAll();
+        if($request->isMethod('POST')){
+            $category = $request->get('categoryKey');
+            $date = $request->get('dateKey');
+            $publications = $repo->findNewsByCategory($category); 
+            // $publications = $repo->SortByDateASC();  
+        }
+        return $this->render($templateName, array('publications' => $publications,'categories' => $categories));
     }
 }

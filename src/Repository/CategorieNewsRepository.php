@@ -47,4 +47,19 @@ class CategorieNewsRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findAllCategoryNames()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.categoryName')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    function SearchByName($categoryName){
+        return $this->createQueryBuilder('s')
+            ->where('s.categoryName like :categoryName')
+            ->setParameter('categoryName','%'.$categoryName.'%')
+            ->getQuery()
+            ->getResult();
+    }
 }

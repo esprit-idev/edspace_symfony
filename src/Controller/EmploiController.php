@@ -4,7 +4,7 @@ namespace App\Controller;
 use App\Entity\Emploi;
 use App\Repository\EmploiRepository;
 use App\Form\EmploiFormType;
-use App\Repository\PublicationNewsRepository;
+use App\Repository\CategorieEmploiRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,18 +26,20 @@ class EmploiController extends AbstractController
   /**
      * @Route("/allemploi", name="allemploi")
      */
-    public function allEmploi(EmploiRepository $repo): Response
+    public function allEmploi(EmploiRepository $repo, CategorieEmploiRepository $catRepo): Response
     {
         
-        $user=1;
+        $user=0;
         $templateName = 'emploi/back/allEmploi.html.twig';
         if($user == 1){
             $templateName = 'emploi/front/allEmploi_FO.html.twig';
         }
         $emplois = $repo->findAll();
+        $categories = $catRepo->findAll();
         return $this->render($templateName, [
             'controller_name' => 'EmploiController',
             'emplois' => $emplois,
+            'categories' => $categories,
         ]);
     }
 
@@ -76,6 +78,15 @@ class EmploiController extends AbstractController
         $form = $this->createForm(EmploiFormType::class,$emploi);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $path = $this->getParameter('kernel.project_dir').'/public/images';
+            $image = $emploi->getImage();
+            /** @var UploadedFile $file */
+            $file = $image->getFile();
+            if(!empty($file)){
+                $imageName = md5(uniqid()).'.'.$file->guessExtension();
+                $file->move($path, $imageName);
+                $image->setName($imageName);
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($emploi);
             $entityManager->flush();
@@ -105,7 +116,7 @@ class EmploiController extends AbstractController
             return $this->redirectToRoute('allemploi');
         }
         return $this->render('emploi/back/modifierEmploi.html.twig', [
-            'form_title' => 'Modifier une publication',
+            'form_title' => 'Modifier une publication d\'emploi',
             'form_add' => $form->createView(),
         ]);
     }
@@ -128,6 +139,36 @@ class EmploiController extends AbstractController
 
     }
 
+    /**
+     * @Route("/allemploi/search", name="searchEmploi")
+     */
+    public function searchPublication(Request $request,EmploiRepository $repo){
 
+        $templateName = 'emploi/back/allEmploi.html.twig';
+        $emplois = $repo->findAll();
+        if($request->isMethod('POST')){
+            $emploiTitle = $request->get('emploiTitle');
+            if($emploiTitle !== ''){
+                $emplois = $repo->SearchByTitle($emploiTitle);
+            }
+        }
+        return $this->render($templateName, array('emplois' => $emplois));
+    }
 
+    /**
+     * @Route("/allemploi/searchByCat", name="searchByEmploi")
+     */
+    public function searchPubByCategoryName(Request $request, EmploiRepository $repo, CategorieEmploiRepository $catRepo){
+
+        $templateName = 'emploi/front/allEmploi_FO.html.twig';
+        $emplois = $repo->findAll();
+        // $publication= $repo->find($id);
+        $categories = $catRepo->findAll();
+        if($request->isMethod('POST')){
+            $category = $request->get('categoryKey');
+            $emplois = $repo->findNewsByCategory($category); 
+            // $publications = $repo->SortByDateASC();  
+        }
+        return $this->render($templateName, array('emplois' => $emplois,'categories' => $categories));
+    }
 }

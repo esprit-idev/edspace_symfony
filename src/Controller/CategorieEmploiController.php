@@ -53,7 +53,7 @@ class CategorieEmploiController extends AbstractController
         }
         return $this->render('categorie_emploi/addCategory.html.twig', [
             'form_title' => 'Ajouter une categorie de Emploi',
-            'form_add' => $form->createView(),
+            'form' => $form->createView(),
             'categories' => $categories,
 
         ]);
@@ -95,5 +95,20 @@ class CategorieEmploiController extends AbstractController
 
         return $this->redirectToRoute('allCategoriesEmploi');
 
+    }
+    /**
+     * @Route("/allcategoriesemploi/search", name="SearchCatNameEmploi")
+     */
+    public function SearchCat(CategorieEmploiRepository $repo, Request $request): Response
+    {
+        $categories = $repo->findAll();
+        if($request->isMethod('POST')){
+            $categoryName = $request->get('catTitle');
+            if($categoryName !== ''){
+                $categories = $repo->SearchByName($categoryName);
+            }
+        }
+        return $this->render('categorie_emploi/allCategories.html.twig',
+            array('categories' => $categories,));
     }
 }

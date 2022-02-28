@@ -48,10 +48,63 @@ class PublicationNewsRepository extends ServiceEntityRepository
     }
     */
 
-    public function findStudentsByEmailASC(){
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager
-                    ->createQuery('SELECT p FROM App\Entity\PublicationNews p ORDER BY p.name ASC');
-        return $query->getResult();
+    public function findNewsByCategory($categoryName){
+        return $this->createQueryBuilder('p')
+        ->join('p.categoryName', 'c')
+        ->addSelect('c')
+        ->where('c.categoryName=:categoryName')
+        ->setParameter('categoryName',$categoryName)
+        ->getQuery()
+        ->getResult();
+    }
+
+    function SearchByTitle($title){
+        return $this->createQueryBuilder('s')
+            ->where('s.title like :title')
+            ->setParameter('title','%'.$title.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function SortByDateASC()
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->addOrderBy('e.date', 'ASC')
+            ->andWhere('e.date > :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function incrementCount($id)
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->update()
+            ->set('e.count', 'e.count + 1')
+            ->where('e.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function CountPublications(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(p) FROM APP\ENTITY\PublicationNews p');
+        return $qb->getSingleScalarResult();
+    }
+    
+    public function ListPublicationByCategory($id){
+        return $this
+        ->createQueryBuilder('p')
+        ->join('p.categoryName', 'c')
+        ->addSelect('c')
+        ->where('c.id = :id')
+        ->setParameter('id', $id)
+        ->getQuery()
+        ->getResult();
     }
 }

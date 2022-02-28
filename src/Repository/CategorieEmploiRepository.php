@@ -47,4 +47,11 @@ class CategorieEmploiRepository extends ServiceEntityRepository
         ;
     }
     */
+    function SearchByName($categoryName){
+        return $this->createQueryBuilder('s')
+            ->where('s.categoryName like :categoryName')
+            ->setParameter('categoryName','%'.$categoryName.'%')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -13,8 +13,9 @@
 <div class="content-wrapper">
     <div class="container-fluid">
 <h1>Ajouter Categorie</h1>
-{{ form_start(form_add,{'attr':{'novalidate':'novalidate'}}) }}
-{{ form_end(form_add) }}
+{{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+{{form_row(form.categoryName)}}
+{{ form_end(form) }}
     </div>
 </div>
 {% endblock %}

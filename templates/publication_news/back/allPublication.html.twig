@@ -16,37 +16,57 @@
             <i class="fas fa-search"></i>
         </a>
         <div class="navbar-search-block">
-            <form class="form-inline">
+            <form class="form-inline" method="POST" action="{{ path('search') }}">
                 <div class="input-group input-group-sm">
-                    <form method="POST">
                         <input class="form-control form-control-navbar" type="text" placeholder="Search" aria-label="Search" name="publicationTitle">
                         <div class="input-group-append">
-                            <button class="btn btn-navbar" type="submit" value="search">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                                <i class="fas fa-times"></i>
-                            </button>
+                                <button class="btn btn-navbar" type="submit" value="recherche">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
-                    </form>
-                    
-                        </div>
-                    </form>
+            </form>
                 </div>
             </li>
 {% endblock searchbar %}
 {% block cards %}
     <div class="content-wrapper"> <!-- don't delete this line-->
+    <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Dashboard</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ path('publication') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard v1</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
         <div class="container-fluid"> <!-- don't delete this line-->
             <div class="row pb-4 pl-2 pr-2 pt-4 d-flex justify-content-between">
                 <div class=""><h3 class="">La liste des publication news</h3> </div>
-                <div class=""><a href="{{ path('addPublication')}}" class="btn btn-primary"> ajouter une publication </a></div>
+                <div class="pl-4"><a href="{{ path('addPublication')}}" class="btn btn-primary"> ajouter une publication </a></div>
             </div>
-            <div class="row">
+            <div class="row d-flex justify-content-center">
             {% for pub in publications %}
             <div class="p-4">
-            <div class="card" style="width: 18rem;">
-              <img src="/documents/666.png" class="card-img-top" alt="...">
+            <div class="card h-100" style="width: 18rem;">
+                {% if pub.image.name is defined and pub.image.name is not null %}
+                <img src="{{ asset('images/') ~ pub.image.name}}" class="card-img-top" style="width: 100%;
+                                                                                            height: 15vw;
+                                                                                            object-fit: cover;">
+                    {% else %}
+                     <img src="{{ asset('images/') ~ pub.image.name}}" alt="pas d image" class="card-img-top" style="width: 100%;
+                                                                                            height: 15vw;
+                                                                                            object-fit: cover;">                                                                            
+                {% endif %}
                 <div class="card-body pe-auto">
                     <h5 class="card-title">{{pub.title}}</h5>
                     <p class="card-text" style="white-space: nowrap;

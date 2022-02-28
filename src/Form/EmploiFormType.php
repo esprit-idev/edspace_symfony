@@ -33,8 +33,10 @@ class EmploiFormType extends AbstractType
             ])
 
             ->add('date', DateType::class,[
-                'label' => 'date'
+                'label' => 'date',
+                'data' => new \DateTime('now'),
             ])
+            ->add('image', ImageType::class)
             ->add('ajouter', SubmitType::class,[
                 'label' => 'Ajouter',
             ])

@@ -10,6 +10,28 @@
         </li>
     </ul>
 {% endblock %}
+{% block searchbar %}
+    <li class="nav-item">
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+            <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+            <form class="form-inline" method="POST" action="{{ path('searchEmploi') }}">
+                <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" type="text" placeholder="Search" aria-label="Search" name="emploiTitle">
+                        <div class="input-group-append">
+                                <button class="btn btn-navbar" type="submit" value="recherche">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+            </form>
+                </div>
+            </li>
+{% endblock searchbar %}
 {% block cards %}
     <div class="content-wrapper"> <!-- don't delete this line-->
         <div class="container-fluid"> <!-- don't delete this line-->
@@ -17,11 +39,20 @@
                 <div class=""><h3 class="">La liste des emplois</h3> </div>
                 <div class=""><a href="{{ path('addEmploi')}}" class="btn btn-primary"> ajouter une offre </a></div>
             </div>
-            <div class="row">
+            <div class="row d-flex justify-content-center">
             {% for emploi in emplois %}
-            <div class="col-sm-4">
-            <div class="card card-link" style="width: 18rem;">
-              <img src="/documents/666.png" class="card-img-top" alt="...">
+                <div class="p-4">
+                <div class="card h-100" style="width: 18rem;">
+                    {% if emploi.image.name is defined and emploi.image.name is not null %}
+                    <img src="{{ asset('images/') ~ emploi.image.name}}"
+                        class="card-img-top" style="width: 100%;
+                                            height: 10vw;
+                                            object-fit: cover;">
+                    {% else %}
+                     <img src="#" alt="pas d image" class="card-img-top" style="width: 100%;
+                                                                                height: 10vw;
+                                                                                object-fit: cover;">                                                                            
+                {% endif %}
                 <div class="card-body pe-auto">
                     <h5 class="card-title">{{emploi.title}}</h5>
                     <br>

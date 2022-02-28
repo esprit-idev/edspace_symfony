@@ -68,7 +68,7 @@ class CategorieNewsController extends AbstractController
         }
         return $this->render('categorie_news/back/addCategory.html.twig', [
             'form_title' => 'Ajouter une categorie de News',
-            'form_add' => $form->createView(),
+            'form' => $form->createView(),
             'categories' => $categories,
 
         ]);
@@ -111,5 +111,21 @@ class CategorieNewsController extends AbstractController
 
         return $this->redirectToRoute('allCategoriesNews');
 
+    }
+      /**
+     * @Route("/allcategoriesnews/search", name="SearchCatName")
+     */
+    public function SearchCategory(CategorieNewsRepository $repo, Request $request): Response
+    {
+        $categories = $repo->findAll();
+        if($request->isMethod('POST')){
+            $categoryName = $request->get('catTitle');
+            if($categoryName !== ''){
+                $categories = $repo->SearchByName($categoryName);
+            }
+        }
+        return $this->render('categorie_news/back/allCategories.html.twig', 
+            array('categories' => $categories,)
+        );
     }
 }

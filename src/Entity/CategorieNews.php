@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CategorieNewsRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,13 +20,14 @@ class CategorieNews
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(message="ajouter un nom pour la catégorie")
      */
-    private $catName;
+    private $categoryName;
 
     /**
-     * @ORM\OneToMany(targetEntity=PublicationNews::class, mappedBy="categorieNews")
+     * @ORM\OneToMany(targetEntity=PublicationNews::class, mappedBy="categoryName")
      */
     private $publicationNews;
 
@@ -37,18 +39,6 @@ class CategorieNews
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCatName(): ?string
-    {
-        return $this->catName;
-    }
-
-    public function setCatName(string $catName): self
-    {
-        $this->catName = $catName;
-
-        return $this;
     }
 
     /**
@@ -63,7 +53,7 @@ class CategorieNews
     {
         if (!$this->publicationNews->contains($publicationNews)) {
             $this->publicationNews[] = $publicationNews;
-            $publicationNews->setCategorieNews($this);
+            $publicationNews->setCategoryName($this);
         }
 
         return $this;
@@ -73,11 +63,26 @@ class CategorieNews
     {
         if ($this->publicationNews->removeElement($publicationNews)) {
             // set the owning side to null (unless already changed)
-            if ($publicationNews->getCategorieNews() === $this) {
-                $publicationNews->setCategorieNews(null);
+            if ($publicationNews->getCategoryName() === $this) {
+                $publicationNews->setCategoryName(null);
             }
         }
 
         return $this;
+    }
+
+    public function getCategoryName(): ?string
+    {
+        return $this->categoryName;
+    }
+
+    public function setCategoryName(?string $categoryName): self
+    {
+        $this->categoryName = $categoryName;
+
+        return $this;
+    }
+    public function __toString() {
+        return $this->getCategoryName();
     }
 }

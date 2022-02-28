@@ -14,8 +14,9 @@ class CategorieNewsFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('catName', TextType::class,[
-                'label' => 'Nom du Categorie'
+            ->add('categoryName', TextType::class,[
+                'label' => 'Nom du Categorie',
+                'required' => true,
             ])
             ->add('ajouter', SubmitType::class,[
                 'label' => 'Ajouter',

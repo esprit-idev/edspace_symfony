@@ -12,8 +12,8 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Joson</title>
-{% block css %}
+    <title> {% block title %} {% endblock title %}</title>
+    {% block css %}
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <!-- fonts style -->
@@ -23,9 +23,16 @@
     <!-- responsive style -->
     <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
     {% endblock css %}
+    {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+    {% endblock %} 
 </head>
 
-<body>
+<body
+        {{ stimulus_controller('symfony/ux-swup/swup',{
+         theme:'fade',
+            }) }}>
+<main id="swup">
 <div class="hero_area">
     <!-- header section strats -->
     {% block header %}
@@ -583,7 +590,7 @@
 
 <script type="text/javascript" src="{{ asset('frontOffice/js/jquery-3.4.1.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('frontOffice/js/bootstrap.js') }}"></script>
-
+</swup>
 </body>
 
 </html>

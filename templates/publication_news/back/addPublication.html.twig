@@ -8,7 +8,7 @@
             <a href="index3.html" class="nav-link">{# NOM DE LA RUBRIQUE HERE!!!!! #}</a>
         </li>
     </ul>
-{% endblock%}
+{% endblock %}
 {% block cards %}
     <div class="content-wrapper"> <!-- don't delete this line-->
         <section class="content-header">
@@ -41,6 +41,7 @@
                 </div>
                 <div class="card-body">
                 {{form_start(form_add,{'attr': {'novalidate': 'novalidate'}})}}
+                {# {{form_row(form_add.image)}} #}
                 {{form_end(form_add)}}
                 </div>
                 <!-- /.card-body -->
@@ -62,6 +63,5 @@
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 {% endblock %}

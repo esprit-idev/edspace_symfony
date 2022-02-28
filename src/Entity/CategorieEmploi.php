@@ -22,6 +22,7 @@ class CategorieEmploi
 
     /**
      * @ORM\Column(type="string", length=55, nullable=true)
+     * @Assert\NotBlank(message="ajouter le nom de categorie")
      */
     private $categoryName;
 

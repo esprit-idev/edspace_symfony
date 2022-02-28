@@ -1,4 +1,5 @@
 {% extends "frontOffice.html.twig" %}
+{% block title %}EdSpace | Publications {% endblock title %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <!-- fonts style -->
@@ -48,7 +49,7 @@
                                 <div class="detail-box">
                                     <div>
                                         <h1>
-                                            Centre de partage
+                                            Les Dernières Nouvelles
                                         </h1>
                                         <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
                                     </div>
@@ -67,25 +68,36 @@
     <section class="news section-padding" id="news">
                 <div class="container">
                     <div class="row">
-
                         <div class="col-12">
                             <h2 class="mb-5 text-center" data-aos="fade-up">News & Events</h2>
+                        </div>
+                        <div class="col-12 d-flex justify-content-center mb-4">
+                         <form method="POST" action="{{ path('searchByCat') }}" class="form-row">
+                            <div class="pr-2">
+                            <select name="categoryKey" id="categoryKey" class="form-select form-control">
+                                <option disabled selected> -- Sélectionnez une catégorie -- </option>
+                                {% for c in categories %}
+                                    <option>{{ c.categoryName }}</option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                            <div><button value="recherche" class="btn btn-secondary">Rechercher</button></div>
+                        </form>
                         </div>
                         {% for pub in publications %}
                         <div class="col-lg-6 col-12 mb-5 mb-lg-0">
                             <div class="news-thumb" data-aos="fade-up">
                                 <a href="{{ path('onePublication', {'id': pub.id,'title':pub.title}) }}" class="news-image-hover news-image-hover-warning">
-                                    <img src="/frontOffice/images/caroline-lm-uqveD8dYPUM-unsplash.jpg" class="img-fluid large-news-image news-image" alt="">
+                                    <img src="{{ asset('images/') ~ pub.image.name}}" class="img-fluid large-news-image news-image" alt="">
                                 </a>
 
-                                <div class="news-category bg-warning text-white">{{pub.categorieNews.getCatName()}}</div>
+                                <div class="news-category bg-warning text-white">{{pub.categoryName.getCategoryName()}}</div>
                                 
                                 <div class="news-text-info">
                                     <h5 class="news-title">
                                         <a href="news-detail.html" class="news-title-link">{{pub.title}}</a>
                                     </h5>
-
-                                    <span class="text-muted">22 hours ago</span>
+                                    <span class="text-muted">{{pub.date.format('d/m/y')}}</span>
                                 </div>
                             </div> 
                         </div>
