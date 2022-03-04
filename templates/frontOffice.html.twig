@@ -12,8 +12,8 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Joson</title>
-{% block css %}
+    <title>{% block title %}Joson {% endblock %}</title>
+
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <!-- fonts style -->
@@ -22,7 +22,7 @@
     <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
     <!-- responsive style -->
     <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
-    {% endblock css %}
+    <script src="https://kit.fontawesome.com/ffcbf2bd8b.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -33,7 +33,10 @@
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg custom_nav-container ">
                 <a class="navbar-brand" href="#">
-                    <img src="/logo1.svg">
+                    <h3>
+                        EdSpace
+                    </h3>
+                    <span>Esprit</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -54,8 +57,28 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('allemploi') }}">Offres d'emploi</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href={# {{ path('listDocuments') }} #}>Centre de partage</a>
+                            <li class="nav-item active">
+                                <a href="#" class="nav-link">
+                                    Centre de partage
+                                    <i class="fas fa-angle-down right"></i>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href={# path('choixNiveau',{'role':1}) #} class="nav-link">
+                                            <p>Liste des documents</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href={# path('mesDoc') #} class="nav-link">
+                                            <p>Mes documents</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href={# path('mesFavoris') #} class="nav-link">
+                                            <p>Favoris</p>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Mon profile</a>
@@ -196,7 +219,6 @@
 </section>
 {% endblock %}
 <!-- end special section -->
-
 <!-- about section -->
 {% block about %}
 <section class="about_section layout_padding">
@@ -563,7 +585,7 @@
 <footer class="container-fluid footer_section">
     <p>
         &copy; 2021 All Rights Reserved By
-        <a href="https://html.design/">Free Html Templates</a>
+        <a href="https://html.design/">iDev Team</a>
     </p>
 
 </footer>
@@ -573,7 +595,7 @@
 
     <p>
         Distributed By
-        <a href="https://themewagon.com/">Themewagon</a>
+        <a href="https://themewagon.com/">iDev</a>
     </p>
 
 </footer>

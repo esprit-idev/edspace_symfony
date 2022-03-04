@@ -58,7 +58,7 @@ class Niveau
         return $this->id;
     }
 
-    public function setId(string $id): self
+    public function setId(?string $id): self
     {
         $this->id = $id;
 
@@ -154,4 +154,11 @@ class Niveau
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getId();
+    }
+
+
 }

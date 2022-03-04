@@ -47,27 +47,67 @@ class DocumentRepository extends ServiceEntityRepository
         ;
     }
     */
-    /*function TriByNiveauMatiere($niveau,$matiere){
-        return $this->createQueryBuilder('d')
-            ->where('d.matiere like ?1')
-            ->andWhere('d.niveau like ?2')
-            ->setParameter('1',$matiere)
-            ->setParameter('2',$niveau)
-            ->getQuery()
-            ->getResult();
-    }*/
 
-    function TriByNiveauMatiere($niveau,$matiere){
-        return $this->createQueryBuilder('d')
-            ->join('d.niveau','n')
-            ->addSelect('n')
-            ->join('d.matiere','m')
-            ->addSelect('m')
-            ->where('m.id =:idM')
-            ->andWhere('n.id =:idN')
-            ->setParameter('idM',$matiere)
-            ->setParameter('idN',$niveau)
+    function FindNiveaux(){
+        $niveaux=array();
+        $docIds= $this->createQueryBuilder('d')
             ->getQuery()
             ->getResult();
+        foreach ($docIds as $item){
+            array_push($niveaux,$item->getNiveau());
+        }
+        $niveaux=array_unique($niveaux);
+        return $niveaux;
+    }
+
+    function FindMatieres($niveau){
+        $matieres=array();
+        $docIds= $this->createQueryBuilder('d')
+            ->where('d.niveau =:idN')
+            ->setParameter('idN',$niveau)
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+        foreach ($docIds as $item){
+            array_push($matieres,$item->getMatiere());
+        }
+        $matieres=array_unique($matieres);
+        return $matieres;
+    }
+
+    public function IncrementCountSignal(Document $document): void
+    {
+        $this
+            ->createQueryBuilder('s')
+            ->update()
+            ->set('s.signalements', 's.signalements + 1')
+            ->where('s.id = :id')
+            ->setParameter('id', $document->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function DecrementCountSignal(Document $document): void
+    {
+        $this
+            ->createQueryBuilder('s')
+            ->update()
+            ->set('s.signalements', 0)
+            ->where('s.id = :id')
+            ->setParameter('id', $document->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    function FindDocSignales(){
+        $documents=array();
+        $document= $this->createQueryBuilder('d')
+            ->where('d.signalements>0')
+            ->getQuery()
+            ->getResult();
+        foreach ($document as $item){
+            array_push($documents,$item);
+        }
+        return $documents;
     }
 }

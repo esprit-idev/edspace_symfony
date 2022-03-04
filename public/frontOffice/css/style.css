@@ -91,7 +91,6 @@ body {
 .custom_nav-container .navbar-nav .nav-item .nav-link {
   padding: 45px 15px 15px;
   color: #ffffff;
-  text-align: center;
   position: relative;
   text-transform: uppercase;
 }
@@ -99,6 +98,26 @@ body {
 .custom_nav-container .navbar-nav .nav-item:hover .nav-link, .custom_nav-container .navbar-nav .nav-item.active .nav-link {
   background-color: #133e3f;
 }
+
+
+.custom_nav-container .navbar-nav .nav-item:hover > .nav-treeview {
+  display: block;
+  position: absolute;
+}
+
+.custom_nav-container .navbar-nav .nav-treeview {
+  display: none;
+  list-style: none;
+}
+.down {
+  padding: 0px 6px;
+  text-transform: none;
+}
+
+.custom_nav-container .navbar-nav .nav-treeview .nav-item .nav-link:hover {
+  background: #4e6e6f;
+}
+
 
 .custom_nav-container .form-inline {
   padding-top: 30px;

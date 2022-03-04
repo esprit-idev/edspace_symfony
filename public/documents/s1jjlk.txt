@@ -1,0 +1,12 @@
+Anas:
+AMH9B-58RC
+
+Mahmoud:
+S2UN7-68RJ
+
+INT
+AJXPF-XPSC
+
+-allow_third_party_software
+
+-novid -tickrate 128 -high -threads 4 +fps_max 0 +cl_interp 0 +cl_interp_ratio 1 +rate 128000 +cl_updaterate 128 +cl_cmdrate 128 +mat_queue_mode 2 -freq 60 -refresh 60 +cl_forcepreload 1 -nod3d9ex -nojoy

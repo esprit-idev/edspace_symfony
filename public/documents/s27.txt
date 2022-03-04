@@ -1,0 +1,34 @@
+/**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route ("/document/ajoutDocument",name="ajoutDocument")
+     */
+    function AjoutDocument(Request $request,NiveauRepository $repository){
+        //$niveau=$request->get('niveauKey');
+        //$matieres=$repository->FindMatieres($niveau);
+        //$niv=$repository->find($niveau);
+        //$matieres=$niv->getMatieres();
+        $document=new Document();
+        $form=$this->createForm(DocumentType::class,$document);
+        //$form->add("niveau",TextareaType::class,['label'=> 'Niveau sélectionné','data'=>$niveau]);
+        //$form->add("matiere",ChoiceType::class,['label'=> 'Choisissez une matière ','choice_label'=>'id','choices'=>$matieres,'placeholder'=>'-- Sélectionnez une matière --']);
+        $form->add("Ajouter",SubmitType::class);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $fic=$document->getFichier();
+            $nomFic=$document->getNom().'.'.$fic->guessExtension();
+            //upload to public under documents
+            $fic->move($this->getParameter('document_dir'),$nomFic);
+            //$document->setNiveau($niveau);
+            $document->setNom($nomFic);
+            $document->setDateInsert(date("d/m/y"));
+            $document->setProprietaire("Meriam2"); //get username
+            $document->setFichier(file_get_contents($this->getParameter('document_dir').'/'.$nomFic));
+            $document->setType(mime_content_type($this->getParameter('document_dir').'/'.$nomFic));
+            $em=$this->getDoctrine()->getManager();
+            $em->persist($document);
+            $em->flush();
+            return $this->redirectToRoute('ajoutDocument');
+        }
+        return $this->render("document/ajoutDocument.html.twig",["f"=>$form->createView()]);
+    }

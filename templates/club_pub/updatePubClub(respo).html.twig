@@ -1,0 +1,51 @@
+{% extends 'frontOffice.html.twig' %}
+{% block title %}
+    Modification Publication {% endblock %}
+
+{% block header %}
+
+{% endblock %}
+{% block slider %}
+    </br>
+    </br>
+
+    <div class="container" align="left">
+        <!-- {% if currentImg is empty %}
+        {% elseif ('.PNG' in (currentImg|upper)) or ('.JPEG' in (currentImg|upper)) or ('.JPG' in (currentImg|upper)) or ('.JFIF' in (currentImg|upper)) %}
+            <p align="center">Current Image</p>
+            <img  style="transition: transform .1s;" src="{{ asset('PubPictures/' ~ currentImg)|imagine_filter('my_dim_down_scale_filter') }}">
+        {% elseif ('.MP4' in (currentImg|upper)) %}
+            <p align="center">Current Video</p>
+            <video controls height="500" width="600">
+                <source src="{{ asset('PubPictures/' ~ currentImg) }}" type="video/mp4">
+                <source src="{{ asset('PubPictures/' ~ currentImg) }}" type="video/webm">
+                <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
+                    Voici <a href="{{ asset('PubPictures/' ~ currentImg) }}">un lien pour télécharger
+                        la vidéo</a>.</p>
+            </video>
+        {% else %}
+            <h4 class="text-danger"> File extension not supported try adding it as a file</h4>
+        {% endif %}-->
+    </div>
+    <div class="container text-white " style="text-align:left;font-size: 20px">    {{ form(formPubEdit,{'attr': {'novalidate': 'novalidate'}}) }}
+    </div>
+{% endblock %}
+{% block special %}
+{% endblock %}
+{% block about %}
+{% endblock %}
+{% block course %}
+{% endblock %}
+{% block login %}
+{% endblock %}
+{% block event %}
+{% endblock %}
+{% block client %}
+{% endblock %}
+{% block contact %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
+
+

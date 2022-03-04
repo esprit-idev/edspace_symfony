@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ReponseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ReponseRepository::class)
@@ -19,6 +20,7 @@ class Reponse
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $reply;
 
@@ -37,6 +39,12 @@ class Reponse
      * @ORM\JoinColumn(nullable=false)
      */
     private $thread;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reponses")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -87,6 +95,18 @@ class Reponse
     public function setThread(?Thread $thread): self
     {
         $this->thread = $thread;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
