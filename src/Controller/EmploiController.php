@@ -29,7 +29,7 @@ class EmploiController extends AbstractController
     public function allEmploi(EmploiRepository $repo, CategorieEmploiRepository $catRepo): Response
     {
         
-        $user=0;
+        $user=1;
         $templateName = 'emploi/back/allEmploi.html.twig';
         if($user == 1){
             $templateName = 'emploi/front/allEmploi_FO.html.twig';

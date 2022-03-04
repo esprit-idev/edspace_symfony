@@ -6,6 +6,7 @@ use App\Entity\CategorieNews;
 use App\Entity\PublicationNews;
 use App\Form\PublicationNewsFormType;
 use App\Repository\CategorieNewsRepository;
+use App\Repository\EmploiRepository;
 use App\Repository\PublicationNewsRepository;
 use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,11 +20,12 @@ class PublicationNewsController extends AbstractController
     /**
      * @Route("/publication", name="publication")
      */
-    public function index(PublicationNewsRepository $repo, ChartBuilderInterface $chartBuilder, CategorieNewsRepository $catRepo): Response
+    public function index(PublicationNewsRepository $repo, ChartBuilderInterface $chartBuilder, CategorieNewsRepository $catRepo, EmploiRepository $E_Repo): Response
     {
         $publications = $repo->findAll();
         $categories = $catRepo->findAll();
         $pubNum = $repo->CountPublications();
+        $emploiNum = $E_Repo->CountEmploi();
         $pubs = array();
         $arrayCategoryName = array();
         Foreach($categories as $category){
@@ -35,19 +37,45 @@ class PublicationNewsController extends AbstractController
             'labels' => $arrayCategoryName,
             'datasets' => [
                 [
-                    'label' => 'My First dataset',
+                    'label' => 'N Publications Par Categorie',
                     'backgroundColor' => [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        'rgb(255, 205, 86)',
+                        'rgb(255, 5, 86)',
+                        'rgb(255, 05, 86)',
                     ],
                     'borderColor' => 'rgb(255, 255, 255)',
                     'data' => $pubs,
                 ],
             ],
         ]);
-
         $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                    'suggestedMax' => 100,
+                ],
+            ],
+        ]);
+
+        //line chart 
+        $chartLine = $chartBuilder->createChart(Chart::TYPE_BAR);
+        $chartLine->setData([
+            'labels' => $arrayCategoryName,
+            'datasets' => [
+                [
+                    'label' => 'Nombre de Publication Par Categorie',
+                    'backgroundColor' => [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                    ],
+                    'borderColor' => 'rgb(255, 255, 255)',
+                    'data' => [12, 4,0,1],
+                ],
+            ],
+        ]);
+        $chartLine->setOptions([
             'scales' => [
                 'y' => [
                     'suggestedMin' => 0,
@@ -58,7 +86,9 @@ class PublicationNewsController extends AbstractController
         return $this->render('/home.html.twig', [
             'controller_name' => 'PublicationNewsController',
             'publications' => $pubNum,
+            'emplois' => $emploiNum,
             'chart' => $chart,
+            'chartLine' => $chartLine,
         ]);
     }
     /**
@@ -83,31 +113,42 @@ class PublicationNewsController extends AbstractController
     #read one single publication
 
     /**
-     * @param $id
-     * @Route("/unepublication/{id}", name="onePublication")
+     * @param $id, $likes
+     * @Route("/unepublication/{id}/{likes}", name="onePublication")
      */
     public function OnePublication($id, PublicationNewsRepository $repo, Request $request): Response
     {
+        $em = $this->getDoctrine()->getManager();
         $user=1;
+        // to check if we did refresh the browser page
+        $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
         $templateName = 'publication_news/back/onePublication.html.twig';
         $publication = $repo->find($id);
+        $publications = $repo->findAll();
         $likes = $publication->getLikes();
-        if($request->isMethod("POST")){
-            // $likesID= $request->get('like');
-            $likes=$repo->incrementCount($id);
-        }
+        $views = $publication->getVues();
+        $comments = $publication->getComments();
+        $comment = count(array($comments));
+        if($pageWasRefreshed){
+            $views = $publication->increment();
+            $em->flush();
+        }else{
+            $views = $publication->getVues();
+            $em->flush();
+        } 
         if($user == 1){
             $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }
         return $this->render($templateName, [
             'publications' => $publication,
             'publication_title' => $publication->getTitle(),
-            'publication_category' =>$publication->getCategoryName(),
             'publication_content' => $publication->getContent(),
             'publication_image' => $publication->getImage()->getName(),
             'likes' => $likes,
-            'comments' =>$publication->getComments(),
-            'views' =>$publication->getVues(),
+            'id' => $id,
+            'comments' =>$comments,
+            'num' => $comment,
+            'views' =>$views,
         ]);
     }
      # add a publication
@@ -216,5 +257,86 @@ class PublicationNewsController extends AbstractController
             // $publications = $repo->SortByDateASC();  
         }
         return $this->render($templateName, array('publications' => $publications,'categories' => $categories));
+    }
+
+    /**
+     * @param $id, $likes
+     * @Route("/unepublication/post/{id}/{likes}", name="postComment")
+     */
+    public function PostComment($id, PublicationNewsRepository $repo, Request $request): Response
+    {
+        $user=1;
+        $templateName = 'publication_news/back/onePublication.html.twig';
+        $em = $this->getDoctrine()->getManager();
+        $publications = $repo->findAll();
+        $publication = $repo->find($id);
+        $likes = $publication->getLikes();
+        $views = $publication->getVues();
+        $comments = $publication->getComments();
+        $comment = count(array($comments));
+
+        if($request->isMethod('POST')){
+            $comment = $request->get('comment');
+            $publication->setComments($comment);
+            $em->flush();
+        }
+        $array = array();
+        Foreach($publications as $pub){
+            array_push($array, $pub->getComments());
+        }
+        if($user == 1){
+            $templateName = 'publication_news/front/onePublication_FO.html.twig';
+        }
+        return $this->render($templateName, array(
+            'publications' => $publication,
+            'publication_title' => $publication->getTitle(),
+            'publication_content' => $publication->getContent(),
+            'publication_image' => $publication->getImage()->getName(),
+            'likes' => $likes,
+            'id' => $id,
+            'comments' => $array,
+            'views' =>$views,
+            'num' => $comment
+        ));
+    }
+    
+    /**
+     * @param $id, $likes
+     * @Route("/unepublicationLikes/{id}/{likes}", name="onePublicationLikes")
+     */
+    public function OnePublicationLikes($id, PublicationNewsRepository $repo, Request $request): Response
+    {
+        $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
+        $user=1;
+        $em = $this->getDoctrine()->getManager();
+        $templateName = 'publication_news/back/onePublication.html.twig';
+        $publication = $repo->find($id);
+        $nextPublication = $repo->getPreviousUser($publication->getTitle());
+        $likes = $publication->getLikes();
+        $views = $publication->getVues();
+        $comments = $publication->getComments();
+        $comment = count(array($comments));
+        if($pageWasRefreshed){
+            $likes = $publication->getLikes();
+            $comments = $publication->getComments();
+            $em->flush();
+        }else{
+            $likes = $publication->incrementLikes();
+            $em->flush();
+        }
+        if($user == 1){
+            $templateName = 'publication_news/front/onePublication_FO.html.twig';
+        }
+        return $this->render($templateName, [
+            'publications' => $publication,
+            'publication_title' => $publication->getTitle(),
+            'publication_content' => $publication->getContent(),
+            'publication_image' => $publication->getImage()->getName(),
+            'likes' => $likes,
+            'id' => $id,
+            'comments' =>$publication->getComments(),
+            'views' =>$views,
+            'num' => $comment
+        ]);
     }
 }

@@ -87,7 +87,7 @@
                         {% for pub in publications %}
                         <div class="col-lg-6 col-12 mb-5 mb-lg-0">
                             <div class="news-thumb" data-aos="fade-up">
-                                <a href="{{ path('onePublication', {'id': pub.id,'title':pub.title}) }}" class="news-image-hover news-image-hover-warning">
+                                <a href="{{ path('onePublication', {'id': pub.id,'title':pub.title, 'likes' : pub.likes, 'views': pub.vues}) }}" class="news-image-hover news-image-hover-warning">
                                     <img src="{{ asset('images/') ~ pub.image.name}}" class="img-fluid large-news-image news-image" alt="">
                                 </a>
 
@@ -95,7 +95,7 @@
                                 
                                 <div class="news-text-info">
                                     <h5 class="news-title">
-                                        <a href="news-detail.html" class="news-title-link">{{pub.title}}</a>
+                                        <a href="{{ path('onePublication', {'id': pub.id,'title':pub.title, 'likes' : pub.likes}) }}" class="news-title-link">{{pub.title}}</a>
                                     </h5>
                                     <span class="text-muted">{{pub.date.format('d/m/y')}}</span>
                                 </div>

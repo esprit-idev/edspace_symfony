@@ -77,19 +77,6 @@ class PublicationNewsRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-    public function incrementCount($id)
-    {
-        return $this
-            ->createQueryBuilder('e')
-            ->update()
-            ->set('e.count', 'e.count + 1')
-            ->where('e.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->execute();
-    }
-
     public function CountPublications(){
         $em = $this->getEntityManager();
         $qb= $em
@@ -97,14 +84,53 @@ class PublicationNewsRepository extends ServiceEntityRepository
         return $qb->getSingleScalarResult();
     }
     
+    // public function ListPublicationByCategory($id){
+    //     return $this
+    //     ->createQueryBuilder('p')
+    //     ->join('p.categoryName', 'c')
+    //     ->addSelect('c')
+    //     ->where('c.id = :id')
+    //     ->setParameter('id', $id)
+    //     ->getQuery()
+    //     ->getResult();
+    // }
     public function ListPublicationByCategory($id){
-        return $this
-        ->createQueryBuilder('p')
-        ->join('p.categoryName', 'c')
-        ->addSelect('c')
-        ->where('c.id = :id')
-        ->setParameter('id', $id)
-        ->getQuery()
-        ->getResult();
+        $em = $this->getEntityManager();
+        return $em
+        ->createQuery("SELECT count(p) FROM APP\ENTITY\PublicationNews p JOIN p.categoryName c where c.id:=id")
+        ->setParameter('id',$id);
     }
+
+    public function getPreviousUser($title)
+{
+    return $this->createQueryBuilder('p')
+        ->select('p')
+        ->where('p.title < :title')
+        ->setParameter(':title', $title)
+        // Order by id.
+        ->orderBy('p.id', 'ASC')
+        // Get the first record.
+        ->setFirstResult(0)
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult()
+    ;
+}
+public function CountNewsByCategory($categoryName){
+    return $this->createQueryBuilder('p')
+    ->join('p.categoryName', 'c')
+    ->addSelect('count(c)')
+    ->where('c.categoryName =:categoryName')
+    ->setParameter('categoryName',$categoryName)
+    ->getQuery()
+    ->getResult();
+}
+public function CountComments($id){
+    return $this->createQueryBuilder('p')
+    ->addSelect('count(p.comments)')
+    ->where('p.id =:id')
+    ->setParameter('id',$id)
+    ->getQuery()
+    ->getOneOrNullResult();
+}
 }

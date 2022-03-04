@@ -66,4 +66,11 @@ class EmploiRepository extends ServiceEntityRepository
         ->getResult();
     }
 
+    public function CountEmploi(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(p) FROM APP\ENTITY\Emploi p');
+        return $qb->getSingleScalarResult();
+    }
+
 }

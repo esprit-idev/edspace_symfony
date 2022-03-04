@@ -203,12 +203,33 @@ p {
 
 .social-share-link,
 .social-share-link + span {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(71, 66, 66, 0.65);
 }
-
+.social-share-icons {
+  color:#54B48C
+}
+a {
+  color :#142810;
+}
+.comments li{
+  list-style-type: none;
+  margin-bottom: 4px;
+  padding: 10px;  
+}
+.li-div{
+  border-bottom: 1px solid #a7a7a7;
+  margin-bottom: 4px;
+  padding: 10px;  
+}
+/* profile image */
+.profile-img{
+  width:4%;
+  border-radius: 50%;
+}
 /*---------------------------------------
   SECTION               
 -----------------------------------------*/
+
 .section-padding {
   padding-top: 7rem;
   padding-bottom: 7rem;

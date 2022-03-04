@@ -62,4 +62,10 @@ class CategorieNewsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function CountEmploi(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(p) FROM APP\ENTITY\CategorieNews p');
+        return $qb->getSingleScalarResult();
+    }
 }

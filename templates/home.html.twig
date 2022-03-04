@@ -357,9 +357,8 @@
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                                <p>Bounce Rate</p>
+                                <h3>{{emplois}}</h3>
+                                <p>Offres d'Emploi</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
@@ -372,9 +371,9 @@
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h3>44</h3>
+                                <h3>+1000</h3>
 
-                                <p>User Registrations</p>
+                                <p>Etudiants</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-person-add"></i>
@@ -387,9 +386,9 @@
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3>65</h3>
+                                <h3>12</h3>
 
-                                <p>Unique Visitors</p>
+                                <p>Clubs</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-pie-graph"></i>
@@ -400,8 +399,13 @@
                     <!-- ./col -->
                 </div>
                 <!-- /.row -->
-                <div style="width:400px">
-                {{ render_chart(chart, {'data-controller': 'mychart'}) }}
+                <div class="row"> 
+                    <div style="width:400px">
+                    {{ render_chart(chart, {'data-controller': 'mychart'}) }}
+                    </div>
+                    <div style="width:700px">
+                    {{ render_chart(chartLine, {'data-controller': 'mychart'}) }}
+                    </div>
                 </div>
             </div><!-- /.container-fluid -->
         </section>
