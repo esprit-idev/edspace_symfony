@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -18,22 +19,26 @@ class Document
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("post:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom du dcument est requis")
+     * @Groups("post:read")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("post:read")
      */
     private $date_insert;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("post:read")
      */
     private $proprietaire;
 
@@ -45,6 +50,7 @@ class Document
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("post:read")
      */
     private $type;
 
@@ -52,6 +58,7 @@ class Document
      * @ORM\ManyToOne(targetEntity=Matiere::class, inversedBy="documents")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="Le choix d'une matière est requis")
+     * @Groups("post:read")
      */
     private $matiere;
 
@@ -59,11 +66,13 @@ class Document
      * @ORM\ManyToOne(targetEntity=Niveau::class, inversedBy="documents")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="Le choix d'un niveau est requis")
+     * @Groups("post:read")
      */
     private $niveau;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("post:read")
      */
     private $signalements;
 
@@ -125,7 +134,7 @@ class Document
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(?string $nom): self
     {
         $this->nom = $nom;
 
@@ -165,7 +174,6 @@ class Document
     public function setNiveau(?Niveau $niveau): self
     {
         $this->niveau = $niveau;
-
         return $this;
     }
 
@@ -177,7 +185,6 @@ class Document
     public function setSignalements(int $signalements): self
     {
         $this->signalements = 0;
-
         return $this;
     }
 

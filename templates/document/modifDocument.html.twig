@@ -14,7 +14,27 @@
         <a class="nav-link" href="contact.html">Offres d'emploi</a>
     </li>
     <li class="nav-item active">
-        <a class="nav-link" href={{ path('choixNiveau',{'role':1}) }}>Centre de partage</a>
+        <a href="#" class="nav-link">
+            Centre de partage
+            <i class="fas fa-angle-down right"></i>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href={{ path('choixNiveau',{'role':1}) }} class="nav-link">
+                    <p class="down">Tous les documents</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href={{ path('mesDoc') }} class="nav-link">
+                    <p class="down">Mes documents</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href={{ path('mesFavoris') }} class="nav-link">
+                    <p class="down">Mes favoris</p>
+                </a>
+            </li>
+        </ul>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="event.html">Mon profile</a>
@@ -24,11 +44,6 @@
 
     <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="container">
@@ -40,8 +55,6 @@
                                             Centre de partage
                                         </h1>
                                         <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
-                                        <a href={{ path('mesDoc') }}> Mes documents </a>
-                                        <a href={{ path('mesFavoris') }}> Mes favoris </a>
                                     </div>
                                 </div>
                             </div>
@@ -54,6 +67,11 @@
 {% endblock %}
 
 {% block custom %}
+    <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+    <!-- Flashy depends on jQuery -->
+    <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Load Flashy default JavaScript -->
+    <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
     </br>
     {{ form(f,{'attr':{'novalidate':'novalidate'}}) }}
 {# {{ form_start(f,{'attr':{'novalidate':'novalidate'}}) }}
@@ -64,6 +82,8 @@
     {{ form_end(f) }}#}
 
     </br>
+    {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+
 {% endblock %}
 
 {% block special %}

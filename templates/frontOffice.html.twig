@@ -57,8 +57,28 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Offres d'emploi</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href={# path('choixNiveau',{'role':1}) #}>Centre de partage</a>
+                            <li class="nav-item active">
+                                <a href="#" class="nav-link">
+                                    Centre de partage
+                                    <i class="fas fa-angle-down right"></i>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href={# path('choixNiveau',{'role':1}) #} class="nav-link">
+                                            <p>Liste des documents</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href={# path('mesDoc') #} class="nav-link">
+                                            <p>Mes documents</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href={# path('mesFavoris') #} class="nav-link">
+                                            <p>Favoris</p>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Mon profile</a>

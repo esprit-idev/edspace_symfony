@@ -11,6 +11,11 @@
     </ul>
 {% endblock%}
 {% block cards %}
+    <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+    <!-- Flashy depends on jQuery -->
+    <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Load Flashy default JavaScript -->
+    <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
     <div class="content-wrapper">
     <div class="container-fluid">
     </br>
@@ -36,21 +41,24 @@
                 <th>Fichier</th>
                 <th>Date d'insertion</th>
                 <th>Propriétaire</th>
-                <th>Supprimer</th>
+                <th></th>
+                <th></th>
                 </thead>
                 <tr {% for d in documents %}>
                     <td></td>
                     <td></td>
                     <td>{{ d.niveau.id }}</td>
                     <td>{{ d.matiere.id }}</td>
-                    <td><a href="{{ path('afficheDocument',{'id':d.id})}}">{{ d.nom }}</a> </td>
+                    <td><a href="{{ asset('documents/'~d.nom) }}" type=d.type download>{{ d.nom }}</a> </td>
                     <td>{{ d.dateinsert }}</td>
                     <td>{{ d.proprietaire }}</td>
-                    <td><a href="{{ path("suppDocument",{'id':d.id,'role':0}) }}" class="btn btn-outline-danger" onclick="return confirm('Supprimer ce document')"><i class="fas fa-trash"></i></a>
+                    <td><a target="_blank" href="{{ path("apercuDocument",{'id':d.id}) }}" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                    <td><a href="{{ path("suppDocument",{'id':d.id,'role':0}) }}" class="btn btn-outline-danger" onclick="return confirm('Supprimer ce document?')"><i class="fas fa-trash"></i></a>
                 </tr {% endfor %}>
             </table>
         </center>
         </br>
     </div>
     </div>
+    {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
 {% endblock %}

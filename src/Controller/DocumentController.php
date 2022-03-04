@@ -5,13 +5,17 @@ namespace App\Controller;
 use App\Entity\Document;
 use App\Entity\DocumentFavoris;
 use App\Entity\Matiere;
+use App\Form\DocShareType;
 use App\Form\DocumentType;
 use App\Form\MatiereType;
+use App\Form\ModifDocumentType;
 use App\Repository\DocumentFavorisRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\MatiereRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\UserRepository;
+use MercurySeries\FlashyBundle\FlashyNotifier;
+use PhpParser\Comment\Doc;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -19,8 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Services\MailerServices;
-use \PDO;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DocumentController extends AbstractController
 {
@@ -84,7 +87,6 @@ class DocumentController extends AbstractController
         } else {
             return $this->render("document/listDocumentsEtudiant.html.twig", ['documents' => $documents, 'matieres' => $matieres,'favoris'=>$favoris]);
         }
-
     }
     /*
     /**
@@ -121,7 +123,8 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @Route ("/document/ajoutDocument",name="ajoutDocument")
      */
-    function AjoutDocument(Request $request,NiveauRepository $repository){
+    function AjoutDocument(Request $request,NiveauRepository $repository,FlashyNotifier $notifier) : Response
+    {
         //$niveau=$request->get('niveauKey');
         //$matieres=$repository->FindMatieres($niveau);
         //$niv=$repository->find($niveau);
@@ -143,9 +146,11 @@ class DocumentController extends AbstractController
             $document->setProprietaire("Meriam2"); //get username //to-change
             $document->setFichier(file_get_contents($this->getParameter('document_dir').'/'.$nomFic));
             $document->setType(mime_content_type($this->getParameter('document_dir').'/'.$nomFic));
+            $document->setSignalements(0);
             $em=$this->getDoctrine()->getManager();
             $em->persist($document);
             $em->flush();
+            $notifier->success("Votre document a été ajouté");
             return $this->redirectToRoute('ajoutDocument');
         }
         return $this->render("document/ajoutDocument.html.twig",["f"=>$form->createView()]);
@@ -154,15 +159,50 @@ class DocumentController extends AbstractController
     /**
      * @Route ("/document/modifDocument/{id}",name="modifDocument")
      */
-    function ModifDocument($id,DocumentRepository $repository,Request $request){
+    function ModifDocument($id,DocumentRepository $repository,Request $request,FlashyNotifier $notifier){
         $document=$repository->find($id);
-        $form=$this->createForm(DocumentType::class,$document);
+        $form=$this->createForm(ModifDocumentType::class,$document);
         $form->add("Modifier",SubmitType::class);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $em=$this->getDoctrine()->getManager();
             $em->flush();
+            $notifier->info("Votre document a été modifié");
             return $this->redirectToRoute('choixNiveau',["role"=>1]);
+        }
+        return $this->render("document/modifDocument.html.twig",["f"=>$form->createView()]);
+    }
+
+    /**
+     * @Route ("/document/modifDocumentMine/{id}",name="modifDocumentMine")
+     */
+    function ModifDocumentMine($id,DocumentRepository $repository,Request $request,FlashyNotifier $notifier){
+        $document=$repository->find($id);
+        $form=$this->createForm(ModifDocumentType::class,$document);
+        $form->add("Modifier",SubmitType::class);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $em=$this->getDoctrine()->getManager();
+            $em->flush();
+            $notifier->info("Votre document a été modifié");
+            return $this->redirectToRoute('mesDoc');
+        }
+        return $this->render("document/modifDocument.html.twig",["f"=>$form->createView()]);
+    }
+
+    /**
+     * @Route ("/document/modifDocumentFavoris/{id}",name="modifDocumentFavoris")
+     */
+    function ModifDocumentFavoris($id,DocumentRepository $repository,Request $request,FlashyNotifier $notifier){
+        $document=$repository->find($id);
+        $form=$this->createForm(ModifDocumentType::class,$document);
+        $form->add("Modifier",SubmitType::class);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $em=$this->getDoctrine()->getManager();
+            $em->flush();
+            $notifier->info("Votre document a été modifié");
+            return $this->redirectToRoute('mesFavoris');
         }
         return $this->render("document/modifDocument.html.twig",["f"=>$form->createView()]);
     }
@@ -173,42 +213,66 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/document/suppDocument/{id}/{role}",name="suppDocument")
      */
-    function SuppDocument($id,DocumentRepository $repository,Request $request){
-        $document=$repository->find($id);
-        $em=$this->getDoctrine()->getManager();
-        $em->remove($document);
-        $em->flush();
+    function SuppDocument($id,DocumentRepository $repository,Request $request,FlashyNotifier $notifier){
+        $this->DelDoc($id,$repository);
         $user=$request->get('role');
+        $notifier->error("Votre document a été supprimé!");
         return $this->redirectToRoute('choixNiveau',["role"=>$user]);
     }
 
     /**
      * @param $id
      * @param DocumentRepository $repository
+     * @param FlashyNotifier $notifier
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route ("/document/suppDocumentSiganles/{id}",name="suppDocumentSiganles")
+     * @Route ("/document/suppDocumentMine/{id}",name="suppDocumentMine")
      */
-    function SuppDocumentSignale($id,DocumentRepository $repository,Request $request){
+    function SuppDocumentMine($id,DocumentRepository $repository,FlashyNotifier $notifier){
+        $this->DelDoc($id,$repository);
+        $notifier->error("Votre document a été supprimé!");
+        return $this->redirectToRoute('mesDoc');
+    }
+
+    /**
+     * @param $id
+     * @param DocumentRepository $repository
+     * @param FlashyNotifier $notifier
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route ("/document/suppDocumentFavoris/{id}",name="suppDocumentFavoris")
+     */
+    function SuppDocumentFavoris($id,DocumentRepository $repository,FlashyNotifier $notifier){
+        $this->DelDoc($id,$repository);
+        $notifier->error("Votre document a été supprimé!");
+        return $this->redirectToRoute('mesFavoris');
+    }
+
+    function DelDoc($id,DocumentRepository $repository){
         $document=$repository->find($id);
         $em=$this->getDoctrine()->getManager();
         $em->remove($document);
         $em->flush();
-        $user=$request->get('role');
-        return $this->redirectToRoute('listDocumentsSignales');
     }
 
     /**
-     * @Route("/afficheDocument/{id}", name="afficheDocument")
+     * @Route ("/document/apercuDocument/{id}",name="apercuDocument")
      */
-    function AfficheDocument($id,DocumentRepository $repository)
-    {
-        $document = $repository->find($id);
-        if (!$document) {
-            throw $this->createNotFoundException("File with ID $id does not exist!");
-        }
-        $fic = stream_get_contents($document->getFichier()); //returns file stored as mysql blob
-        $response = new Response($fic, 200, array('Content-Type' => $document->getType()));
-        return $response;
+    function ApercuDocument($id,DocumentRepository $repository,Request $request,FlashyNotifier $notifier){
+        $document=$repository->find($id);
+        return $this->render("document/apercuDocument.html.twig",["document"=>$document]);
+    }
+    /**
+     * @param $id
+     * @param DocumentRepository $repository
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route ("/document/suppDocumentSignales/{id}",name="suppDocumentSignales")
+     */
+    function SuppDocumentSignale(FlashyNotifier $notifier,$id,DocumentRepository $repository,Request $request){
+        $document=$repository->find($id);
+        $em=$this->getDoctrine()->getManager();
+        $em->remove($document);
+        $em->flush();
+        $notifier->error("Le document a été supprimé!");
+        return $this->redirectToRoute('listDocumentsSignales');
     }
 
     /**
@@ -244,11 +308,31 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/document/signalDoc/{id}/{role}",name="signalDoc")
      */
-    function SignlaDoc($id,DocumentRepository $repository,Request $request){
+    function SignalDoc(FlashyNotifier $notifier,$id,DocumentRepository $repository,Request $request){
+        $this->ReportDoc($id,$repository);
+        $user=$request->get('role');
+        $notifier->warning("Le document a été signalé!");
+        return $this->redirectToRoute('choixNiveau',["role"=>$user]);
+    }
+
+    /**
+     * @param FlashyNotifier $notifier
+     * @param $id
+     * @param DocumentRepository $repository
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route ("/document/signalDocFavoris/{id}",name="signalDocFavoris")
+     */
+    function SignalDocFavoris(FlashyNotifier $notifier,$id,DocumentRepository $repository,Request $request){
+        $this->ReportDoc($id,$repository);
+        $user=$request->get('role');
+        $notifier->warning("Le document a été signalé!");
+        return $this->redirectToRoute('mesFavoris');
+    }
+
+    function ReportDoc($id,DocumentRepository $repository){
         $document=$repository->find($id);
         $repository->IncrementCountSignal($document);
-        $user=$request->get('role');
-        return $this->redirectToRoute('choixNiveau',["role"=>$user]);
     }
 
     /**
@@ -269,9 +353,10 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/document/ignorerSignalDoc/{id}",name="ignorerSignalDoc")
      */
-    function IgnorerSignalDoc($id,DocumentRepository $repository,Request $request){
+    function IgnorerSignalDoc(FlashyNotifier $notifier,$id,DocumentRepository $repository,Request $request){
         $document=$repository->find($id);
         $repository->DecrementCountSignal($document);
+        $notifier->info("Signal ignoré!");
         return $this->redirectToRoute('listDocumentsSignales');
     }
 
@@ -283,7 +368,7 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/document/pinDoc/{id}/{role}",name="pinDoc")
      */
-    function PinDocument($id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
+    function PinDocument(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
         $document=$documentRepository->find($id);
         $user=$userRepository->find(2); //to-change
         $docFavoris=new DocumentFavoris();
@@ -292,6 +377,7 @@ class DocumentController extends AbstractController
         $em=$this->getDoctrine()->getManager();
         $em->persist($docFavoris);
         $em->flush();
+        $notifier->primary("Document ajouté aux favoris!");
         $user=$request->get('role');
         return $this->redirectToRoute('choixNiveau',["role"=>$user]);
     }
@@ -305,8 +391,9 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/document/unPinDoc/{id}/{role}",name="unPinDoc")
      */
-    function UnPinDocFromList($id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
+    function UnPinDocFromList(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
         $this->UnPinDoc($id,$documentRepository,$userRepository,$request,$documentFavorisRepository);
+        $notifier->primary("Document supprimé des favoris!");
         $user=$request->get('role');
         return $this->redirectToRoute('choixNiveau',["role"=>$user]);
     }
@@ -319,12 +406,13 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/document/unPinDocFavoris/{id}/{role}",name="unPinDocFavoris")
      */
-    function UnPinDocFromFav($id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
+    function UnPinDocFromFav(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
        $this->UnPinDoc($id,$documentRepository,$userRepository,$request,$documentFavorisRepository);
+        $notifier->primary("Document supprimé des favoris!");
         return $this->redirectToRoute('mesFavoris');
     }
 
-    function UnPinDoc($id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
+    function UnPinDoc($id,DocumentRepository $documentRepository,UserRepository $userRepository,DocumentFavorisRepository $documentFavorisRepository){
         $userid=$userRepository->find(2); //to-change
         $document=$documentRepository->find($id);
         $docInFav=$documentFavorisRepository->findOneBy(array('document'=>$document,'user'=>$userid));
@@ -335,24 +423,73 @@ class DocumentController extends AbstractController
 
     /**
      * @param Request $request
-     * @param MailerServices $mailerServices
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @Route ("/document/shareDoc/{id}",name="shareDoc")
      */
-    public function ShareDoc($id,DocumentRepository $documentRepository, MailerServices $mailerServices) {
-            $document=$documentRepository->find($id);
-            $fic=$document->getFichier();
-            $emailreceptor="meriam.benida@esprit.tn";
-            $subject="this is the subject";
-            $texto="this is the body";
-            $mailerServices->sendEmail($emailreceptor,$subject, $texto);
-        return $this->render(
-            'document/shareDoc.html.twig',
-            array(
-                'destination' => $emailreceptor,
-                'subject' => $subject
-            )
-        );
+    public function ShareDoc(Request $request,$id,DocumentRepository $documentRepository,\Swift_Mailer $mailer,FlashyNotifier $notifier) {
+        $document=$documentRepository->find($id);
+        $docNom=$document->getNom();
+        $form=$this->createForm(DocShareType::class);
+        $form->add("Envoyer",SubmitType::class);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $data=$form->getData();
+           $message=(new \Swift_Message($data['subject']))
+               ->setFrom("meriamesprittest@gmail.com")
+               ->setTo($data['to'])
+               ->setBody($data['body'])
+               ->attach(\Swift_Attachment::fromPath($this->getParameter('document_dir').'/'.$docNom)->setFilename($docNom)               );
+           $mailer->send($message);
+            $notifier->success("Un email a été envoyé");
+           return $this->redirectToRoute('choixNiveau',["role"=>1]);
+        }
+        return $this->render("document/shareDoc.html.twig", ["f"=>$form->createView()]);
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/allDocs",name="allDocs")
+     */
+    function AllDocsJSON(NormalizerInterface $normalizer, DocumentRepository $repository): Response
+    {
+        $documents=$repository->findAll();
+        $jsonContent=$normalizer->normalize($documents,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/showDoc/{id}",name="showDoc")
+     */
+    function showDocJSON($id,NormalizerInterface $normalizer): Response
+    {
+        $em=$this->getDoctrine()->getManager();
+        $document=$em->getRepository(Document::class)->find($id);
+        $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/deleteDoc/{id}",name="deleteDoc")
+     */
+    function DeleteDocJSON(NormalizerInterface $normalizer,$id): Response
+    {
+        $em=$this->getDoctrine()->getManager();
+        $document=$em->getRepository(Document::class)->find($id);
+        $em->remove($document);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
+        return new Response("Document deleted successfully".json_encode($jsonContent));
     }
 
 }
