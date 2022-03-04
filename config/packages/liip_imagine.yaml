@@ -1,0 +1,66 @@
+# Documentation on how to configure the bundle can be found at: https://symfony.com/doc/current/bundles/LiipImagineBundle/basic-usage.html
+liip_imagine:
+    filter_sets:
+
+      # name our first filter set "my_ratio_down_scale_filter"
+      my_ratio_down_scale_filter:
+        filters:
+
+          # use and setup the "scale" filter
+          scale:
+
+            # given 1920x1600px -> output 960x800px (relative down-scale)
+            to: 0.5
+
+      # name our first filter set "my_ratio_up_scale_filter"
+      my_ratio_up_scale_filter:
+        filters:
+
+          # use and setup the "scale" filter
+          scale:
+
+            # given 1920x1600px -> output 5760x3200px (relative up-scale)
+            to: 2
+
+      # name our third filter set "my_dim_down_scale_filter"
+      my_dim_down_scale_filter:
+        filters:
+
+          # use and setup the "scale" filter
+          scale:
+
+            # input 1200x1600px -> output 750x1000px (relative down-scale)
+            dim: [ 800, 1000 ]
+
+      # name our fourth filter set "my_dim_up_scale_filter"
+      my_thumb_filter:
+        filters:
+
+          # use and setup the "thumbnail" filter
+          thumbnail:
+            quality: 85
+
+            # set the thumbnail size to "32x32" pixels
+            size: [ 50, 50 ]
+
+            # crop the input image, if required
+            mode: outbound
+
+      # name our filter set "my_fixed_filter"
+      my_fixed_filter:
+        filters:
+            # use and setup the "fixed" filter
+
+            fixed:
+
+              # set the fixed size to "120x90" pixels
+              width: 800
+              height: 550
+      my_fixed_filter2:
+        filters:
+          # use and setup the "fixed" filter
+          fixed:
+
+            # set the fixed size to "120x90" pixels
+            width: 800
+            height: 300

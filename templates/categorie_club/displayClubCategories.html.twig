@@ -1,0 +1,62 @@
+{% extends "backOffice.html.twig" %}
+{% block leftNavBar %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Catégories Disponibles</a>
+        </li>
+    </ul>
+{% endblock%}
+{% block cards %}
+    </br>
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <TABLE class="table table-striped">
+                <tr>
+                    <th>Catégorie</th>
+                    <th>Supprimer</th>
+                    <th>Modifier</th>
+
+                </tr>
+                <tr> {% for c in categorie %}
+                    <td>{{ c.categorieNom }}</td>
+                    <td>
+                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal3">Supprimer</button>
+                    </td>
+                    <td>
+                        <form ACTION="{{ path("updateClubCategories",{'id':c.id}) }}">
+                            <button class="btn btn-info">Modifier</button>
+                        </form>
+                    </td>
+                    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer la catégorie?</h5>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                                    <form ACTION="{{ path("deleteClubCategories",{'id':c.id}) }}">
+                                        <button class="btn btn-danger" >Supprimer</button>
+                                    </form>                                        </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <tr> {% endfor %}
+
+                </tr>
+            </TABLE>
+            <div align="center"><form ACTION="{{ path("addClubCategories") }}" >
+                    <button class="btn btn-success" >Ajouter</button>
+                </form> </div>
+
+
+        </div>
+
+    </div>
+{% endblock %}
+

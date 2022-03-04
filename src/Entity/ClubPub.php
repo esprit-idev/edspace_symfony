@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use App\Repository\ClubPubRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use function PHPUnit\Framework\isEmpty;
+
 
 /**
  * @ORM\Entity(repositoryClass=ClubPubRepository::class)
@@ -18,25 +22,50 @@ class ClubPub
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime",nullable=true)
      */
     private $pubDate;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=1000, nullable=false)
+     * @Assert\NotBlank(message="Le champ 'Description' ne peut pas etre vide.")
      */
     private $pubDescription;
 
     /**
-     * @ORM\Column(type="blob", nullable=true)
+     * @ORM\Column(type="blob",nullable=true)
+
      */
     private $pubFile;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pubFileName;
+    /**
+     * @ORM\Column(type="string", length=255,nullable=true)
+     */
+    private $typeFichier;
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Club::class, inversedBy="clubPubs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $club;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $ClubImg;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $isPosted;
+
+
+
 
     public function getId(): ?int
     {
@@ -90,4 +119,55 @@ class ClubPub
 
         return $this;
     }
+
+
+
+    public function getTypeFichier(): ?string
+    {
+        return $this->typeFichier;
+    }
+
+    public function setTypeFichier(string $typeFichier): self
+    {
+        $this->typeFichier = $typeFichier;
+        return $this;
+    }
+
+
+    public function getClubImg()
+    {
+        return $this->ClubImg;
+    }
+
+    public function setClubImg($ClubImg)
+    {
+        $this->ClubImg = $ClubImg;
+
+        return $this;
+    }
+
+    public function getPubFileName(): ?string
+    {
+        return $this->pubFileName;
+    }
+
+    public function setPubFileName(?string $pubFileName): self
+    {
+        $this->pubFileName = $pubFileName;
+
+        return $this;
+    }
+
+    public function getIsPosted(): ?int
+    {
+        return $this->isPosted;
+    }
+
+    public function setIsPosted(int $isPosted): self
+    {
+        $this->isPosted = $isPosted;
+
+        return $this;
+    }
+
 }

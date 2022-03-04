@@ -22,7 +22,7 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -35,12 +35,18 @@ class User
     private $email;
 
     /**
+     * @ORM\OneToOne(targetEntity="Club")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    protected $club;
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $password;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     *
      */
     private $isBanned;
 
@@ -50,9 +56,9 @@ class User
     private $banDuration;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="json",nullable=true)
      */
-    private $role;
+    private $roles =[];
 
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
@@ -66,14 +72,24 @@ class User
     private $threads;
 
     /**
+<<<<<<< HEAD
      * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="user", orphanRemoval=true)
      */
     private $documentsFavoris;
+=======
+     * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $reponses;
+>>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
 
     public function __construct()
     {
         $this->threads = new ArrayCollection();
+<<<<<<< HEAD
         $this->documentsFavoris = new ArrayCollection();
+=======
+        $this->reponses = new ArrayCollection();
+>>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
     }
 
     public function getId(): ?int
@@ -81,17 +97,6 @@ class User
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     public function getPrenom(): ?string
     {
@@ -129,6 +134,22 @@ class User
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getClub()
+    {
+        return $this->club;
+    }
+
+    /**
+     * @param mixed $club
+     */
+    public function setClub($club): void
+    {
+        $this->club = $club;
+    }
+
     public function getIsBanned(): ?bool
     {
         return $this->isBanned;
@@ -153,17 +174,39 @@ class User
         return $this;
     }
 
-    public function getRole(): ?bool
+    /**
+     * @return mixed
+     */
+    public function getUsername()
     {
-        return $this->role;
+        return $this->username;
     }
 
-    public function setRole(bool $role): self
+    /**
+     * @param mixed $username
+     */
+    public function setUsername($username): void
     {
-        $this->role = $role;
-
-        return $this;
+        $this->username = $username;
     }
+
+    /**
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param array $roles
+     */
+    public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
+    }
+
+
 
     public function getClasse(): ?Classe
     {
@@ -206,6 +249,7 @@ class User
 
         return $this;
     }
+<<<<<<< HEAD
 
     /**
      * @return Collection<int, DocumentFavoris>
@@ -220,17 +264,45 @@ class User
         if (!$this->documentsFavoris->contains($documentsFavori)) {
             $this->documentsFavoris[] = $documentsFavori;
             $documentsFavori->setUser($this);
+=======
+    public function __toString(){
+        return $this->getEmail();
+    }
+
+    /**
+     * @return Collection|Reponse[]
+     */
+    public function getReponses(): Collection
+    {
+        return $this->reponses;
+    }
+
+    public function addReponse(Reponse $reponse): self
+    {
+        if (!$this->reponses->contains($reponse)) {
+            $this->reponses[] = $reponse;
+            $reponse->setUser($this);
+>>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
         }
 
         return $this;
     }
 
+<<<<<<< HEAD
     public function removeDocumentsFavori(DocumentFavoris $documentsFavori): self
     {
         if ($this->documentsFavoris->removeElement($documentsFavori)) {
             // set the owning side to null (unless already changed)
             if ($documentsFavori->getUser() === $this) {
                 $documentsFavori->setUser(null);
+=======
+    public function removeReponse(Reponse $reponse): self
+    {
+        if ($this->reponses->removeElement($reponse)) {
+            // set the owning side to null (unless already changed)
+            if ($reponse->getUser() === $this) {
+                $reponse->setUser(null);
+>>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
             }
         }
 

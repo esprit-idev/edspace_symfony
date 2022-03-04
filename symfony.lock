@@ -1,4 +1,10 @@
 {
+    "abraham/twitteroauth": {
+        "version": "0.7.4"
+    },
+    "clue/stream-filter": {
+        "version": "v1.6.0"
+    },
     "doctrine/annotations": {
         "version": "1.13",
         "recipe": {
@@ -82,20 +88,79 @@
     "egulias/email-validator": {
         "version": "3.1.2"
     },
+    "facebook/graph-sdk": {
+        "version": "5.7.0"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
+<<<<<<< HEAD
     "jms/metadata": {
         "version": "2.6.1"
+=======
+    "friendsofsymfony/ckeditor-bundle": {
+        "version": "2.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "f5ad42002183a6881962683e6d84bbb25cdfce5d"
+        },
+        "files": [
+            "./config/packages/fos_ckeditor.yaml"
+        ]
+    },
+    "happyr/linkedin-api-client": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "f407e3d9af98d1b391cc671d3c5790b79f1907e6"
+        },
+        "files": [
+            "./config/packages/linkedin.yaml"
+        ]
+    },
+    "imagine/imagine": {
+        "version": "1.2.4"
+    },
+    "knplabs/knp-components": {
+        "version": "v3.4.0"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.8.0"
+>>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
     },
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
+<<<<<<< HEAD
     "lexik/form-filter-bundle": {
         "version": "v5.0.10"
     },
     "mercuryseries/flashy-bundle": {
         "version": "v3.0.0"
+=======
+    "liip/imagine-bundle": {
+        "version": "2.7",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.8",
+            "ref": "d1227d002b70d1a1f941d91845fcd7ac7fbfc929"
+        },
+        "files": [
+            "./config/packages/liip_imagine.yaml",
+            "./config/routes/liip_imagine.yaml"
+        ]
+    },
+    "martin-georgiev/social-post": {
+        "version": "v1.0"
+    },
+    "martin-georgiev/social-post-bundle": {
+        "version": "v3.1.0"
+>>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
     },
     "monolog/monolog": {
         "version": "1.26.1"
@@ -111,6 +176,24 @@
     },
     "phar-io/version": {
         "version": "3.1.1"
+    },
+    "php-http/curl-client": {
+        "version": "v1.7.1"
+    },
+    "php-http/discovery": {
+        "version": "1.14.1"
+    },
+    "php-http/httplug": {
+        "version": "v1.1.0"
+    },
+    "php-http/message": {
+        "version": "1.13.0"
+    },
+    "php-http/message-factory": {
+        "version": "v1.0.2"
+    },
+    "php-http/promise": {
+        "version": "1.1.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
@@ -158,6 +241,9 @@
     },
     "psr/container": {
         "version": "1.1.2"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
     },
     "psr/link": {
         "version": "1.0.0"

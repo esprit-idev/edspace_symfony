@@ -19,32 +19,62 @@ class ClubPubRepository extends ServiceEntityRepository
         parent::__construct($registry, ClubPub::class);
     }
 
+
     // /**
     //  * @return ClubPub[] Returns an array of ClubPub objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function find_all_approved_pub_ordredByDate($idclub)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+            ->where('c.club = :id')
+            ->setParameter('id', $idclub)
+            ->andwhere('c.isPosted = 1')
+            ->orderBy('c.pubDate','DESC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?ClubPub
+    public function find_all_hanging_pub_ordredByDate($idclub)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where('c.club = :id')
+            ->setParameter('id', $idclub)
+            ->andwhere('c.isPosted = 0')
+            ->orderBy('c.pubDate','DESC')
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
+            ;
+    }
+    public function find_all_refused_pub_ordredByDate($idclub)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.club = :id')
+            ->setParameter('id', $idclub)
+            ->andwhere('c.isPosted = -1')
+            ->orderBy('c.pubDate','DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+
+    public function find_all_pub_between_dates($minDate,$maxDate,$idclub)
+    {
+
+        return $this->createQueryBuilder('c')
+            ->where('c.club = :id')
+            ->setParameter('id', $idclub)
+            ->andwhere('c.pubDate >= :date')
+            ->setParameter('date', $minDate)
+            ->andWhere('c.pubDate <= :date2')
+            ->setParameter('date2', $maxDate)
+            ->andwhere('c.isPosted = 1')
+            ->orderBy('c.pubDate','DESC')
+            ->getQuery()
+            ->getResult()
         ;
     }
-    */
+
 }

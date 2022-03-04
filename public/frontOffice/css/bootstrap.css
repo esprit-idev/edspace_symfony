@@ -6510,6 +6510,10 @@ a.close.disabled {
 .bg-primary {
   background-color: #007bff !important;
 }
+.bg-lightgreen {
+  background-color: #99F393 !important;
+}
+
 
 a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,
@@ -6570,8 +6574,18 @@ button.bg-danger:focus {
 .bg-light {
   background-color: #f8f9fa !important;
 }
+.bg-custom_morelightsilver {
+  background-color: #F0F0F0 !important;
+}
+.bg-custom_lightsilver {
+  background-color: #C0C0C0 !important;
+}
+.silv_bg{
+  background-color: #D3D3D3 !important;
+}
+D3D3D3
 
-a.bg-light:hover, a.bg-light:focus,
+ a.bg-light:hover, a.bg-light:focus,
 button.bg-light:hover,
 button.bg-light:focus {
   background-color: #dae0e5 !important;

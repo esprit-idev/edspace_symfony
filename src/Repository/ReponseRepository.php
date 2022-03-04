@@ -47,4 +47,17 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findDisplay(){
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT t
+            FROM App\Entity\Reponse t
+            WHERE t.display = :t
+            '
+        )->setParameter('t', '0');
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
 }

@@ -47,4 +47,42 @@ class ThreadRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findThreadByName(string $query){
+        $qb = $this->createQueryBuilder('p');
+        $qb ->where(
+            $qb->expr()->andX(
+                $qb->expr()->like('p.question',':query')
+            ),
+            
+        )
+        ->setParameter('query','%'.$query.'%');
+        return $qb ->getQuery()
+        ->getResult();
+    }
+    public function getReponses(int $id){
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT r
+            FROM App\Entity\Reponse r
+            WHERE r.thread = :id and r.display = 0
+            '
+        )->setParameter('id', $id);
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+    public function findDisplay(){
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT t
+            FROM App\Entity\Thread t
+            WHERE t.display = :t
+            '
+        )->setParameter('t', '0');
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
 }

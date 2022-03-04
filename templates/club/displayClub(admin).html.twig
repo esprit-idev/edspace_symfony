@@ -1,0 +1,90 @@
+{% extends "backOffice.html.twig" %}
+{% block leftNavBar %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="index3.html" class="nav-link">Les Clubs Universitaires</a>
+        </li>
+    </ul>
+{% endblock%}
+{% block cards %}
+    </br>
+
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            </br>
+            <div align="left">
+                <form ACTION="{{ path("addClub") }}">
+                    <button class="btn btn-success">Créer un club</button>
+                </form>
+            </div>
+            </br>
+
+
+            <TABLE class="table table-striped fixed">
+
+                <tr>
+                    <th width="100px">Nom du club</th>
+                    <th width="180px">Email responsable</th>
+                    <th >Description</th>
+                    <th width="130px">
+                        <a href="{{ path('displayClubCategories') }}">Catégorie</a></th>
+                    <th width="130px">Supprimer</th>
+                    <th width="130px">Modifier</th>
+                    <th width="130px">Consulter</th>
+
+                </tr>
+                <tr> {% for c in clubs %}
+                    <td><a href="{{ path('displayPubClub',{'id':c.id}) }}" class="text text-dark font-weight-bold">{{ c.clubNom }} </a></td>
+                    <td>{{ c.clubResponsable.email }}</td>
+                    <td> {% autoescape %}
+                        {{ c.clubDescription|raw }} {# var won't be escaped #}
+                        {% endautoescape %}</td>
+                    <td>{{ c.clubCategorie.categorieNom }}</td>
+                    <td>
+                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal2{{ c.id }}">Supprimer</button>
+                    </td>
+                    <td>
+                        <form ACTION="{{ path("updateClub",{'id':c.id}) }}">
+                            <button class="btn btn-info">Modifier</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form ACTION="{{ path('displayPubClub',{'id':c.id}) }}">
+                            <button class="btn btn-success">Consulter</button>
+                        </form>
+                    </td>
+                    <div class="modal fade" id="exampleModal2{{ c.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer le club?</h5>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                                    <form ACTION="{{ path("deleteClub",{'id':c.id}) }}">
+                                        <button class="btn btn-danger" >Supprimer</button>
+                                    </form>                                        </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <tr> {% endfor %}
+
+                </tr>
+            </TABLE>
+
+        </div>
+    </div>
+    <style>
+        table.fixed { table-layout: fixed; }
+        th,td { word-wrap: break-word; }
+
+    </style>
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
