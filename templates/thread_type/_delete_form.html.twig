@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('thread_type_display', {'id': thread_type.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_token" value="{{ thread_type.id }}">
+    <button class="btn">Delete</button>
+</form>

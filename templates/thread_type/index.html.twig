@@ -6,15 +6,13 @@
     <title>AdminLTE 3 | Dashboard</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet"
-          href="{{ asset('backOffice/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backOffice/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- JQVMap -->
@@ -33,23 +31,22 @@
 
     <!-- Preloader -->
     <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="{{ asset('backOffice/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
-             height="60" width="60">
+        <img class="animation__shake" src="{{ asset('backOffice/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo" height="60" width="60">
     </div>
 
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
         {% block leftNavBar %}
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Home</a>
-                </li>
-            </ul>
-        {% endblock %}
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="#" class="nav-link">Home</a>
+            </li>
+        </ul>
+        {% endblock%}
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
@@ -61,8 +58,7 @@
                 <div class="navbar-search-block">
                     <form class="form-inline">
                         <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search"
-                                   aria-label="Search">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-navbar" type="submit">
                                     <i class="fas fa-search"></i>
@@ -86,8 +82,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 mr-3 img-circle">
+                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     Brad Diesel
@@ -103,8 +98,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user8-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 img-circle mr-3">
+                            <img src="{{ asset('backOffice/dist/img/user8-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     John Pierce
@@ -120,8 +114,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 img-circle mr-3">
+                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     Brad Diesel2
@@ -137,7 +130,6 @@
                     <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
                 </div>
             </li>
-            {% block notif %}
             <!-- Notifications Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
@@ -161,7 +153,6 @@
                     <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                 </div>
             </li>
-            {% endblock %}
             <li class="nav-item">
                 <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                     <i class="fas fa-expand-arrows-alt"></i>
@@ -184,8 +175,7 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="{{ asset('backOffice/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
-                         alt="User Image">
+                    <img src="{{ asset('backOffice/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
                     <a href="#" class="d-block">Nom de l'agent</a>
@@ -193,112 +183,78 @@
             </div>
             <!-- Sidebar Menu -->
             {% block sideBarMenu %}
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-                             with font-awesome or any other icon font library -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
-                                <p>
-                                    Tableau d'affichage
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-header">GESTION</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-users mr-2"></i>
-                                <p>
-                                    Etudiants
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-graduation-cap"></i>
-                                <p>
-                                    Niveaux d'études
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href= {{ path('ajoutNiveau') }}  class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i><p>Niveaux</p>
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <!-- Add icons to the links using the .nav-icon class
+                         with font-awesome or any other icon font library -->
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                Tableau d'affichage
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-header">GESTION</li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-users mr-2"></i>
+                            <p>
+                                Etudiants
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-graduation-cap"></i>
+                            <p>
+                                Niveaux d'études
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href={# {{ path('ajoutNiveau') }} #} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Niveaux</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href={# {{ path('classes') }} #} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Classes</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href={# {{ path('ajoutMatiere') }} #} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Matières</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-shapes"></i>
+                            <p>
+                                Clubs universitaires
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href={# {{ path('displayClub') }} #} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>La liste des clubs</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href={# {{ path('displayClubCategories') }} #} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Catégories disponibles</p>
+                                </a>
+                            </li>
 
-<<<<<<< HEAD
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href={# {{ path('classes') }} #} class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i><p>Classes</p>
-
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href= {{ path('ajoutMatiere') }}  class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i><p>Matières</p>
-
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-shapes"></i>
-                                <p>
-                                    Clubs universitaires
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href= {{ path('displayClub') }}  class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>La liste des clubs</p>
-
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href= {{ path('displayClubCategories') }}  class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Catégories disponibles</p>
-
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-bullhorn"></i>
-                                <p>
-                                    Propositions d'emploi
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-header">SUIVI</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-comments"></i>
-                                <p>
-                                    Forum
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href={# {{ path('listDocuments') }} #} class="nav-link">
-                                <i class="nav-icon far fa-folder"></i>
-                                <p>
-                                    Centre de partage
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-=======
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -372,7 +328,6 @@
                     </li>
                 </ul>
             </nav>
->>>>>>> bc0aec16ba9f5b6d0050dc17c4f1dd46fc69c349
             {% endblock %}
             <!-- /.sidebar-menu -->
         </div>
@@ -381,97 +336,6 @@
 
     <!-- Content Wrapper. Contains page content -->
     {% block cards %}
-<<<<<<< HEAD
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid">
-                    <!-- Small boxes (Stat box) -->
-                    <div class="row">
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-info">
-                                <div class="inner">
-                                    <h3>150</h3>
-
-                                    <p>New Orders</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-bag"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-success">
-                                <div class="inner">
-                                    <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                                    <p>Bounce Rate</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-stats-bars"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-warning">
-                                <div class="inner">
-                                    <h3>44</h3>
-
-                                    <p>User Registrations</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-person-add"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-danger">
-                                <div class="inner">
-                                    <h3>65</h3>
-
-                                    <p>Unique Visitors</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-pie-graph"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                    </div>
-                    <!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
-=======
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <div class="content-header">
@@ -484,13 +348,62 @@
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
                             <li class="breadcrumb-item active">Dashboard v1</li>
-                            <li class="breadcrumb-item active">Threads</li>
+                            <li class="breadcrumb-item active">Topic</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
->>>>>>> bc0aec16ba9f5b6d0050dc17c4f1dd46fc69c349
         </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+        
+
+{% block body %}
+<center>
+<h2> List of topics </h2>
+</center>
+   <div style="padding-top:-20px;padding-left:1120px">
+<a href="{{ path('thread_type_new') }}" ><svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-cloud-plus" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+  <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+</svg></a>
+</div>
+<br>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                
+                <th>Topic</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for thread_type in thread_types %}
+            <tr>
+                
+                <td>{{ thread_type.content }}</td>
+                <td>
+                <a href="{{ path('thread_type_edit', {'id': thread_type.id}) }}" class="btn btn-outline-info">edit</a>
+                    <a href="{{ path('thread_type_display', {'id': thread_type.id}) }}" class="btn btn-outline-danger">delete</a>
+                    
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    
+{% endblock %}
+        </section>
+        <!-- /.content -->
+    </div>
     {% endblock %}
 
     {% block custom %}
@@ -499,13 +412,13 @@
 
     <!-- /.content-wrapper -->
     {% block footer %}
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-            All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.2.0
-            </div>
-        </footer>
+    <footer class="main-footer">
+        <strong>Copyright &copy; 2022 <a href="https://adminlte.io">EdSpace</a>.</strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+            <b>Version</b> 3.2.0
+        </div>
+    </footer>
     {% endblock %}
 
     <!-- Control Sidebar -->
@@ -514,6 +427,10 @@
     </aside>
     <!-- /.control-sidebar -->
 </div>
+
+
+
+
 <!-- ./wrapper -->
 
 <!-- jQuery -->
@@ -547,6 +464,7 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('backOffice/dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
+<script src="{{ asset('backOffice/dist/js/demo.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backOffice/dist/js/pages/dashboard.js') }}"></script>
 </body>

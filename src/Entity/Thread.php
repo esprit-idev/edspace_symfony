@@ -6,7 +6,7 @@ use App\Repository\ThreadRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=ThreadRepository::class)
  */
@@ -21,6 +21,7 @@ class Thread
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $question;
 
@@ -56,9 +57,17 @@ class Thread
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $Verified;
+
+    
+
     public function __construct()
     {
         $this->reponses = new ArrayCollection();
+        $this->ThreadReact = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,4 +176,22 @@ class Thread
 
         return $this;
     }
+    public function __toString()
+    {
+        return $this->getQuestion();
+    }
+
+    public function getVerified(): ?bool
+    {
+        return $this->Verified;
+    }
+
+    public function setVerified(bool $Verified): self
+    {
+        $this->Verified = $Verified;
+
+        return $this;
+    }
+
+   
 }
