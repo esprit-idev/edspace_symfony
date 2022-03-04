@@ -94,10 +94,10 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
-<<<<<<< HEAD
+
     "jms/metadata": {
         "version": "2.6.1"
-=======
+        },
     "friendsofsymfony/ckeditor-bundle": {
         "version": "2.4",
         "recipe": {
@@ -130,18 +130,16 @@
     },
     "knplabs/knp-paginator-bundle": {
         "version": "v5.8.0"
->>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
     },
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
-<<<<<<< HEAD
     "lexik/form-filter-bundle": {
         "version": "v5.0.10"
     },
     "mercuryseries/flashy-bundle": {
         "version": "v3.0.0"
-=======
+        },
     "liip/imagine-bundle": {
         "version": "2.7",
         "recipe": {
@@ -160,7 +158,6 @@
     },
     "martin-georgiev/social-post-bundle": {
         "version": "v3.1.0"
->>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
     },
     "monolog/monolog": {
         "version": "1.26.1"

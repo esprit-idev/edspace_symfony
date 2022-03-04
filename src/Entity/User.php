@@ -72,24 +72,19 @@ class User
     private $threads;
 
     /**
-<<<<<<< HEAD
      * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="user", orphanRemoval=true)
      */
     private $documentsFavoris;
-=======
+    /**
      * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="user", orphanRemoval=true)
      */
     private $reponses;
->>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
 
     public function __construct()
     {
         $this->threads = new ArrayCollection();
-<<<<<<< HEAD
         $this->documentsFavoris = new ArrayCollection();
-=======
         $this->reponses = new ArrayCollection();
->>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
     }
 
     public function getId(): ?int
@@ -249,7 +244,6 @@ class User
 
         return $this;
     }
-<<<<<<< HEAD
 
     /**
      * @return Collection<int, DocumentFavoris>
@@ -264,7 +258,8 @@ class User
         if (!$this->documentsFavoris->contains($documentsFavori)) {
             $this->documentsFavoris[] = $documentsFavori;
             $documentsFavori->setUser($this);
-=======
+        }
+    }
     public function __toString(){
         return $this->getEmail();
     }
@@ -282,27 +277,27 @@ class User
         if (!$this->reponses->contains($reponse)) {
             $this->reponses[] = $reponse;
             $reponse->setUser($this);
->>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
         }
 
         return $this;
     }
 
-<<<<<<< HEAD
     public function removeDocumentsFavori(DocumentFavoris $documentsFavori): self
     {
         if ($this->documentsFavoris->removeElement($documentsFavori)) {
             // set the owning side to null (unless already changed)
             if ($documentsFavori->getUser() === $this) {
                 $documentsFavori->setUser(null);
-=======
+            }
+        }
+        return $this;
+    }
     public function removeReponse(Reponse $reponse): self
     {
         if ($this->reponses->removeElement($reponse)) {
             // set the owning side to null (unless already changed)
             if ($reponse->getUser() === $this) {
                 $reponse->setUser(null);
->>>>>>> 6dfa360597e8c07db1995234c0c76df4b4e453cc
             }
         }
 
