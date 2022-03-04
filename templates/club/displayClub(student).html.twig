@@ -6,9 +6,9 @@
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg custom_nav-container ">
                 <a class="navbar-brand" {# href="index.html" #}>
-                    <img src="{{ asset('logo.png') }}"
-                         width="300px">
-                    <span></span>
+                    <h3>
+                        EdSpace
+                    </h3>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -84,47 +84,99 @@
 {% endblock %}
 {% block special %}
     </br>
-    <div class="container">
+    <div class="container leftitem" align="center">
+        <form method="post" action="{{ path('displayClub') }}">
+            <select name="catego" id="catego" class="border">
+                <option disabled selected> -- Catégories --</option>
+                {% for cat in categories %}
+                    <option>{{ cat.categorieNom }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-secondary">Afficher les clubs</button>
+        </form>
+
+    </div>
+
+    </br>
+    <div class=" rightitem">
 
         {% set i = 1 %}
+        <div class="row">
+            {% if clubs is empty %}
+                <p ">Pas de clubs dans cette categorie.
+                </p>
+            {% else %}
+            {% for c in clubs %}
+                <div class="col-sm-6">
+                    <div id="accordion">
+                        <div class="card ">
+                            <div class="card-header btn bg-secondary" id="heading{{ i }}">
+                                <h2 class="mb-0" align="center">
+                                    <button class="btn text-white font-weight-bolder  " data-toggle="collapse"
+                                            data-target="#collapse{{ i }}" aria-expanded="true"
+                                            aria-controls="collapse{{ i }}">
+                                        {{ c.clubNom }}
+                                    </button>
+                                </h2>
+                            </div>
 
-        {% for c in clubs %}
+                            <div id="collapse{{ i }}" class="collapse" aria-labelledby="heading{{ i }}"
+                                 data-parent="#accordion" align="center">
+                                </br>
+                                <img width="200px" height="200px" align="center" class="rounded-circle"
+                                     src="{{ asset('ClubPictures/' ~ c.clubPic) }}">
+                                </br>
+                                </br>
 
-        <div id="accordion">
-            <div class="card ">
-                <div class="card-header btn bg-info" id="heading{{ i }}">
-                    <h2 class="mb-0" align="center" >
-                        <button class="btn text-white font-weight-bolder  " data-toggle="collapse" data-target="#collapse{{i}}" aria-expanded="true" aria-controls="collapse{{ i }}">
-                            {{ c.clubNom }}
-                        </button>
-                    </h2>
-                </div>
-
-                <div id="collapse{{ i }}" class="collapse hide" aria-labelledby="heading{{i}}" data-parent="#accordion" align="center">
-
-                    <img width="250px" align="center"
-                         src={{ asset('club.png') }}>
-                    <h5 align="center">Catégorie : {{ c.clubCategorie.categorieNom }}</h5>
-                    <div class="card-body">
-                        {{ c.clubDescription }}
+                                <h5 align="center">Catégorie : {{ c.clubCategorie.categorieNom }}</h5>
+                                <div class="card-body">
+                                    {% autoescape %}
+                                        {{ c.clubDescription|raw }} {# var won't be escaped #}
+                                    {% endautoescape %}
+                                </div>
+                                <h5> Contact:</h5>
+                                <div>
+                                    {{ c.clubResponsable.email }}
+                                </div>
+                                <h5>
+                                    <button class=" btn btn-success"><a href="{{ path('displayPubClub',{'id':c.id}) }} "
+                                                                        class="text text-white">Consulter</a></button>
+                                </h5>
+                            </div>
+                        </div>
                     </div>
-                    <h5>
-                        <button class=" btn btn-success"> <a href="{{ path('displayPubClub',{'id':c.id,'idpub':c.id}) }}" class="text text-white">Consulter</a> </button>
-                    </h5>
+                    {% set i = i + 1 %}
                 </div>
-            </div>
+
+            {% endfor %}
+            {% endif %}
         </div>
-            {% set i = i + 1 %}
-        {% endfor %}
+
     </div>
     </br>
 
+    <style>
+        .leftitem
+        {
+            float: left;
+            width: 450px;
+        }
+
+        .rightitem
+        {
+            margin-left: 170px;
+            margin-right: 170px;
+
+        }
+    </style>
 {% endblock %}
 {% block about %}
 {% endblock %}
 {% block course %}
 {% endblock %}
 {% block login %}
+
+
 {% endblock %}
 {% block event %}
 

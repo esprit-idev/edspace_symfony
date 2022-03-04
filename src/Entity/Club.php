@@ -48,10 +48,17 @@ class Club
     private $clubPubs;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class)
+     * @ORM\OneToOne(targetEntity=User::class,inversedBy="club")
+     * @ORM\JoinColumn(nullable=false,onDelete="CASCADE")
      * @Assert\NotBlank(message="Le champ 'Email du responsable' ne peut pas etre vide.")
      */
     private $clubResponsable;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ajoutez une image s'il vous plaît.")
+     */
+    private $ClubPic;
 
     public function __construct()
     {
@@ -142,6 +149,18 @@ class Club
     public function setClubResponsable(?User $clubResponsable): self
     {
         $this->clubResponsable = $clubResponsable;
+
+        return $this;
+    }
+
+    public function getClubPic()
+    {
+        return $this->ClubPic;
+    }
+
+    public function setClubPic($ClubPic)
+    {
+        $this->ClubPic = $ClubPic;
 
         return $this;
     }

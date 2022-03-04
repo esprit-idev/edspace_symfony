@@ -9,8 +9,11 @@ use App\Repository\ClubRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,29 +32,28 @@ class ClubType extends AbstractType
                 ]
 
             ])
-            ->add('clubResponsable', EntityType::class, [
+         /*   ->add('clubResponsable', EntityType::class, [
                 'label' => 'Email du responsable ',
                 'attr' => [
                     'placeholder' => "ex@ex.com",
                     'class' => 'name'
                 ],
                 'class' => User::class,
-
                 'placeholder' => 'Choisissez unrespo',
                 'query_builder' => function(UserRepository $repository) {
 
                     $qb = $repository->createQueryBuilder('u');
 
                     return $qb
-                        // find all users where 'deleted' is NOT '1'
-                        ->where('u.role != 1')
-                        ;
+                        ->where('u.roles NOT LIKE :roles')
+                        ->setParameter('roles','%"'.'ROLE_RESPONSABLE'.'"%');
+                    // find all users where 'role' is NOT '['ROLE_RESPONSABLE']'
                 },
                 'choice_label' => 'email',
 
 
-            ])
-            ->add('clubDescription', TextareaType::class, [
+            ])*/
+            ->add('clubDescription', CKEditorType::class, [
                 'label' => 'Description ',
                 'attr' => [
                     'placeholder' => 'Description du club',
@@ -64,6 +66,9 @@ class ClubType extends AbstractType
                 'choice_label' => 'categorieNom',
                 'placeholder' => 'Choisissez une catégorie',
 
+            ])
+            ->add('clubPic', HiddenType::class, [
+                'data' => "defaultProfilePicture.png"
             ]);
 
     }

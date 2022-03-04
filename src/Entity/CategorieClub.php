@@ -24,6 +24,7 @@ class CategorieClub
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champ 'Catégorie' ne peut pas etre vide.")
+
      */
     private $categorieNom;
 

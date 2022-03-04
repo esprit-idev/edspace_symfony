@@ -39,10 +39,12 @@
                 <tr> {% for c in clubs %}
                     <td><a href="{{ path('displayPubClub',{'id':c.id}) }}" class="text text-dark font-weight-bold">{{ c.clubNom }} </a></td>
                     <td>{{ c.clubResponsable.email }}</td>
-                    <td>{{ c.clubDescription }}</td>
+                    <td> {% autoescape %}
+                        {{ c.clubDescription|raw }} {# var won't be escaped #}
+                        {% endautoescape %}</td>
                     <td>{{ c.clubCategorie.categorieNom }}</td>
                     <td>
-                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal2">Supprimer</button>
+                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal2{{ c.id }}">Supprimer</button>
                     </td>
                     <td>
                         <form ACTION="{{ path("updateClub",{'id':c.id}) }}">
@@ -54,7 +56,7 @@
                             <button class="btn btn-success">Consulter</button>
                         </form>
                     </td>
-                    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal2{{ c.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
 
@@ -82,5 +84,7 @@
         th,td { word-wrap: break-word; }
 
     </style>
+{% endblock %}
+{% block footer %}
 {% endblock %}
 
