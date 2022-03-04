@@ -3,14 +3,22 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Entity\Classe;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(
+ *     fields={"email"},
+ *  message="l'email que vous avez indiqué est déjà utlisé "
+ * )
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -22,7 +30,7 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -31,13 +39,16 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email()
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="8",minMessage="votre mot de passe doit faire minimum 8 caractéres")
      */
     private $password;
+
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -49,10 +60,6 @@ class User
      */
     private $banDuration;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $role;
 
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
@@ -65,6 +72,23 @@ class User
      */
     private $threads;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $roles = [];
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $activation_token;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reset_token;
+
+
+
     public function __construct()
     {
         $this->threads = new ArrayCollection();
@@ -75,14 +99,14 @@ class User
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getUsername(): ?string
     {
-        return $this->name;
+        return $this->username;
     }
 
-    public function setName(string $name): self
+    public function setUsername(string $username): self
     {
-        $this->name = $name;
+        $this->username = $username;
 
         return $this;
     }
@@ -147,17 +171,7 @@ class User
         return $this;
     }
 
-    public function getRole(): ?bool
-    {
-        return $this->role;
-    }
 
-    public function setRole(bool $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
 
     public function getClasse(): ?Classe
     {
@@ -200,4 +214,51 @@ class User
 
         return $this;
     }
+    public function getRoles(): array
+    {
+        $roles= $this->roles;
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function getActivationToken(): ?string
+    {
+        return $this->activation_token;
+    }
+
+    public function setActivationToken(?string $activation_token): self
+    {
+        $this->activation_token = $activation_token;
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->reset_token;
+    }
+
+    public function setResetToken(?string $reset_token): self
+    {
+        $this->reset_token = $reset_token;
+
+        return $this;
+    }
+
 }

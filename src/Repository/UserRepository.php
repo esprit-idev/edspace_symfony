@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -47,4 +48,40 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    ///**
+   //  * @throws NonUniqueResultException
+    // */
+    /*
+    public function findOneByEmail($email)
+    {
+
+            return $this->createQueryBuilder('u')
+                ->andWhere('u.email = :email ')
+                ->setParameter('email', $email)
+                ->getQuery()
+                ->getOneOrNullResult();
+
+    } */
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByEmail($email)
+    {
+        $q = $this->createQueryBuilder('c')
+            ->where('c.email = :email')
+
+            ->setParameter('email', $email)
+
+            ->getQuery();
+        return $q->getOneOrNullResult(); // will return only one result or null 'getResult' will return a collection
+    }
+    public function findByRole($role) {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('u')
+            ->from($this->_entityName, 'u')
+            ->where('u.roles LIKE :roles')
+            ->setParameter('roles', '%"' . $role . '"%');
+        return $qb->getQuery()->getResult();
+    }
 }

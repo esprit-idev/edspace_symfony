@@ -1,0 +1,88 @@
+
+
+
+
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('frontOffice/css/bootstrap.css') }}">
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="{{ asset('frontOffice/images/edspace.png') }}" class="img-fluid"
+                     alt="Sample image">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+
+                    {% for message in app.flashes('message') %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('warning') %}
+                        <div class="alert alert-warning" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    <form method="post">
+                        {% if error %}
+                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+
+                        {% if app.user %}
+                            <div class="mb-3">
+                                You are logged in as {{ app.user.username }}, <a href={# "{{ path('app_logout') }}" #}>Logout</a>
+                            </div>
+                        {% endif %}
+                    <div class="divider d-flex align-items-center my-4">
+                        <p class="text-center fw-bold mx-3 mb-0">Welcome to your EdSpace</p>
+                    </div>
+
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" value="{{ last_Username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                    </div>
+                    <!-- Password input -->
+                    <div class="form-outline mb-3">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Checkbox -->
+                        <div class="form-check mb-0">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
+                            <label class="form-check-label" for="form2Example3">
+                                Remember me
+                            </label>
+                        </div>
+                        <a href="{{ path('forgot-password') }}" class="text-body">Forgot password?</a>
+                    </div>
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <button type="submit" class="btn btn-primary btn-lg"
+                                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+        <!-- Copyright -->
+
+        <!-- Copyright -->
+
+        <!-- Right -->
+
+        <!-- Right -->
+    </div>
+</section>
+{% endblock %}
