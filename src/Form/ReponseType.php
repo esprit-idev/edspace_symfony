@@ -13,7 +13,7 @@ class ReponseType extends AbstractType
     {
         $builder
             ->add('reply')
-            ->add('user')
+            
         ;
     }
 

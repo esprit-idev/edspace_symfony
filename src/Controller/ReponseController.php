@@ -6,10 +6,12 @@ use App\Entity\Reponse;
 use App\Form\ReponseType;
 use App\Repository\ReponseRepository;
 use App\Repository\ThreadRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -30,17 +32,20 @@ class ReponseController extends AbstractController
     /**
      * @Route("/new/{id}", name="reponse_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,ThreadRepository $threadRepository): Response
+    public function new(UserRepository $userRepository,Request $request, EntityManagerInterface $entityManager,ThreadRepository $threadRepository,SessionInterface $session): Response
     {
         $reponse = new Reponse();
         $form = $this->createForm(ReponseType::class, $reponse);
         $form->handleRequest($request);
         $thread_id = $request->get('id');
+        $user =$userRepository->find($session->get('id'));
+        
         $thread = $threadRepository->find($thread_id);
         if ($form->isSubmitted() && $form->isValid()) {
             $reponse->setReplyDate(new \DateTime());
             $reponse->setDisplay(0);
             $reponse->setThread($thread);
+            $reponse->setUser($user);
             $entityManager->persist($reponse);
             $entityManager->flush();
 

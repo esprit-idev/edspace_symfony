@@ -96,5 +96,16 @@ class ThreadTypeController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/search/{id}", name="threadtype_search", methods={"GET", "POST"})
+     */
+    public function search(ThreadTypeRepository $threadTypeRepository,$id){
+        $threadType= $threadTypeRepository->find($id);
+        $threads = $threadTypeRepository->findThreads($id);
+        return $this->render('thread_type/showThreads.html.twig', [
+            'threadType' => $threadType,
+            'threads' => $threads,
+        ]);
+    }
     
 }

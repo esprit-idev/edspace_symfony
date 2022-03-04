@@ -60,4 +60,15 @@ class ThreadTypeRepository extends ServiceEntityRepository
         // returns an array of Product objects
         return $query->getResult();
     }
+    public function findThreads($id){
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT t
+            FROM App\Entity\Thread t
+            WHERE t.threadType = :t and t.display = 0
+            '
+        )->setParameter('t', $id);
+        return $query->getResult();
+    }
 }

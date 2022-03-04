@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220216215507 extends AbstractMigration
+final class Version20220301234622 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -31,9 +31,9 @@ final class Version20220216215507 extends AbstractMigration
         $this->addSql('CREATE TABLE message (id INT AUTO_INCREMENT NOT NULL, classe_id INT DEFAULT NULL, content VARCHAR(255) NOT NULL, post_date DATE NOT NULL, INDEX IDX_B6BD307F8F5EA509 (classe_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE niveau (id VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE publication_news (id INT AUTO_INCREMENT NOT NULL, categorie_news_id INT NOT NULL, content VARCHAR(255) DEFAULT NULL, owner VARCHAR(255) NOT NULL, date DATE NOT NULL, INDEX IDX_162B189DEA27F702 (categorie_news_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE reponse (id INT AUTO_INCREMENT NOT NULL, thread_id INT NOT NULL, reply VARCHAR(255) NOT NULL, reply_date DATETIME NOT NULL, display TINYINT(1) NOT NULL, INDEX IDX_5FB6DEC7E2904019 (thread_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE thread (id INT AUTO_INCREMENT NOT NULL, thread_type_id INT NOT NULL, user_id INT NOT NULL, question VARCHAR(255) NOT NULL, nb_likes INT DEFAULT NULL, post_date DATETIME NOT NULL, display TINYINT(1) NOT NULL, INDEX IDX_31204C8374F664DA (thread_type_id), INDEX IDX_31204C83A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE thread_type (id INT AUTO_INCREMENT NOT NULL, content VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE reponse (id INT AUTO_INCREMENT NOT NULL, thread_id INT NOT NULL, user_id INT NOT NULL, reply VARCHAR(255) NOT NULL, reply_date DATETIME NOT NULL, display TINYINT(1) NOT NULL, INDEX IDX_5FB6DEC7E2904019 (thread_id), INDEX IDX_5FB6DEC7A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE thread (id INT AUTO_INCREMENT NOT NULL, thread_type_id INT NOT NULL, user_id INT NOT NULL, question VARCHAR(255) NOT NULL, nb_likes INT DEFAULT NULL, post_date DATETIME NOT NULL, display TINYINT(1) NOT NULL, verified TINYINT(1) NOT NULL, INDEX IDX_31204C8374F664DA (thread_type_id), INDEX IDX_31204C83A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE thread_type (id INT AUTO_INCREMENT NOT NULL, content VARCHAR(255) NOT NULL, display TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, classe_id INT NOT NULL, name VARCHAR(255) NOT NULL, prenom VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, is_banned TINYINT(1) DEFAULT NULL, ban_duration INT DEFAULT NULL, role TINYINT(1) NOT NULL, INDEX IDX_8D93D6498F5EA509 (classe_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE classe ADD CONSTRAINT FK_8F87BF96B3E9C81 FOREIGN KEY (niveau_id) REFERENCES niveau (id)');
         $this->addSql('ALTER TABLE club ADD CONSTRAINT FK_B8EE3872C6414FDD FOREIGN KEY (club_categorie_id) REFERENCES categorie_club (id)');
@@ -45,6 +45,7 @@ final class Version20220216215507 extends AbstractMigration
         $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307F8F5EA509 FOREIGN KEY (classe_id) REFERENCES classe (id)');
         $this->addSql('ALTER TABLE publication_news ADD CONSTRAINT FK_162B189DEA27F702 FOREIGN KEY (categorie_news_id) REFERENCES categorie_news (id)');
         $this->addSql('ALTER TABLE reponse ADD CONSTRAINT FK_5FB6DEC7E2904019 FOREIGN KEY (thread_id) REFERENCES thread (id)');
+        $this->addSql('ALTER TABLE reponse ADD CONSTRAINT FK_5FB6DEC7A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE thread ADD CONSTRAINT FK_31204C8374F664DA FOREIGN KEY (thread_type_id) REFERENCES thread_type (id)');
         $this->addSql('ALTER TABLE thread ADD CONSTRAINT FK_31204C83A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D6498F5EA509 FOREIGN KEY (classe_id) REFERENCES classe (id)');
@@ -65,6 +66,7 @@ final class Version20220216215507 extends AbstractMigration
         $this->addSql('ALTER TABLE reponse DROP FOREIGN KEY FK_5FB6DEC7E2904019');
         $this->addSql('ALTER TABLE thread DROP FOREIGN KEY FK_31204C8374F664DA');
         $this->addSql('ALTER TABLE club DROP FOREIGN KEY FK_B8EE38729F742DA1');
+        $this->addSql('ALTER TABLE reponse DROP FOREIGN KEY FK_5FB6DEC7A76ED395');
         $this->addSql('ALTER TABLE thread DROP FOREIGN KEY FK_31204C83A76ED395');
         $this->addSql('DROP TABLE categorie_club');
         $this->addSql('DROP TABLE categorie_news');

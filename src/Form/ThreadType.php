@@ -16,11 +16,8 @@ class ThreadType extends AbstractType
             ->add('question',TextType::class,[
                 'label'=>"What's on your mind ?",
             ])
-            
-            
-            
             ->add('threadType')
-            ->add('user')
+            
         ;
     }
 

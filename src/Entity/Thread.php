@@ -57,9 +57,17 @@ class Thread
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $Verified;
+
+    
+
     public function __construct()
     {
         $this->reponses = new ArrayCollection();
+        $this->ThreadReact = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -172,4 +180,18 @@ class Thread
     {
         return $this->getQuestion();
     }
+
+    public function getVerified(): ?bool
+    {
+        return $this->Verified;
+    }
+
+    public function setVerified(bool $Verified): self
+    {
+        $this->Verified = $Verified;
+
+        return $this;
+    }
+
+   
 }

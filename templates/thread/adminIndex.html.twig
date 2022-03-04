@@ -366,6 +366,7 @@
     <tr>
       
       <th scope="col">Question</th>
+      <th scope="col">User</th>
       <th scope="col">Topic</th>
       
     </tr>
@@ -373,9 +374,56 @@
   <tbody>
   {% for thread in threads %}
     <tr>
-      <td><a href="{{ path('thread_admin', {'id': thread.id})}}">{{ thread.question }} </a><small class="text-success col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }}</small></td>
+    {% if thread.verified ==0 %}
+                <td><h3><a href="{{ path('thread_admin', {'id': thread.id})}}">{{ thread.question }}</a></h3><small class="text col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }}</small></td>
+                {% else %}
+                <td><h3><a href="{{ path('thread_admin', {'id': thread.id})}}">{{ thread.question }} <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+  <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+</svg></a></h3><small class="text col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }}</small></td>
+                {% endif %}
+       <td> {{thread.user}}
        <td> {{thread.threadtype}} </td>
         <td>{{ include('thread/_delete_form.html.twig') }}</td>
+      
+    </tr>
+    {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        
+    {% endfor %}
+  </tbody>
+</table>
+
+</section>
+<section class="content">
+    <div style="margin-left: 1000px">
+<br>
+</div>
+<h3 class="h2 text-danger" style="margin-left: 24px; text-decoration : underline"> Archive </h3>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      
+      <th scope="col">Question</th>
+      <th scope="col">User</th>
+      <th scope="col">Topic</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+  {% for thread in threadss %}
+    <tr>
+    {% if thread.verified ==0 %}
+                <td><h3><a href="{{ path('thread_admin', {'id': thread.id})}}">{{ thread.question }}</a></h3><small class="text col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }}</small></td>
+                {% else %}
+                <td><h3><a href="{{ path('thread_admin', {'id': thread.id})}}">{{ thread.question }} <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+  <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+</svg></a></h3><small class="text col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }}</small></td>
+                {% endif %}
+       <td> {{thread.user}}
+       <td> {{thread.threadtype}} </td>
+        <td><a href="{{ path('thread_reactivate', {'id': thread.id})}}" class="btn btn-outline-success"> Reactivate </a></td>
       
     </tr>
     {% else %}

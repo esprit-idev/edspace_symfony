@@ -361,12 +361,27 @@
 
 {% block body %}
     <h1>Thread</h1>
-
+    
     <table class="table">
         <tbody>
             <tr>
-                <td><h3>{{ thread.question }}</h3><small class="text col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }}</small></td>
-            <td> {{ include('thread/_delete_form.html.twig') }} </td>
+                {% if thread.verified ==0 %}
+                <td><h3>{{ thread.question }} <a href="{{path('thread_verify', {'id': thread.id})}}}"> <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-patch-check btn-outline-success" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+  <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
+</svg></a></h3><small class="text col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }}</small></td>
+                {% else %}
+                <td><h3>{{ thread.question }} <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+  <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+</svg></a></h3><small class="text col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }}</small></td>
+                {% endif %}
+                <td>  </td>
+             
+            {% if thread.display == 0%}
+           <td> {{ include('thread/_delete_form.html.twig') }} </td>
+            {% else  %}
+            <td><a href="{{ path('thread_reactivate', {'id': thread.id})}}" class="btn btn-outline-success"> Reactivate </a></td>
+            {% endif %}
             </tr>
             
         </tbody>

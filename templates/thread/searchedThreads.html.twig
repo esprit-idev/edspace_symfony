@@ -12,10 +12,11 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Joson</title>
+    <title>EdSpace</title>
 
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- fonts style -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
     <!-- Custom styles for this template -->
@@ -23,8 +24,8 @@
     <!-- responsive style -->
     <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/v4-shims.min.js" integrity="sha512-7qQljqOcfujtn+H4jLGbhDviLED/sMZ+gnJeExpfXKLQMzuOT0/3mGaqUgbqjAPrMsDMZ/6uVNqtXuallND7WQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -36,7 +37,7 @@
                         <nav class="navbar navbar-expand-lg custom_nav-container ">
                             <a class="navbar-brand" href="#">
                                 <h3>
-                                    Joson
+                                    EdSpace
                                 </h3>
                                 <span> college</span>
                             </a>
@@ -47,10 +48,10 @@
                             <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
                                 <ul class="navbar-nav  ml-auto">
                                     {% block nav %}
-                                        <li class="nav-item active">
+                                        <li class="nav-item">
                                             <a class="nav-link" href="#">Tableau d'affichage</a>
                                         </li>
-                                        <li class="nav-item">
+                                        <li class="nav-item  active">
                                             <a class="nav-link" href="/thread">Forum<span class="sr-only">(current)</span></a>
                                         </li>
                                         <li class="nav-item">
@@ -81,10 +82,78 @@
 
                 <div>
                 <h3><footer class="blockquote-footer text-right"> <cite title="Source Title">What are you seeking today ?</cite></footer></h3>
-                </div>
-                <div class="container">
                 
-
+                </div>
+                <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Forum
+                                        </h1>
+                                        <small>
+                                            <footer class="footer text"> <cite title="Source Title">Your safe place to ask for anything you want with a vaste community</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Threads
+                                        </h1>
+                                        <small>
+                                            <footer class="footer text"> <cite title="Source Title">Ask in the thread section and wait for the response</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Comments
+                                        </h1>
+                                         <small>
+                                            <footer class="footer text"> <cite title="Source Title">If you think you can be of use to other people help solving problems</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- end slider section -->
+</div>
+{% block custom %}
+{% endblock %}
 
                 </div>
                 <div class="input-group">
@@ -92,15 +161,15 @@
                         {{ render(controller('App\\Controller\\SearchController::searchBar')) }}
                 </div>
                 <br>
-                <div style="margin-left: 1370px">
-                    <a href="{{ path('thread_new') }}" class="btn btn-secondary">Create new</a>
-                </div>
-            <table class="table table-bordered table-dark">
+                
+            <table class="table table-striped">
             <thead>
                 <tr>
                 
                 <th scope="col">Question</th>
                 <th scope="col">Topic</th>
+                <th scope="col">User</th>
+
                 
                 </tr>
             </thead>
@@ -108,7 +177,7 @@
             {% for thread in posts %}
                 <tr>
                 <td><a href="{{ path('thread_show', {'id': thread.id})}}">{{ thread.question }} </a><small class="text-success col-xs-12 blockquote-footer text-right">{{ thread.postDate ? thread.postDate|date('Y-m-d H:i:s') : '' }} <td>{{ thread.threadtype }}</td></small></td>
-                
+                <td>{{thread.user}}</td>
                 </tr>
                 
                 {% endfor %}
