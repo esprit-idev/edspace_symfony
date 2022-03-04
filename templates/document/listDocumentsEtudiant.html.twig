@@ -1,0 +1,126 @@
+{% extends "frontOffice.html.twig" %}
+
+{% block nav %}
+    <li class="nav-item">
+        <a class="nav-link" href="index.html">Tableau d'affichage<span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="about.html">Forum</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="course.html">Clubs</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="contact.html">Offres d'emploi</a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="listDocuments">Centre de partage</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="event.html">Mon profile</a>
+    </li>
+{% endblock %}
+
+{% block slider %}
+
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Centre de partage
+                                        </h1>
+                                        <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block custom %}
+    </br>
+    <center> <a href="{{ path("ajoutDocument") }}" class="btn btn-dark">Ajouter un document</a></center>
+    </br>
+    <center>
+        <form method="post" action="{{ path('triDocuments') }}" >
+            <select name="niveauKey" id="niveauKey" class="border">
+                <option disabled selected> -- Sélectionnez un niveau -- </option>
+                {% for n in niveaux %}
+                    <option>{{ n.id }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="matiereKey" id="matiereKey" class="border">
+                <option disabled selected> -- Sélectionnez une matière -- </option>
+                {% for m in matieres %}
+                    <option>{{ m.id }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-dark">Rechercher</button>
+        </form>
+    </center>
+
+    </br>
+    <center>
+        <table class="table table-striped">
+            <thead>
+            <th></th>
+            <th></th>
+            <th>Niveau</th>
+            <th>Matière</th>
+            <th>Fichier</th>
+            <th>Date d'insertion</th>
+            <th>Propriétaire</th>
+            <th>Supprimer</th>
+            </thead>
+            <tr {% for d in documents %}>
+                <td></td>
+                <td></td>
+                <td>{{ d.niveau.id }}</td>
+                <td>{{ d.matiere.id }}</td>
+                <td><a href="{{ path('afficheDocument',{'id':d.id})}}">{{ d.nom }}</a> </td>
+                <td>{{ d.dateinsert }}</td>
+                <td>{{ d.proprietaire }}</td>
+                <td><a href="{{ path("suppDocument",{'id':d.id}) }}" class="btn btn-danger">Supprimer</a>
+                </td>
+            </tr {% endfor %}>
+        </table>
+    </center>
+    </br>
+{% endblock %}
+
+{% block special %}
+{% endblock %}
+
+{% block about %}
+{% endblock %}
+
+{% block course %}
+{% endblock %}
+
+{% block login %}
+{% endblock %}
+
+{% block event %}
+{% endblock %}
+
+{% block client %}
+{% endblock %}
+
+{% block contact %}
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'frontOffice.html.twig' %}
+
+{% block custom %}
+
+ 
+<div class="chat" id="body"> 
+  
+<div id="chat-circle" class="btn btn-raised">
+        <div id="chat-overlay"></div>
+		   <i class="far fa-comment"></i>
+	</div>
+  <div  class="chat-members">
+        {% for n in memebers %}
+      <i class="fas fa-user"></i><a href="#">  {{n.prenom}} {{n.name}} </a>  <br>
+
+        {% endfor %}
+  </div>
+
+  
+  <div class="chat-box">
+    <div class="chat-box-header">
+   <a  id="members"> <i class="fa fa-user" aria-hidden="true" ></i> </a>
+  
+   CLASSE:{{classe.niveau.id}}{{classe.classe}}
+      <span class="chat-box-toggle"><button type="button" class="btn-close btn-close-white" aria-label="Close"></button></span>
+    </div>
+    <div class="chat-box-body">
+      <div class="chat-box-overlay">   
+      </div>
+      <div class="chat-logs">
+
+               {% for n in message %}
+               {% if n.user.id == user.id %}
+       <div class="chat-msg self last">
+       
+       
+           <div class="cm-msg-text"> {{n.content}}</div>
+       </div>
+       {% endif %}
+
+                  {% if n.user.id != user.id %}
+       <div class="chat-msg user">
+        
+           <div class="cm-msg-text "> {{n.content}}</div>
+           <a class="hidem"><i class="far fa-eye-slash"></i></a>
+       </div>
+       {% endif %}
+               {% endfor %}
+      </div><!--chat-log -->
+    </div>
+    <div class="chat-input">      
+      <form id="sample_form">
+        
+        <input type="hidden" class="form_data" name="idu" id="chat-input-user"  value="{{user.id}}" />
+        <input type="hidden" class="form_data" name="idc" id="chat-input-classe" value="{{user.classe.id}}" />
+<input type="text" class="form_data" name="content" id="chat-input" placeholder="Envoyer un message..."/>
+      <button type="submit" class="chat-submit" id="sendbtn" onclick="save_data();"><i class="fas fa-paper-plane"></i></button>
+      </form>      
+    </div>
+  </div>
+  
+  
+  
+  
+</div>
+
+
+
+<script>
+function hidem(){
+const hidem=document.querySelectorAll(".hidem");
+hidem.forEach(element => {
+  element.addEventListener("click", () => element.parentElement.style.display = 'none')
+});
+}
+
+hidem();
+
+
+
+
+function save_data(){
+
+  event.preventDefault();
+add_mymessage(document.getElementById('chat-input').value);
+
+  
+  let form_element = document.querySelectorAll('.form_data');
+  var form_data = new FormData();
+  for (let i = 0; i < form_element.length; i++) {
+ form_data.append(form_element[i].name, form_element[i].value);
+  }
+  
+        let http = new XMLHttpRequest();
+    http.open("POST", "http://127.0.0.1:8000/push", true);
+    http.send(form_data);
+    document.getElementById('chat-input').value='';
+}
+
+
+const url = new URL('http://localhost:3000/hub');
+url.searchParams.append('topic', 'http://127.0.0.1:8000/conversation');
+const eventSource=new EventSource(url);
+
+eventSource.onmessage = e => {
+
+  if({{user.id}}  != JSON.parse(e.data).user){
+add_message(e);
+ }
+
+}
+function add_message(e){
+  const chat=document.querySelector('.chat-logs');
+ chat.insertAdjacentHTML('beforeend', ` </i><div class="chat-msg user">
+ <div class="cm-msg-text "> `+JSON.parse(e.data).message+`</div><a class="hidem"><i class="far fa-eye-slash"></i></a></div>`)
+ hidem();
+}
+
+
+function add_mymessage(data){
+  const chat=document.querySelector('.chat-logs');
+ chat.insertAdjacentHTML('beforeend', `<div class="chat-msg self last">
+ <div class="cm-msg-text "> `+data+`</div></div>`)
+}
+
+
+
+</script>
+
+{% endblock %}
