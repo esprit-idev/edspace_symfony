@@ -47,4 +47,30 @@ class EmploiRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    function SearchByTitle($title){
+        return $this->createQueryBuilder('s')
+            ->where('s.title like :title')
+            ->setParameter('title','%'.$title.'%')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findNewsByCategory($categoryName){
+        return $this->createQueryBuilder('p')
+        ->join('p.categoryName', 'c')
+        ->addSelect('c')
+        ->where('c.categoryName=:categoryName')
+        ->setParameter('categoryName',$categoryName)
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function CountEmploi(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(p) FROM APP\ENTITY\Emploi p');
+        return $qb->getSingleScalarResult();
+    }
+
 }

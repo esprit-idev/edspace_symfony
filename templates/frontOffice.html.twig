@@ -13,7 +13,7 @@
     <meta name="author" content="" />
 
     <title>{% block title %}Joson {% endblock %}</title>
-
+    {% block css %}
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <!-- fonts style -->
@@ -23,9 +23,17 @@
     <!-- responsive style -->
     <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/ffcbf2bd8b.js" crossorigin="anonymous"></script>
+    {% endblock css %}
+    {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+    {% endblock %} 
 </head>
 
-<body>
+<body
+        {{ stimulus_controller('symfony/ux-swup/swup',{
+         theme:'fade',
+            }) }}>
+<main id="swup">
 <div class="hero_area">
     <!-- header section strats -->
     {% block header %}
@@ -46,13 +54,13 @@
                     <ul class="navbar-nav  ml-auto">
                         {% block nav %}
                             <li class="nav-item active">
-                                <a class="nav-link" href="#">Tableau d'affichage<span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="{{ path('allPublications') }}">Tableau d'affichage<span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Forum</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href={# {{ path('displayClub') }} #}>Clubs</a>
+                                <a class="nav-link" href={{ path('displayClub') }}>Clubs</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('allemploi') }}">Offres d'emploi</a>
@@ -64,17 +72,17 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href={# path('choixNiveau',{'role':1}) #} class="nav-link">
+                                        <a href=path('choixNiveau',{'role':1}) class="nav-link">
                                             <p>Liste des documents</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href={# path('mesDoc') #} class="nav-link">
+                                        <a href=path('mesDoc') class="nav-link">
                                             <p>Mes documents</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href={# path('mesFavoris') #} class="nav-link">
+                                        <a href=path('mesFavoris') class="nav-link">
                                             <p>Favoris</p>
                                         </a>
                                     </li>
@@ -605,7 +613,7 @@
 
 <script type="text/javascript" src="{{ asset('frontOffice/js/jquery-3.4.1.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('frontOffice/js/bootstrap.js') }}"></script>
-
+</swup>
 </body>
 
 </html>

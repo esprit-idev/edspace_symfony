@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\CategorieEmploi;
 use App\Entity\Emploi;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -23,9 +25,18 @@ class EmploiFormType extends AbstractType
             ->add('content', TextareaType::class,[
                 'label' => 'Description de proposition d\'emploi'
             ])
-            ->add('date', DateType::class,[
-                'label' => 'date'
+            ->add('categoryName', EntityType::class,[
+                    'class'=>CategorieEmploi::class,
+                    'choice_label'=>'categoryName',
+                    'placeholder'=>'-- Sélectionnez une catégorie --',
+                    'label' => "Catégorie ",
             ])
+
+            ->add('date', DateType::class,[
+                'label' => 'date',
+                'data' => new \DateTime('now'),
+            ])
+            ->add('image', ImageType::class)
             ->add('ajouter', SubmitType::class,[
                 'label' => 'Ajouter',
             ])

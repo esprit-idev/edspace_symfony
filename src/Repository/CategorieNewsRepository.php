@@ -47,4 +47,25 @@ class CategorieNewsRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findAllCategoryNames()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.categoryName')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    function SearchByName($categoryName){
+        return $this->createQueryBuilder('s')
+            ->where('s.categoryName like :categoryName')
+            ->setParameter('categoryName','%'.$categoryName.'%')
+            ->getQuery()
+            ->getResult();
+    }
+    public function CountEmploi(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(p) FROM APP\ENTITY\CategorieNews p');
+        return $qb->getSingleScalarResult();
+    }
 }

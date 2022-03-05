@@ -14,6 +14,8 @@
     <div class="container-fluid">
 <h1>Modifier Categorie</h1>
 {{ form_start(form_add,{'attr':{'novalidate':'novalidate'}}) }}
+{{form_row(form_add.categoryName)}}
+{{form_row(form_add.ajouter, { 'label': 'Modifier' }) }}
 {{ form_end(form_add) }}
     </div>
 </div>

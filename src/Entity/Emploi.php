@@ -26,6 +26,7 @@ class Emploi
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="ajouter une discription")
      */
     private $content;
 
@@ -33,6 +34,19 @@ class Emploi
      * @ORM\Column(type="date")
      */
     private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CategorieEmploi::class, inversedBy="emplois")
+     * @ORM\JoinColumn(nullable=true)
+     * @Assert\NotBlank(message="add category !")
+     */
+    private $categoryName;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
+     * @Assert\NotBlank()
+     */
+    private $image;
 
     public function getId(): ?int
     {
@@ -75,4 +89,30 @@ class Emploi
         return $this;
     }
 
+    public function getCategoryName(): ?CategorieEmploi
+    {
+        return $this->categoryName;
+    }
+
+    public function setCategoryName(?CategorieEmploi $categoryName): self
+    {
+        $this->categoryName = $categoryName;
+
+        return $this;
+    }
+    public function __toString() {
+        return $this->name;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
 }

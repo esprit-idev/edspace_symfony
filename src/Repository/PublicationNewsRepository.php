@@ -48,10 +48,89 @@ class PublicationNewsRepository extends ServiceEntityRepository
     }
     */
 
-    public function findStudentsByEmailASC(){
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager
-                    ->createQuery('SELECT p FROM App\Entity\PublicationNews p ORDER BY p.name ASC');
-        return $query->getResult();
+    public function findNewsByCategory($categoryName){
+        return $this->createQueryBuilder('p')
+        ->join('p.categoryName', 'c')
+        ->addSelect('c')
+        ->where('c.categoryName=:categoryName')
+        ->setParameter('categoryName',$categoryName)
+        ->getQuery()
+        ->getResult();
     }
+
+    function SearchByTitle($title){
+        return $this->createQueryBuilder('s')
+            ->where('s.title like :title')
+            ->setParameter('title','%'.$title.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function SortByDateASC()
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->addOrderBy('e.date', 'ASC')
+            ->andWhere('e.date > :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function CountPublications(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(p) FROM APP\ENTITY\PublicationNews p');
+        return $qb->getSingleScalarResult();
+    }
+    
+    // public function ListPublicationByCategory($id){
+    //     return $this
+    //     ->createQueryBuilder('p')
+    //     ->join('p.categoryName', 'c')
+    //     ->addSelect('c')
+    //     ->where('c.id = :id')
+    //     ->setParameter('id', $id)
+    //     ->getQuery()
+    //     ->getResult();
+    // }
+    public function ListPublicationByCategory($id){
+        $em = $this->getEntityManager();
+        return $em
+        ->createQuery("SELECT count(p) FROM APP\ENTITY\PublicationNews p JOIN p.categoryName c where c.id:=id")
+        ->setParameter('id',$id);
+    }
+
+    public function getPreviousUser($title)
+{
+    return $this->createQueryBuilder('p')
+        ->select('p')
+        ->where('p.title < :title')
+        ->setParameter(':title', $title)
+        // Order by id.
+        ->orderBy('p.id', 'ASC')
+        // Get the first record.
+        ->setFirstResult(0)
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult()
+    ;
+}
+public function CountNewsByCategory($categoryName){
+    return $this->createQueryBuilder('p')
+    ->join('p.categoryName', 'c')
+    ->addSelect('count(c)')
+    ->where('c.categoryName =:categoryName')
+    ->setParameter('categoryName',$categoryName)
+    ->getQuery()
+    ->getResult();
+}
+public function CountComments($id){
+    return $this->createQueryBuilder('p')
+    ->addSelect('count(p.comments)')
+    ->where('p.id =:id')
+    ->setParameter('id',$id)
+    ->getQuery()
+    ->getOneOrNullResult();
+}
 }

@@ -29,14 +29,16 @@ class PublicationNewsFormType extends AbstractType
             ])
             ->add('date',DateType::class, [
                 'label' => 'La date',
+                'data' => new \DateTime('now'),
             ])
-            ->add('categorieNews',
+            ->add('categoryName',
                 EntityType::class,[
                 'class'=>CategorieNews::class,
-                    'choice_label'=>'catName',
+                    'choice_label'=>'categoryName',
                     'placeholder'=>'-- Sélectionnez une catégorie --',
                     'label' => "Catégorie ",
             ])
+            ->add('image', ImageType::class)
             ->add('ajouter',SubmitType::class)
         ;
     }

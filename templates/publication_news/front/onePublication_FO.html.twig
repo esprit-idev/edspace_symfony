@@ -67,26 +67,53 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-8 col-10 mx-auto">
-                            <h2 class="mb-3 animated fadeIn" data-aos="fade-up">{{publication_title}}</h2>
-                            <p class="me-4" data-aos="fade-up">{{publication_content}}</p>
+                            <h2 class="mb-3" data-aos="fade-up">{{publication_title}}</h2>
                             <div class="clearfix my-4 mt-lg-0 mt-5">
-                                <div class="col-md-6 float-md-end mb-3 ms-md-3" data-aos="fade-up">
+                                <div class="col-md-6 float-md-right mb-3 ms-md-3" data-aos="fade-up">
                                     <figure class="figure">
-                                        <img src="images/news/jean-philippe-delberghe-MmanXAs1sKw-unsplash.jpeg" class="img-fluid news-image" alt="">
+                                        <img src="{{ asset('images/') ~ publication_image}}" class="img-fluid news-image" alt="">
 
                                         <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
                                     </figure>
                                 </div>
+                                <p class="me-4" data-aos="fade-up">{{publication_content}}</p>
                             </div>
-
                             <div class="social-share d-flex mt-5">
                                 <span class="mr-4">Share this article:</span>
-                                <a href="#" class="social-share-icon bi-facebook"></a>
-                                <a href="#" class="social-share-icon bi-twitter mx-3" ></a>
-                                <a href="#" class="social-share-icon bi-envelope"></a>
-                            </div>
+                                <a href="#" class="social-share-icons bi-facebook"></a>
+                                <a href="#" class="social-share-icons bi-twitter mx-3" ></a>
+                                <a href="#" class="social-share-icons bi-envelope"></a>
                         </div>
-
+                        <div class="social-share d-flex flex-row mt-4">
+                                <div class="mr-2"><a href="{{path('onePublicationLikes', {id: id, likes : likes}) }}"  class="social-share-icon p-2" id="likes" type="button" name='likes'><span class="social-share-icon bi-hand-thumbs-up pr-2"></span> {{likes}} aiment ça </a></div>
+                                <div class="mr-2"><a href="#" class="social-share-icon p-2"><span class="social-share-icon bi-chat pr-2 "></span>{{num}}  Commentaires</a></div>
+                                <div class="mr-2"><a href="#" class="social-share-icon p-2"><span class="social-share-icon bi-eye pr-2"></span> {{views}}  Vues</a></div>
+                        </div>
+                        <div class="social-share d-flex flex-column mt-5">
+                                <div><span class="mr-4 mb-2">Commentaires</span></div>
+                                <form method="POST" action={{ path('postComment', {id : id, 'likes' : likes, 'views' : views})}} class="pb-2 mt-2">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="comment" required="required" placeholder="Ajouter un commentaire"/>
+                                    <input type="submit" value="poster" class="btn btn-outline-secondary" />
+                                </div>
+                                </form>
+                                <div>
+                                {% for c in comments %}
+                                <ul class="list-group list-group-flush comments">
+                                    {% if c is not null %}
+                                    <div class="">
+                                        <div class="li-div row">
+                                        <li>
+                                        <img src="{{ asset('images/') ~ publication_image}}" class="img-fluid profile-img mr-4" alt=""/>
+                                        {{c}}
+                                        </li></div>
+                                    </div>
+                                </ul>
+                                {% endif %}
+                                {% endfor %}
+                        </div>
+                        
+                        </div>
                     </div>
                 </div>
             </section>
@@ -98,7 +125,7 @@
                             <span class="d-block" data-aos="zoom-in">Next article</span>
 
                             <h3 class="news-title" data-aos="fade-up">
-                                <a href="news-detail.html" class="news-title-link">{{publication_title}}</a>
+                                <a href="{{path('onePublication', {id: id, 'likes' : likes, 'views': views})}}" class="news-title-link">{{publication_title}}</a>
                             </h3>
                         </div>
 
@@ -137,5 +164,10 @@
         <script src=" {{ asset('frontOffice/js/magnific-popup-options.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/scrollspy.min.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/custom.js') }}"></script>
-
+        {# <script>
+        let $likes = document.getElementById('likes');
+        $likes.addEventListener('click', ()=>{
+            $likes+=1
+        })
+        </script> #}
 {% endblock js %}

@@ -27,15 +27,20 @@
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/summernote/summernote-bs4.min.css') }}">
+    {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+    {% endblock %}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
+<body class="sidebar-mini layout-fixed"
+{{ stimulus_controller('symfony/ux-swup/swup',{
+         theme:'fade',
+     }) }}>
+<div class="wrapper" id="swup">
 
     <!-- Preloader -->
-    <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="{{ asset('backOffice/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
-             height="60" width="60">
-    </div>
+    {# <div class="preloader flex-column justify-content-center align-items-center">
+        <img class="animation__shake" src="{{ asset('backOffice/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo" height="60" width="60">
+    </div> #}
 
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -54,6 +59,7 @@
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             <!-- Navbar Search -->
+            {% block searchbar %}
             <li class="nav-item">
                 <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                     <i class="fas fa-search"></i>
@@ -75,7 +81,7 @@
                     </form>
                 </div>
             </li>
-
+            {% endblock searchbar %}
             <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
@@ -174,7 +180,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="#" class="brand-link">
+        <a href="{{ path('publication')}}" class="brand-link">
             <img src="/logo1.svg"/>
         </a>
 
@@ -197,14 +203,34 @@
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
+                        <li class='nav-item'>
+                                <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-graduation-cap"></i>
                                 <p>
-                                    Tableau d'affichage
+                                    News
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ path('allPublications') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-table"></i>
+                                    <p>
+                                        Tableau d'affichage
+                                    </p>
+                                </a>
+                            </li>
+                        
+                        <li class="nav-item">
+                        <a href="{{ path('allCategoriesNews') }}" class="nav-link">
+                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <p>
+                                Categorie de news
+                            </p>
+                        </a>
                         </li>
+                        </li>
+                        </ul>
                         <li class="nav-header">GESTION</li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -229,7 +255,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href={# {{ path('classes') }} #} class="nav-link">
+                                    {# <a href={{ path('classes') }} class="nav-link"> #}
                                         <i class="far fa-circle nav-icon"></i><p>Classes</p>
 
                                     </a>
@@ -268,51 +294,37 @@
 
                             </ul>
                         </li>
+
+                    </li>
+                    <li class="nav-item">
+                     <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-graduation-cap"></i>
+                                <p>
+                                    Emploi
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                        <ul class='nav nav-treeview'>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ path('allemploi') }}" class="nav-link">
                                 <i class="nav-icon fas fa-bullhorn"></i>
                                 <p>
                                     Propositions d'emploi
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-header">SUIVI</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-comments"></i>
-                                <p>
-                                    Forum
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href={# {{ path('listDocuments') }} #} class="nav-link">
-                                <i class="nav-icon far fa-folder"></i>
-                                <p>
-                                    Centre de partage
-                                </p>
-                            </a>
-                        </li>
+                         <li class="nav-item">
+                        <a href="{{ path('allCategoriesEmploi') }}" class="nav-link">
+                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <p>
+                                Categorie d'emploi
+                            </p>
+                        </a>
+                    </li>
                     </ul>
-                </nav>
-                        </ul>
+
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ path('allemploi') }}" class="nav-link">
-                            <i class="nav-icon fas fa-bullhorn"></i>
-                            <p>
-                                Propositions d'emploi
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ path('allCategoriesNews') }}" class="nav-link">
-                            <i class="nav-icon fas fa-bullhorn"></i>
-                            <p>
-                                Categorie de news
-                            </p>
-                        </a>
-                    </li>
+                   
                     <li class="nav-header">SUIVI</li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -454,5 +466,12 @@
 <!-- AdminLTE for demo purposes -->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backOffice/dist/js/pages/dashboard.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+<script>
+    $(document).ready(function () {
+        bsCustomFileInput.init()
+    })
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 </body>
 </html>
