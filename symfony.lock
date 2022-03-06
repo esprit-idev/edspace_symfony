@@ -94,10 +94,6 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
-
-    "jms/metadata": {
-        "version": "2.6.1"
-        },
     "friendsofsymfony/ckeditor-bundle": {
         "version": "2.4",
         "recipe": {
@@ -125,6 +121,9 @@
     "imagine/imagine": {
         "version": "1.2.4"
     },
+    "jms/metadata": {
+        "version": "2.6.1"
+    },
     "knplabs/knp-components": {
         "version": "v3.4.0"
     },
@@ -134,12 +133,15 @@
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
+    "lcobucci/clock": {
+        "version": "2.0.0"
+    },
+    "lcobucci/jwt": {
+        "version": "4.0.4"
+    },
     "lexik/form-filter-bundle": {
         "version": "v5.0.10"
     },
-    "mercuryseries/flashy-bundle": {
-        "version": "v3.0.0"
-        },
     "liip/imagine-bundle": {
         "version": "2.7",
         "recipe": {
@@ -158,6 +160,9 @@
     },
     "martin-georgiev/social-post-bundle": {
         "version": "v3.1.0"
+    },
+    "mercuryseries/flashy-bundle": {
+        "version": "v3.0.0"
     },
     "monolog/monolog": {
         "version": "1.26.1"
@@ -473,6 +478,21 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
+    },
+    "symfony/mercure": {
+        "version": "v0.6.1"
+    },
+    "symfony/mercure-bundle": {
+        "version": "0.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "0.3",
+            "ref": "e0a854b5439186e04b28fb8887b42c54f24a0d32"
+        },
+        "files": [
+            "./config/packages/mercure.yaml"
+        ]
     },
     "symfony/mime": {
         "version": "v4.4.37"

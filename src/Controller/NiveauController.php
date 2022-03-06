@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Niveau;
+use App\Entity\Classe;
+use App\Entity\User;
 use App\Form\NiveauType;
 use App\Repository\NiveauRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,11 +27,24 @@ class NiveauController extends AbstractController
 
     /**
      * @param $id
-     * @param NiveauController $repository
+     * @param NiveauRepository $repository
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/niveau/suppNiveau/{id}",name="suppNiveau")
      */
     function SuppNiveau($id, NiveauRepository $repository){
+
+        $em2=$this->getDoctrine()->getManager();
+        $classes=$em2->getRepository(Classe::class)->findBy(['niveau'=> $id]);
+        foreach($classes as $i){
+            $em3=$this->getDoctrine()->getManager();
+        $users=$em3->getRepository(User::class)->findBy(['classe'=> $i->getId()]);
+        foreach($users as $user){
+            $user->setClasse(NULL);
+            $em3->flush($user);
+            }
+            
+        }
+
         $niveau=$repository->find($id);
         $em=$this->getDoctrine()->getManager();
         $em->remove($niveau);
