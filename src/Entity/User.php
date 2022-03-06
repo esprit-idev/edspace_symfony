@@ -6,11 +6,17 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- */
-class User
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="l'email que vous avez indiqué est deja utulisé"
+ * )
+*/
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -62,7 +68,7 @@ class User
 
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $classe;
 
@@ -79,6 +85,11 @@ class User
      * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="user", orphanRemoval=true)
      */
     private $reponses;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reset_token;
 
     public function __construct()
     {
@@ -303,4 +314,25 @@ class User
 
         return $this;
     }
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->reset_token;
+    }
+
+    public function setResetToken(?string $reset_token): self
+    {
+        $this->reset_token = $reset_token;
+
+        return $this;
+    }
+    
 }
