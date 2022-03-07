@@ -12,31 +12,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use mysqli;
 
 class ClasseController extends AbstractController
 {
 
     /**
      * @Route("/classe", name="Classe")
-     * @param Request $request
      */
-    public function index(Request $request): Response
+    public function index(): Response
     {
 
             
         $em1=$this->getDoctrine()->getRepository(Niveau::class);
         $niveau=$em1->findAll(Niveau::class);
-
-        if($request->request->count() > 0){
-            
-            $em2=$this->getDoctrine()->getManager();
-            $classe=$em2->getRepository(Classe::class)->find($request->request->get('id'));
-            $classe->setClasse($request->request->get('classe'))
-                ->setNiveau($em1->findOneBy(['id'=> $request->request->get('niveau')]));
-                $em2->flush($classe);
-                
-
-        }
         
 
         
@@ -47,33 +38,55 @@ class ClasseController extends AbstractController
         $em=$this->getDoctrine()->getRepository(Classe::class);
         $classes=$em->findAll(Classe::class);
 
-
+ 
 
         return $this->render('classe/classes.html.twig', [
             'classes' => $classes,
             'niveau'=> $niveau,
         ]);
     }
+    
 
 
 
-
-    /**
-     * @Route("/classe2", name="Classe2")
-     * @param Request $request
+       /**
+     * @Route("/listc", name="listc")
      */
-    public function index2(Request $request): Response
+    public function listeClasse(): Response
     {
 
-            $classeform=new Classe();
-            $form=$this->createForm(ClasseType::class,$classeform);
-        $form->add('valider',SubmitType::class);
+            
+        
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+        $em=$this->getDoctrine()->getRepository(Classe::class);
+        $classes=$em->findAll(Classe::class);
 
+        // Retrieve the HTML generated in our twig file
+        $html = $this->renderView('classe/listclasse.html.twig', [
+            'classes' => $classes,
+        ]);
+        
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+        
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
 
-        return $this->render('classe/test.html.twig', [
-            'classes' => $form->createView(),
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (force download)
+        $dompdf->stream("classes.pdf", [
+            "Attachment" => true
         ]);
     }
+        
+    
+    
 
 
 
@@ -102,7 +115,56 @@ class ClasseController extends AbstractController
     }
 
 
+
+
+
      /**
+     * @Route ("/searchclasse",name="searchclasse")
+     * @param Request $request
+     */
+
+    public function searchclasse(Request $request)
+    {
+        $em=$this->getDoctrine()->getManager();
+
+
+    $conn = mysqli_connect("localhost", "root", "", "edspace");
+
+        
+$sql = "SELECT * FROM classe where classe like '%".$request->request->get('name')."%'";
+        
+$result = mysqli_query($conn, $sql);
+
+if(mysqli_num_rows($result)>0){
+while ($row=mysqli_fetch_assoc($result)){
+    print_r(' <td></td>
+    <td class="id">'.$row['id'].'</td>
+    <td class="niveau">'.$row['niveau_id'].'</td>
+    <td class="classe">'.$row['classe'].'</td>
+    <td id="'.$row['id'].'" class="c-item"><a href="#">
+         <i class="fas fa-list"></i> </a></td>
+    <td class=""><a href="../classe/'.$row['id'].'">
+        <i class="fas fa-user-plus"></i> </a></td>
+    <td class="t-item" id="'.$row['id'].'"><a href="../suppclaase/'.$row['id'].'">
+          <i  class="fas fa-trash-alt"></i> </a></td>
+</tr >');
+
+}
+}
+else{
+    echo "<tr><td> 0 result found</td></tr>";
+}
+return new Response('success');
+    }
+
+
+
+
+
+
+
+
+    /**
      * @Route ("/addclaase",name="addClasse")
      * @param Request $request
      */
@@ -177,5 +239,49 @@ class ClasseController extends AbstractController
            
         ]);
     }
+
+
+
+           /**
+     * @Route("/listet/{id}", name="listet")
+     */
+    public function listet($id): Response
+    {
+        $em2=$this->getDoctrine()->getRepository(Classe::class);
+        $classe=$em2->find($id);
+        
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $etudiant=$em1->findBy(['classe'=> $id]);
+        
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+        $em=$this->getDoctrine()->getRepository(Classe::class);
+        $classes=$em->findAll(Classe::class);
+
+        // Retrieve the HTML generated in our twig file
+        $html = $this->renderView('classe/listet.html.twig', [
+            'etudiant' => $etudiant,
+        ]);
+        
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+        
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (force download)
+        $dompdf->stream("etudiants.pdf", [
+            "Attachment" => true
+        ]);
+    }
+        
+
+
 
 }

@@ -97,9 +97,8 @@
   </div>
   <br>
                      <div class="d-flex justify-content-between bt">
-                              <div class="new">
-                                <a href="{{ path('ajoutNiveau') }}"  class="btn btn-primary btn-lg">Ajouter un niveau</a>
-                            </div>
+                        <div>
+                        </div>
                             <div class="new">
                                 <a href="#" id="19" class="btn btn-primary btn-lg">Ajouter une classe</a>
                             </div>
@@ -109,7 +108,7 @@
 
 
 
-
+<input type="text" class="form-control" placeholder="Chercher une classe..." id="search">
     <table class="table table-striped">
         <thead>
             <th></th>
@@ -120,6 +119,7 @@
             <th>List des etudiants</th>
             <th>Supprimer</th>
         </thead>
+        <tbody id="output">
         {% for n in classes %}
         <tr class="a-item">
             <td></td>
@@ -136,10 +136,15 @@
                   <i  class="fas fa-trash-alt"></i> </a></td>
         </tr >
         {% endfor %}
+        </tbody>
 
     </table>
+    <a href="{{ path('listc') }}">Imprimer </a>
 </div>
 </div>
+
+
 
 
 {% endblock %}
+

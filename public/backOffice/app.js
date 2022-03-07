@@ -1,5 +1,39 @@
+$(document).ready(function(){
+  $("#search").keyup(function(){
+    if($("#search").val()!=""){
+    $.ajax({
+      type:'POST',
+      url:'http://127.0.0.1:8000/searchclasse',
+      data:{
+        name:$("#search").val(),
+      },
+      success:function(data){
+        $("#output").html(data);
+        alpha();
+      }
+    });
+  }
+else{
+  location.reload();
+}
+
+  });
+});
+alpha();
 
 
+
+
+$.ajax({
+  type:'POST',
+  url:'http://127.0.0.1:8000/searchclasse',
+  data:{
+    name:$("#search").val(),
+  },
+});
+
+
+function alpha(){
 const v=document.getElementById("button");
 if(v){
 v.addEventListener('click', event=>{
@@ -144,3 +178,4 @@ else{
 }
 
 }}
+}

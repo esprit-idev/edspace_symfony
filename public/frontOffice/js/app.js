@@ -9,6 +9,17 @@ if (memebers.style.display == "none") {
 }
 })
 
+var searchb=document.getElementById("searchm");
+const option=document.querySelector('.option');
+searchb.addEventListener('click',function() {
+if (option.style.display == "none") {
+  option.style.display = "flex";
+} else {
+  option.style.display = "none";
+}
+})
+
+
 $(function() {
     var INDEX = 0; 
     $("#chat-submit").click(function(e) {

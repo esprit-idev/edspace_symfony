@@ -6,15 +6,13 @@
     <title>AdminLTE 3 | Dashboard</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet"
-          href="{{ asset('backOffice/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backOffice/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- JQVMap -->
@@ -27,21 +25,14 @@
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/summernote/summernote-bs4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backOffice/style.css?version=2') }}">
-    {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-    {% endblock %}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 </head>
-<body class="sidebar-mini layout-fixed"
-{{ stimulus_controller('symfony/ux-swup/swup',{
-         theme:'fade',
-     }) }}>
-<div class="wrapper" id="swup">
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
 
     <!-- Preloader -->
-    {# <div class="preloader flex-column justify-content-center align-items-center">
+    <div class="preloader flex-column justify-content-center align-items-center">
         <img class="animation__shake" src="{{ asset('backOffice/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo" height="60" width="60">
-    </div> #}
+    </div>
 
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -55,12 +46,11 @@
                     <a href="#" class="nav-link">Home</a>
                 </li>
             </ul>
-        {% endblock %}
+        {% endblock%}
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             <!-- Navbar Search -->
-            {% block searchbar %}
             <li class="nav-item">
                 <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                     <i class="fas fa-search"></i>
@@ -68,8 +58,7 @@
                 <div class="navbar-search-block">
                     <form class="form-inline">
                         <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search"
-                                   aria-label="Search">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-navbar" type="submit">
                                     <i class="fas fa-search"></i>
@@ -82,7 +71,7 @@
                     </form>
                 </div>
             </li>
-            {% endblock searchbar %}
+
             <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
@@ -93,8 +82,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 mr-3 img-circle">
+                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     Brad Diesel
@@ -110,8 +98,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user8-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 img-circle mr-3">
+                            <img src="{{ asset('backOffice/dist/img/user8-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     John Pierce
@@ -127,8 +114,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 img-circle mr-3">
+                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                             <div class="media-body">
                                 <h3 class="dropdown-item-title">
                                     Brad Diesel2
@@ -144,7 +130,6 @@
                     <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
                 </div>
             </li>
-            {% block notif %}
             <!-- Notifications Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
@@ -168,7 +153,6 @@
                     <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                 </div>
             </li>
-            {% endblock %}
             <li class="nav-item">
                 <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                     <i class="fas fa-expand-arrows-alt"></i>
@@ -181,8 +165,9 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="{{ path('publication')}}" class="brand-link">
-            <img src="/logo1.svg"/>
+        <a href="#" class="brand-link">
+            <i class="nav-icon fas fa-graduation-cap"></i>
+            <span class="brand-text font-weight-light">EdSpace</span>
         </a>
 
         <!-- Sidebar -->
@@ -190,54 +175,40 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="{{ asset('backOffice/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
-                         alt="User Image">
+                    <img src="{{ asset('backOffice/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
                 </div>
-                <div class="info">
-                    {# <a href="{{path('show')}}" class="d-block">{{ app.user.username}} {{ app.user.prenom }}</a> #}
-                </div>
+                {# <div class="info">
+                    <a href="{{ path('show') }}" class="d-block">{{ app.user.username }} {{ app.user.prenom }}</a>
+                </div> #}
             </div>
             <!-- Sidebar Menu -->
             {% block sideBarMenu %}
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
-                        <li class='nav-item'>
-                                <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-graduation-cap"></i>
-                                <p>
-                                    News
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ path('allPublications') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
-                                    <p>
-                                        Tableau d'affichage
-                                    </p>
-                                </a>
-                            </li>
-                        
-                        <li class="nav-item">
-                        <a href="{{ path('allCategoriesNews') }}" class="nav-link">
-                            <i class="nav-icon fas fa-bullhorn"></i>
-                            <p>
-                                Categorie de news
-                            </p>
-                        </a>
-                        </li>
-                        </li>
-                        </ul>
-                        <li class="nav-header">GESTION</li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Tableau d'affichage
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-header">GESTION</li>
+                        <li class="nav-item">
+                            <a href="{{path('affiche')}}" class="nav-link">
                                 <i class="fas fa-users mr-2"></i>
                                 <p>
                                     Etudiants
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{# {{path('afficheA')}} #}" class="nav-link">
+                                <i class="fas fa-users mr-2"></i>
+                                <p>
+                                    Admins
                                 </p>
                             </a>
                         </li>
@@ -251,20 +222,21 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href= {{ path('ajoutNiveau') }}  class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i><p>Niveaux</p>
+                                    <a href={# {{ path('ajoutNiveau') }} #} class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Niveaux</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href={{ path('Classe') }} class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i><p>Classes</p>
-
+                                    <a href={# {{ path('classes') }} #} class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Classes</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href= {{ path('ajoutMatiere') }}  class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i><p>Matières</p>
-
+                                    <a href={# {{ path('ajoutMatiere') }} #} class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Matières</p>
                                     </a>
                                 </li>
                             </ul>
@@ -279,110 +251,55 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href= {{ path('displayClub') }}  class="nav-link">
+                                    <a href={# {{ path('displayClub') }} #} class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>La liste des clubs</p>
-
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href= {{ path('displayClubCategories') }}  class="nav-link">
+                                    <a href={# {{ path('displayClubCategories') }} #} class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Catégories disponibles</p>
-
                                     </a>
                                 </li>
 
                             </ul>
                         </li>
-
-                    </li>
-                    <li class="nav-item">
-                     <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-graduation-cap"></i>
-                                <p>
-                                    Emploi
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                        <ul class='nav nav-treeview'>
                         <li class="nav-item">
-                            <a href="{{ path('allemploi') }}" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-bullhorn"></i>
                                 <p>
                                     Propositions d'emploi
                                 </p>
                             </a>
                         </li>
-                         <li class="nav-item">
-                        <a href="{{ path('allCategoriesEmploi') }}" class="nav-link">
-                            <i class="nav-icon fas fa-bullhorn"></i>
-                            <p>
-                                Categorie d'emploi
-                            </p>
-                        </a>
-                    </li>
+                        <li class="nav-header">SUIVI</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon far fa-comments"></i>
+                                <p>
+                                    Forum
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href={# {{ path('listDocuments') }} #} class="nav-link">
+                                <i class="nav-icon far fa-folder"></i>
+                                <p>
+                                    Centre de partage
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href= {# {{ path('app_logout') }} #} class="nav-link">
+                                <i class="nav-icon far fa-folder"></i>
+                                <p>
+                                    LogOut
+                                </p>
+                            </a>
+                        </li>
                     </ul>
-
-                    </li>
-                   
-                    <li class="nav-header">SUIVI</li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-graduation-cap"></i>
-                            <p>
-                                Forum
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href= '{{ path('thread_index') }}' class="nav-link">
-                                    <i class="fas fa-arrow-right"></i>
-                                    <p>Check Forum</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href='{{ path('thread_type_index') }}' class="nav-link">
-                                   <i class="fas fa-arrow-right"></i>
-                                    <p>Topics</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href='{{ path('threads_admin') }}' class="nav-link">
-                                    <i class="fas fa-arrow-right"></i>
-                                    <p>Manage Threads</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% block sideCentePartage %}
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon far fa-folder"></i>
-                            <p>
-                                Centre de partage
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href={{ path('choixNiveau',{'role':0}) }} class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Liste des documents</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href={{ path('listDocumentsSignales') }} class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Documents signalés</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% endblock %}
-                </ul>
-            </nav>
+                </nav>
             {% endblock %}
             <!-- /.sidebar-menu -->
         </div>
@@ -391,23 +308,61 @@
 
     <!-- Content Wrapper. Contains page content -->
     {% block cards %}
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0">Dashboard</h1>
-                    </div><!-- /.col -->
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Dashboard v1</li>
-                            <li class="breadcrumb-item active">Threads</li>
-                        </ol>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Dashboard</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">Dashboard v1</li>
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+
+
+                {% block customized %}
+                    </br>
+                    {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+                    {{ form_end(form) }}
+
+                    </br>
+                {% endblock %}
+
+                {% block special %}
+                {% endblock %}
+
+                {% block about %}
+                {% endblock %}
+
+
+                {% block course %}
+                {% endblock %}
+
+                {% block login %}
+                {% endblock %}
+
+                {% block event %}
+                {% endblock %}
+
+                {% block client %}
+                {% endblock %}
+
+                {% block contact %}
+                {% endblock %}
+
+            </section>
+            <!-- /.content -->
         </div>
     {% endblock %}
 
@@ -435,7 +390,6 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-
 <script src="{{ asset('backOffice/plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('backOffice/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -466,15 +420,8 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('backOffice/dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="{{asset('backOffice/app.js?v=3')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backOffice/dist/js/pages/dashboard.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
-<script>
-    $(document).ready(function () {
-        bsCustomFileInput.init()
-    })
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 </body>
 </html>
+

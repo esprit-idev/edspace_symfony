@@ -16,8 +16,14 @@
         {% endfor %}
   </div>
 
+ {# <div class="theme">
+  <span class="dot"></span>
+<span class="dot"></span>
+<span class="dot"></span>
+  </div> #}
+
   <div class="option">
-  <p>hello</p>
+  <input type="text" id="sinput"></input>
   <i class="fa fa-search"></i>
   </div>
 
@@ -54,7 +60,7 @@
 
 
       <form id="sample_form">
-      <a><i class="fa fa-chevron-left"></i></a>
+      <a><i id="searchm" class="fa fa-chevron-left"></i></a>
         <input type="text" class="form_data" name="content" id="chat-input" placeholder="Envoyer un message..."/>
         <input type="hidden" class="form_data" name="idu" id="chat-input-user"  value="{{user.id}}" />
         <input type="hidden" class="form_data" name="idc" id="chat-input-classe" value="{{user.classe.id}}" />
@@ -74,6 +80,11 @@
 <script>
 
 hidem();
+
+const find=document.getElementById('sinput');
+find.addEventListener('keyup',() =>{
+search(find.value);
+});
 
 function save_data(){
 
@@ -135,8 +146,22 @@ function hidem(){
   x.forEach(a => { hide(a);
   });
 
-
 }
+
+
+function search(str){
+  const x=document.querySelectorAll('.cm-msg-text');
+x.forEach(element => {
+  if(element.innerText.search(str)!=-1){
+    element.parentElement.style.display = "block";
+  console.log(element.innerText)
+  }
+  else{
+    element.parentElement.style.display = "none";
+  }
+});
+}
+
 
 
 </script>
