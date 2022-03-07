@@ -150,11 +150,7 @@
       <path value="$PROJECT_DIR$/vendor/knplabs/knp-paginator-bundle" />
     </include_path>
   </component>
-<<<<<<< HEAD
-  <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
-=======
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3">
->>>>>>> bc0aec16ba9f5b6d0050dc17c4f1dd46fc69c349
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpUnit">
