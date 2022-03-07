@@ -1,0 +1,19 @@
+{% extends "document/frontDoc.html.twig" %}
+{% block title %}
+    <title>Ajout d'un document</title>
+{% endblock %}
+{% block custom %}
+</br>
+<center>
+    <form method="post" action="{{ path('ajoutDocument') }}" >
+        <select name="niveauKey" id="niveauKey" class="border">
+            <option disabled selected> -- Sélectionnez un niveau -- </option>
+            {% for n in niveaux %}
+                <option>{{ n.id }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-secondary">Procéder à l'ajout</button>
+    </form>
+</center>
+    </br>
+{% endblock %}

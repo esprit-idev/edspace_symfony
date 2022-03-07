@@ -1,0 +1,123 @@
+{% extends "frontOffice.html.twig" %}
+{% block title %}<title>Publications</title>{% endblock title %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="{{ asset('/frontOffice/css/templatemo-nomad-force.css') }}" rel="stylesheet">
+    <link href="{{ asset('/frontOffice/css/responsive.css') }}" rel="stylesheet" />
+{% endblock css %}
+
+{% block tabaff_item %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{{ path('allPublications') }}">Tableau d'affichage<span class="sr-only">(current)</span></a>
+    </li>
+{% endblock %}
+
+{% block slider %}
+
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Les Dernières Nouvelles
+                                        </h1>
+                                        <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block custom %}
+    <section class="news section-padding" id="news">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h2 class="mb-5 text-center" data-aos="fade-up">News & Events</h2>
+                        </div>
+                        <div class="col-12 d-flex justify-content-center mb-4">
+                         <form method="POST" action="{{ path('searchByCat') }}" class="form-row">
+                            <div class="pr-2">
+                            <select name="categoryKey" id="categoryKey" class="form-select form-control">
+                                <option disabled selected> -- Sélectionnez une catégorie -- </option>
+                                {% for c in categories %}
+                                    <option>{{ c.categoryName }}</option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                            <div><button value="recherche" class="btn btn-secondary">Rechercher</button></div>
+                        </form>
+                        </div>
+                        {% for pub in publications %}
+                        <div class="col-lg-6 col-12 mb-5 mb-lg-0">
+                            <div class="news-thumb" data-aos="fade-up">
+                                <a href="{{ path("onePublication",{'id':pub.id,'likes':pub.likes}) }}" class="news-image-hover news-image-hover-warning">
+                                    <img src="{{ asset('images/') ~ pub.image.name}}" class="img-fluid large-news-image news-image" alt="">
+                                </a>
+
+                                <div class="news-category bg-warning text-white">{{pub.categoryName.getCategoryName()}}</div>
+                                
+                                <div class="news-text-info">
+                                    <h5 class="news-title">
+                                        <a href="{{ path('onePublication', {id: pub.id, 'likes' : pub.likes}) }}" class="news-title-link">{{pub.title}}</a>
+                                    </h5>
+                                    <span class="text-muted">{{pub.date.format('d/m/y')}}</span>
+                                </div>
+                            </div> 
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+{% endblock %}
+
+{% block special %}
+{% endblock %}
+
+{% block about %}
+{% endblock %}
+
+{% block course %}
+{% endblock %}
+
+{% block login %}
+{% endblock %}
+
+{% block event %}
+{% endblock %}
+
+{% block client %}
+{% endblock %}
+
+{% block contact %}
+{% endblock %}
+{% block js %}
+        <script src=" {{ asset('frontOffice/js/bootstrap.bundle.min.js') }}"></script>
+        <script src=" {{ asset('frontOffice/js/jquery.sticky.js') }}"></script>
+        <script src=" {{ asset('frontOffice/js/jquery.min.js') }}"></script>
+        <script src=" {{ asset('frontOffice/js/aos.js') }}"></script>
+        <script src=" {{ asset('frontOffice/js/jquery.magnific-popup.min.js') }}"></script>
+        <script src=" {{ asset('frontOffice/js/magnific-popup-options.js') }}"></script>
+        <script src=" {{ asset('frontOffice/js/scrollspy.min.js') }}"></script>
+        <script src=" {{ asset('frontOffice/js/custom.js') }}"></script>
+{% endblock js %}

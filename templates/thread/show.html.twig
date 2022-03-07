@@ -1,19 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends 'frontOffice.html.twig' %}
 
-<head>
-    <!-- Basic -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <!-- Site Metas -->
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+{% block title %}
+    <title>Forum</title>
+{% endblock %}
 
-    <title>EdSpace</title>
-
+    {% block css %}
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -26,64 +17,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/v4-shims.min.js" integrity="sha512-7qQljqOcfujtn+H4jLGbhDviLED/sMZ+gnJeExpfXKLQMzuOT0/3mGaqUgbqjAPrMsDMZ/6uVNqtXuallND7WQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-</head>
+        <script src="https://kit.fontawesome.com/ffcbf2bd8b.js" crossorigin="anonymous"></script>
 
-<body>
-<div class="hero_area">
-                <!-- header section strats -->
-                {% block header %}
-                <header class="header_section">
-                    <div class="container-fluid">
-                        <nav class="navbar navbar-expand-lg custom_nav-container ">
-                            <a class="navbar-brand" href="#">
-                                <h3>
-                                    EdSpace
-                                </h3>
-                                <span> college</span>
-                            </a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
+    {% endblock %}
 
-                            <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-                                <ul class="navbar-nav  ml-auto">
-                                    {% block nav %}
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#">Tableau d'affichage</a>
-                                        </li>
-                                        <li class="nav-item  active">
-                                            <a class="nav-link" href="/thread">Forum<span class="sr-only">(current)</span></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href={# {{ path('displayClub') }} #}>Clubs</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#">Offres d'emploi</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href={# {{ path('listDocuments') }} #}>Centre de partage</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#">Mon profile</a>
-                                        </li>
-                                    {% endblock %}
-                                </ul>
-                                <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                                    <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                                </form>
-                            </div>
-                        </nav>
-                    </div>
-                </header>
-                {% endblock %}
+    {% block forum_item %}
+        <li class="nav-item active">
+            <a class="nav-link" href="/thread">Forum</a>
+        </li>
+    {% endblock %}
 
 
 
-
-                <div>
-                <h3><footer class="blockquote-footer text-right"> <cite title="Source Title">What are you seeking today ?</cite></footer></h3>
-                
-                </div>
+    {% block slider %}
+        <div>
+            <h3><footer class="blockquote-footer text-right"> <cite title="Source Title">What are you seeking today ?</cite></footer></h3>
+        </div>
                 <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
@@ -149,17 +98,10 @@
             </div>
         </div>
     </section>
-    
-    <!-- end slider section -->
-</div>
+
+    {% endblock %}
+
 {% block custom %}
-{% endblock %}
-
-
-
-                
-    
-
 <div class="container bootdey">
 <div class="col-md-12 bootstrap snippets">
 <div class="panel">
@@ -192,12 +134,12 @@
         
           <a href="#" class="btn text-bold media-heading box-inline">
           {% if thread.verified == 1%}
-          {{thread.user.prenom}} {{thread.user.name}} <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+          {{thread.user.prenom}} {{thread.user.username}} <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
   <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
 </svg></a>
         {% else %}
        
-        {{thread.user.prenom}} {{thread.user.name}}
+        {{thread.user.prenom}} {{thread.user.username}}
         
           {% endif %}
           <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> {{thread.postDate ? thread.postDate|date('H:i:s y-m-d') : ''}}</p>
@@ -225,7 +167,7 @@
             <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://bootdey.com/img/Content/avatar/avatar2.png"></a>
             <div class="media-body">
               <div class="mar-btm">
-                <a href="#" class="btn text-semibold media-heading box-inline">{{thread.user.prenom}} {{thread.user.name}}</a>
+                <a href="#" class="btn text-semibold media-heading box-inline">{{thread.user.prenom}} {{thread.user.username}}</a>
                 <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> - {{thread.replyDate ? thread.replyDate|date('y-m-d H:i:s ') : ''}}</p>
               </div>
               <p>{{thread.reply}}</p>
@@ -239,21 +181,14 @@
               <hr>
             </div>
           </div>
+        </div>
         {% endfor %}
           
-  </div>
+      </div>
 </div>
 </div>
 </div>
-</body>
-</html>
-
-
-
-
-
-
-
+</div>
 
 <style>
 body{
@@ -359,3 +294,5 @@ body{
 }
 
 </style>
+</div>
+{% endblock %}

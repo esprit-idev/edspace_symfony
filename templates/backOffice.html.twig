@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard</title>
+    {% block title %}<title>AdminLTE 3</title>{% endblock %}
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -27,15 +27,18 @@
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/summernote/summernote-bs4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backOffice/style.css?version=2') }}">
+    {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+    {% endblock %}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="sidebar-mini layout-fixed">
 <div class="wrapper">
 
     <!-- Preloader -->
-    <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="{{ asset('backOffice/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
-             height="60" width="60">
-    </div>
+    {# <div class="preloader flex-column justify-content-center align-items-center">
+        <img class="animation__shake" src="{{ asset('backOffice/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo" height="60" width="60">
+    </div> #}
 
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -53,7 +56,7 @@
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
-            <!-- Navbar Search -->
+            {% block searchbar %}
             <li class="nav-item">
                 <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                     <i class="fas fa-search"></i>
@@ -61,8 +64,7 @@
                 <div class="navbar-search-block">
                     <form class="form-inline">
                         <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search"
-                                   aria-label="Search">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-navbar" type="submit">
                                     <i class="fas fa-search"></i>
@@ -75,68 +77,7 @@
                     </form>
                 </div>
             </li>
-
-            <!-- Messages Dropdown Menu -->
-            <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-comments"></i>
-                    <span class="badge badge-danger navbar-badge">3</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <a href="#" class="dropdown-item">
-                        <!-- Message Start -->
-                        <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 mr-3 img-circle">
-                            <div class="media-body">
-                                <h3 class="dropdown-item-title">
-                                    Brad Diesel
-                                    <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                                </h3>
-                                <p class="text-sm">Call me whenever you can...</p>
-                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                            </div>
-                        </div>
-                        <!-- Message End -->
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <!-- Message Start -->
-                        <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user8-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 img-circle mr-3">
-                            <div class="media-body">
-                                <h3 class="dropdown-item-title">
-                                    John Pierce
-                                    <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                                </h3>
-                                <p class="text-sm">I got your message bro</p>
-                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                            </div>
-                        </div>
-                        <!-- Message End -->
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <!-- Message Start -->
-                        <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 img-circle mr-3">
-                            <div class="media-body">
-                                <h3 class="dropdown-item-title">
-                                    Brad Diesel2
-                                    <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                                </h3>
-                                <p class="text-sm">The subject goes here</p>
-                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                            </div>
-                        </div>
-                        <!-- Message End -->
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                </div>
-            </li>
+            {% endblock %}
             {% block notif %}
             <!-- Notifications Dropdown Menu -->
             <li class="nav-item dropdown">
@@ -174,10 +115,18 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
+        <center>
         <a href="#" class="brand-link">
-            <i class="nav-icon fas fa-graduation-cap"></i>
-            <span class="brand-text font-weight-light">EdSpace</span>
+            <img src="/logo_small.svg"/>
         </a>
+        </center>
+
+        <!--center>
+            <div style="margin: 5px 5px 5px -10px;" align="center"><h5><i style="color: #4bc5b8;margin-right: 10px" class="nav-icon fas fa-graduation-cap fa-lg"></i>EdSpace</h5></div>
+
+        <h3 style="color: white;font-weight: bold;text-transform: uppercase; margin-top: 10px">EDSPACE</h3>
+        <span style="color: darkgrey; font-size: 16px;font-weight: bold;margin-top: -10px" >Esprit</span>
+        </center-->
 
         <!-- Sidebar -->
         <div class="sidebar">
@@ -188,7 +137,7 @@
                          alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block">Nom de l'agent</a>
+                    {# <a href="{{path('show')}}" class="d-block">{{ app.user.username}} {{ app.user.prenom }}</a> #}
                 </div>
             </div>
             <!-- Sidebar Menu -->
@@ -198,15 +147,38 @@
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-table"></i>
+                        {% block tabaff_side %}
+                        <li class='nav-item'>
+                                <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-newspaper"></i>
                                 <p>
-                                    Tableau d'affichage
+                                    News
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ path('allPublications') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Tableau d'affichage
+                                    </p>
+                                </a>
+                            </li>
+
+                        <li class="nav-item">
+                        <a href="{{ path('allCategoriesNews') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>
+                                Categorie news
+                            </p>
+                        </a>
                         </li>
+                            </ul>
+                        </li>
+                        {% endblock %}
                         <li class="nav-header">GESTION</li>
+                        {% block etudiant_side %}
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-users mr-2"></i>
@@ -215,6 +187,8 @@
                                 </p>
                             </a>
                         </li>
+                        {% endblock %}
+                        {% block niveau_side %}
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-graduation-cap"></i>
@@ -227,12 +201,11 @@
                                 <li class="nav-item">
                                     <a href= {{ path('ajoutNiveau') }}  class="nav-link">
                                         <i class="far fa-circle nav-icon"></i><p>Niveaux</p>
-
-<<<<<<< HEAD
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href={# {{ path('classes') }} #} class="nav-link">
+                                    <a href={{ path('Classe') }} class="nav-link">
+
                                         <i class="far fa-circle nav-icon"></i><p>Classes</p>
 
                                     </a>
@@ -245,6 +218,8 @@
                                 </li>
                             </ul>
                         </li>
+                        {% endblock %}
+                        {% block clubs_side %}
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-shapes"></i>
@@ -271,56 +246,43 @@
 
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-bullhorn"></i>
-                                <p>
-                                    Propositions d'emploi
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-header">SUIVI</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-comments"></i>
-                                <p>
-                                    Forum
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href={# {{ path('listDocuments') }} #} class="nav-link">
-                                <i class="nav-icon far fa-folder"></i>
-                                <p>
-                                    Centre de partage
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-=======
-                        </ul>
-                    </li>
+                        {% endblock %}
+                        {% block emploi_side %}
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-bullhorn"></i>
+                     <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-briefcase"></i>
+                                <p>
+                                    Emploi
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                        <ul class='nav nav-treeview'>
+                        <li class="nav-item">
+                            <a href="{{ path('allemploi') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    Offres d'emploi
+                                </p>
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                        <a href="{{ path('allCategoriesEmploi') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
                             <p>
-                                Propositions d'emploi
+                                Catégories des offres
                             </p>
                         </a>
                     </li>
+                    </ul>
+
+                    </li>
+                        {% endblock %}
+                   
                     <li class="nav-header">SUIVI</li>
-                    
-
-
-
-
-
-
-
+                        {% block forum_side %}
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-graduation-cap"></i>
+                            <i class="nav-icon fas fa-comments "></i>
                             <p>
                                 Forum
                                 <i class="fas fa-angle-left right"></i>
@@ -329,50 +291,52 @@
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href= '{{ path('thread_index') }}' class="nav-link">
-                                    <i class="fas fa-arrow-right"></i>
+                                    <i class="far fa-circle nav-icon"></i>
                                     <p>Check Forum</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href='{{ path('thread_type_index') }}' class="nav-link">
-                                   <i class="fas fa-arrow-right"></i>
+                                   <i class="far fa-circle nav-icon"></i>
                                     <p>Topics</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href='{{ path('threads_admin') }}' class="nav-link">
-                                    <i class="fas fa-arrow-right"></i>
+                                    <i class="far fa-circle nav-icon"></i>
                                     <p>Manage Threads</p>
                                 </a>
                             </li>
                         </ul>
                     </li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        {% endblock %}
+                    {% block sideCentePartage %}
                     <li class="nav-item">
-                        <a href={# {{ path('listDocuments') }} #} class="nav-link">
+                        <a href="#" class="nav-link">
                             <i class="nav-icon far fa-folder"></i>
                             <p>
                                 Centre de partage
+                                <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href={{ path('choixNiveau') }} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Liste des documents</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href={{ path('listDocumentsSignales') }} class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Documents signalés</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+                    {% endblock %}
                 </ul>
             </nav>
->>>>>>> bc0aec16ba9f5b6d0050dc17c4f1dd46fc69c349
             {% endblock %}
             <!-- /.sidebar-menu -->
         </div>
@@ -381,97 +345,6 @@
 
     <!-- Content Wrapper. Contains page content -->
     {% block cards %}
-<<<<<<< HEAD
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid">
-                    <!-- Small boxes (Stat box) -->
-                    <div class="row">
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-info">
-                                <div class="inner">
-                                    <h3>150</h3>
-
-                                    <p>New Orders</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-bag"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-success">
-                                <div class="inner">
-                                    <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                                    <p>Bounce Rate</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-stats-bars"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-warning">
-                                <div class="inner">
-                                    <h3>44</h3>
-
-                                    <p>User Registrations</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-person-add"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-danger">
-                                <div class="inner">
-                                    <h3>65</h3>
-
-                                    <p>Unique Visitors</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-pie-graph"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                    </div>
-                    <!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
-=======
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <div class="content-header">
@@ -489,23 +362,11 @@
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
->>>>>>> bc0aec16ba9f5b6d0050dc17c4f1dd46fc69c349
         </div>
     {% endblock %}
 
     {% block custom %}
 
-    {% endblock %}
-
-    <!-- /.content-wrapper -->
-    {% block footer %}
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-            All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.2.0
-            </div>
-        </footer>
     {% endblock %}
 
     <!-- Control Sidebar -->
@@ -517,6 +378,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
+
 <script src="{{ asset('backOffice/plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('backOffice/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -547,7 +409,15 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('backOffice/dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
+<script src="{{asset('backOffice/app.js?v=3')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backOffice/dist/js/pages/dashboard.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+<script>
+    $(document).ready(function () {
+        bsCustomFileInput.init()
+    })
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 </body>
 </html>

@@ -1,53 +1,15 @@
 {% extends 'frontOffice.html.twig' %}
-{% block title %}
-    CLUBS {% endblock %}
-{% block header %}
-    <header class="header_section">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg custom_nav-container ">
-                <a class="navbar-brand" {# href="index.html" #}>
-                    <h3>
-                        EdSpace
-                    </h3>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-                    <ul class="navbar-nav  ml-auto">
-                        <li class="nav-item ">
-                            {% block nav %}
-                            <a class="nav-link" {# href="index.html" #}>Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="about.html" #}> About </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="course.html" #}> Courses </a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('displayClub') }}"> Clubs </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="contact.html" #}>Contact us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="login.html" #}>Login</a>
-                        </li>
-                        {% endblock %}
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                    </form>
-                </div>
-            </nav>
-        </div>
-    </header>
-    <!-- end header section -->
+{% block title %}
+    <title>Clubs</title>
 {% endblock %}
+
+{% block clubs_item %}
+    <li class="nav-item active">
+        <a class="nav-link" href={{ path('displayClub') }}>Clubs</a>
+    </li>
+{% endblock %}
+
 {% block slider %}
 
     <!-- slider section -->
@@ -84,10 +46,10 @@
 {% endblock %}
 {% block special %}
     </br>
-    <div class="container leftitem" align="center">
+    <div class="container " align="center">
         <form method="post" action="{{ path('displayClub') }}">
-            <select name="catego" id="catego" class="border">
-                <option disabled selected> -- Catégories --</option>
+            <select name="catego" id="catego" class="border" style="height: 36px">
+                <option disabled selected>-- Catégories --</option>
                 {% for cat in categories %}
                     <option>{{ cat.categorieNom }}</option>
                 {% endfor %}
@@ -98,57 +60,60 @@
     </div>
 
     </br>
-    <div class=" rightitem">
+    <div class="container ">
 
         {% set i = 1 %}
         <div class="row">
             {% if clubs is empty %}
-                <p ">Pas de clubs dans cette categorie.
+                <p>Pas de clubs dans cette categorie
                 </p>
             {% else %}
-            {% for c in clubs %}
-                <div class="col-sm-6">
-                    <div id="accordion">
-                        <div class="card ">
-                            <div class="card-header btn bg-secondary" id="heading{{ i }}">
-                                <h2 class="mb-0" align="center">
-                                    <button class="btn text-white font-weight-bolder  " data-toggle="collapse"
-                                            data-target="#collapse{{ i }}" aria-expanded="true"
-                                            aria-controls="collapse{{ i }}">
-                                        {{ c.clubNom }}
-                                    </button>
-                                </h2>
-                            </div>
-
-                            <div id="collapse{{ i }}" class="collapse" aria-labelledby="heading{{ i }}"
-                                 data-parent="#accordion" align="center">
-                                </br>
-                                <img width="200px" height="200px" align="center" class="rounded-circle"
-                                     src="{{ asset('ClubPictures/' ~ c.clubPic) }}">
-                                </br>
-                                </br>
-
-                                <h5 align="center">Catégorie : {{ c.clubCategorie.categorieNom }}</h5>
-                                <div class="card-body">
-                                    {% autoescape %}
-                                        {{ c.clubDescription|raw }} {# var won't be escaped #}
-                                    {% endautoescape %}
+                {% for c in clubs %}
+                    <div class="col-sm-6">
+                        <div id="accordion">
+                            <div class="card shadow" >
+                                <div class="card-header btn bg-secondary"  id="heading{{ i }}">
+                                    <h2 class="mb-0" align="center">
+                                        <button class="btn text-white font-weight-bolder" style="width: 400px" data-toggle="collapse"
+                                                data-target="#collapse{{ i }}" aria-expanded="true"
+                                                aria-controls="collapse{{ i }}">
+                                            {{ c.clubNom }}
+                                        </button>
+                                    </h2>
                                 </div>
-                                <h5> Contact:</h5>
-                                <div>
-                                    {{ c.clubResponsable.email }}
+
+                                <div id="collapse{{ i }}" class="collapse" aria-labelledby="heading{{ i }}"
+                                     data-parent="#accordion" align="center">
+                                    </br>
+                                    <img width="200px" height="200px" align="center" class="rounded-circle"
+                                         src="{{ asset('ClubPictures/' ~ c.clubPic) }}">
+                                    </br>
+                                    </br>
+
+                                    <h5 align="center">Catégorie : {{ c.clubCategorie.categorieNom }}</h5>
+                                    <div class="card-body">
+                                        {% autoescape %}
+                                            {{ c.clubDescription|raw }} {# var won't be escaped #}
+                                        {% endautoescape %}
+                                    </div>
+                                    <h5> Contact:</h5>
+                                    <div>
+                                        {{ c.clubResponsable.email }}
+                                    </div>
+                                    <h5>
+                                        <button class="btn btn-success" style="margin-top: 10px">
+                                            <a href="{{ path('displayPubClub',{'id':c.id}) }} "class="text text-white" >
+                                                Consulter
+                                            </a>
+                                        </button>
+                                    </h5>
                                 </div>
-                                <h5>
-                                    <button class=" btn btn-success"><a href="{{ path('displayPubClub',{'id':c.id}) }} "
-                                                                        class="text text-white">Consulter</a></button>
-                                </h5>
                             </div>
                         </div>
+                        {% set i = i + 1 %}
                     </div>
-                    {% set i = i + 1 %}
-                </div>
 
-            {% endfor %}
+                {% endfor %}
             {% endif %}
         </div>
 

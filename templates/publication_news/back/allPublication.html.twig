@@ -1,0 +1,69 @@
+{% extends "backOffice.html.twig" %}
+{% block title %}<title>Tableau d'affichage</title>{% endblock %}
+{% block leftNavBar %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Tableau d'affichage</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block searchbar %}
+    <li class="nav-item">
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+            <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+            <form class="form-inline" method="POST" action="{{ path('search') }}">
+                <div class="input-group input-group-sm">
+                        <input class="form-control form-control-navbar" type="text" placeholder="Search" aria-label="Search" name="publicationTitle">
+                        <div class="input-group-append">
+                                <button class="btn btn-navbar" type="submit" value="recherche">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+            </form>
+                </div>
+            </li>
+{% endblock searchbar %}
+{% block cards %}
+    <div class="content-wrapper"> <!-- don't delete this line-->
+        <div class="container-fluid"> <!-- don't delete this line-->
+            <div class="row pb-4 pl-2 pr-2 pt-4 d-flex justify-content-between">
+                <div class="pl-4"><a href="{{ path('addPublication')}}" class="btn btn-primary"> Ajouter une publication </a></div>
+            </div>
+            <div class="row d-flex justify-content-center">
+            {% for pub in publications %}
+            <div class="p-4">
+            <div class="card h-100" style="width: 18rem;">
+                {% if pub.image.name is defined and pub.image.name is not null %}
+                <img src="{{ asset('images/') ~ pub.image.name}}" class="card-img-top" style="width: 100%;
+                                                                                            height: 15vw;
+                                                                                            object-fit: cover;">
+                    {% else %}
+                     <img src="{{ asset('images/') ~ pub.image.name}}" alt="pas d image" class="card-img-top" style="width: 100%;
+                                                                                            height: 15vw;
+                                                                                            object-fit: cover;">                                                                            
+                {% endif %}
+                <div class="card-body pe-auto">
+                    <h5 class="card-title">{{pub.title}}</h5>
+                    <p class="card-text" style="white-space: nowrap;
+                                                overflow: hidden;
+                                                text-overflow: ellipsis">{{pub.content}}</p>
+                    <a href="{{ path('updatePublication',{'id':pub.id}) }}" class="card-link btn btn-success">Modifier</a>
+                    <a href="{{ path('deletePublication',{'id':pub.id}) }}" class="card-link btn btn-danger">supprimer</a>
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}

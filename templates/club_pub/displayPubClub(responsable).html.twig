@@ -1,54 +1,11 @@
 {% extends 'frontOffice.html.twig' %}
 {% block title %}
-    RUBRIQUE CLUB {{ nom }}{% endblock %}
+    <title>RUBRIQUE CLUB {{ nom }}</title>{% endblock %}
 
-{% block header %}
-    <header class="header_section">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg custom_nav-container ">
-                <a class="navbar-brand" {# href="index.html" #}>
-                    <h3>
-                        EdSpace
-                    </h3>
-                    <span></span>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-                    <ul class="navbar-nav  ml-auto">
-                        <li class="nav-item ">
-                            {% block nav %}
-                            <a class="nav-link" {# href="index.html" #}>Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="about.html" #}> About </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="course.html" #}> Courses </a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('displayClub') }}">Clubs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="contact.html" #}>Contact us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="login.html" #}>Login</a>
-                        </li>
-                        {% endblock %}
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                    </form>
-                </div>
-            </nav>
-        </div>
-    </header>
-    <!-- end header section -->
+{% block clubs_item %}
+    <li class="nav-item active">
+        <a class="nav-link" href={{ path('displayClub') }}>Clubs</a>
+    </li>
 {% endblock %}
 
 {% block slider %}
@@ -134,58 +91,418 @@
     </br>
     </br>
     </br>
-
-
-
     <div class="container login_form">
         <div class="d-flex justify-content-center">
             <div class="container container-fluid ">
-
                 {{ form(formPub,{'attr': {'novalidate': 'novalidate'}} ) }}
             </div>
-
         </div>
-
-
     </div>
+    </br>
+    </br>
+    </br>
+    <div class="container login_form">
+        <div class="float-right" style="width: 200px;margin-right: -150px" >
+            <div class="d-flex justify-content-center" >
+                <div class="container container-fluid ">
+                    <!-- filter ************************************** -->
+                    <div class="float-right" style="margin-top: -30px ;margin-bottom:30px ;margin-left: -150px">
+                        <h4>Filter by date</h4>
+                        <form style="margin-bottom: 10px" method="post" action="{{ path('displayPubClub',{'id':idclub}) }}">
+                            <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+                            <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+                            <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+                            <input type="text" id="minDate" name="minDate" value="minDate" width="200"/>
+                            <script>
+                                $('#minDate').datepicker({
+                                    uiLibrary: 'bootstrap4'
+                                    , format: "yyyy-mm-dd"
+
+                                });
+                            </script>
+                            <input type="text" id="maxDate" name="maxDate" value="maxDate" width="200"/>
+                            <script>
+                                $('#maxDate').datepicker({
+                                    uiLibrary: 'bootstrap4'
+                                    , format: "yyyy-mm-dd"
+
+                                });
+                            </script>
+                            <button style="margin-top: 10px" class="btn btn-secondary" onclick="TDate()">Afficher les pubs</button>
+
+                            <div class="modal fade" id="datewarning" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog  modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <h5 class="modal-title text-dark">
+                                                La date max doit être supérieure à la date min.
+                                            </h5>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+
+                                        </div>
 
 
-    </br>
-    </br>
-    </br>
-    </br>
-    </br>
+                                    </div>
+                                </div>
+                            </div>
 
-    <!-- en attente/refused **************************************************** -->
-    <div class="rightitem">
-        <div id="accordion">
-            <div class="card">
-                <div class="card-header btn bg-success" id="headingOne" data-toggle="collapse" data-target="#enAttente"
-                     aria-expanded="false" aria-controls="enAttente">
-                    <h5 class="mb-0 text-white" align="center">
-                        Publications en attente.
-                    </h5>
+                            <script>
+                                function TDate() {
+                                    var minDate = document.getElementById("minDate").value;
+                                    var maxDate = document.getElementById("maxDate").value;
+                                    if (new Date(minDate).getTime() >= new Date(maxDate).getTime()) {
+                                        minDate.value = ""
+                                        $('#datewarning').modal('show');
+                                        event.preventDefault();
+
+                                        return false;
+                                    }
+
+                                    return true;
+                                }
+                            </script>
+
+                        </form>
+
+                    </div>
+                    <!-- hanging/refused pubs ************************************** -->
+                    <div class="float-right" style="margin-top: 20px ;margin-bottom:30px ;">
+                        <div  style="width: 200px">
+                            <div id="accordion">
+                                <div class="card">
+                                    <div>
+
+                                        <button class="btn btn-outline-success " type="button"  data-toggle="modal"
+                                                data-target="#pubEnAttente">
+                                            {% if pub_hanging is empty %}
+                                            {% else %}
+                                                <span class="badge-xlg badge-pill badge-danger navbar-badge float-right" style="margin-top:-22px;width: 25px;font-size: 1.1em;margin-right:-20px;">{{ pub_hanging|length }}</span>
+                                            {% endif %}
+                                            <h5 class="mb-0 " align="center">
+                                                Publications en attente
+                                            </h5>
+                                        </button>
+
+                                    </div>
+                                    <div class="modal fade"  id="pubEnAttente" tabindex="-1" role="dialog"
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl" >
+                                            <div class="modal-content">
+                                                <div class="modal-body"  style="margin-left: -26px">
+                                                    <div class="container container-fluid ">
+                                                        <div style="width: 807px;">
+                                                            {% if pub_hanging is empty %}
+                                                                <p align="center">Pas de publications. </p>
+                                                            {% endif %}
+                                                            {% for c in pub_hanging %}
+                                                                <div class="card card-info contain shadow rounded">
+                                                                    <div class="card-header " style="background: #F3F3F3;height: 70px">
+                                                                        <h4 class="float-left"><a href="{{ path('displayClub') }}" class="text-dark">
+                                                                                <img class="rounded-circle"
+                                                                                     src="{{ asset('ClubPictures/' ~ clubPic)|imagine_filter('my_thumb_filter') }}">
+                                                                                {{ c.club.clubNom|upper }}
+                                                                            </a>
+                                                                        </h4>
+                                                                        <div class="dropdown float-right" style="margin-top: 10px ;margin-left: 10px">
+                                                                            <a><i class="fa-solid fa-ellipsis fa-xl" style="color:grey" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></a>
+                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="margin-left: -5px; margin-top: -5px">
+                                                                                <a class="dropdown-item" href="{{ path('updatePubClub',{'idpub':c.id,'idclub':idclub}) }}" style="color: #7EBCF7"><i class="fas fa-pen fa-sm" style="margin-right: 10px"></i>Modifier</a>
+                                                                                <a class="dropdown-item"  href="#" data-toggle="modal"
+                                                                                   data-target="#exampleModal{{ c.id }}" style="color: #FA5550"><i class="fas fa-trash fa-sm" style="margin-right: 10px"></i>Supprimer</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card-body" style="background: #F3F3F3">
+                                                                        <p class="card-text">
+                                                                            {% autoescape %}
+                                                                                {{ c.pubDescription|raw }} {# var won't be escaped #}
+                                                                            {% endautoescape %}</p>
+                                                                        {% if c.pubFileName is empty %}
+                                                                        {% else %}
+                                                                            </br>
+                                                                            <div align="right" style="margin-top: -20px;margin-bottom: -30px">
+                                                                                <p style="display: inline-block;">Attatched file:</p>
+                                                                                <a style="display: inline-block; margin: 0;"
+                                                                                   href="{{ path('DisplayPubFile',{'id':c.id}) }}">{{ c.pubFileName }}</a>
+                                                                            </div>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div align="center" style="background: #F3F3F3">{% if c.ClubImg is empty %}
+                                                                        {% else %}
+                                                                            <div align="center">
+                                                                                {% if ('.PNG' in (c.ClubImg|upper)) or ('.JPEG' in (c.ClubImg|upper)) or ('.JPG' in (c.ClubImg|upper)) or ('.JFIF' in (c.ClubImg|upper)) %}
+                                                                                    <img style="transition: transform .1s;"
+                                                                                         src="{{ asset('PubPictures/' ~ c.ClubImg)|imagine_filter('my_dim_down_scale_filter') }}">
+                                                                                {% elseif ('.MP4' in (c.ClubImg|upper)) %}
+                                                                                    <video controls height="400" width="806" >
+                                                                                        <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
+                                                                                                type="video/mp4">
+                                                                                        <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
+                                                                                                type="video/webm">
+                                                                                        <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
+                                                                                            Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien
+                                                                                                pour télécharger
+                                                                                                la vidéo</a>.</p>
+                                                                                    </video>
+                                                                                {% else %}
+                                                                                    <h4 class="text-danger"> File extension not supported try adding it as a
+                                                                                        file</h4>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        {% endif %}
+
+                                                                    </div>
+                                                                    <div class="card-footer" align="left" style="background: #F3F3F3; height: 50px">
+                                                                        <div>
+                                                                            <div class="float-left">
+                                                                                <p class="card-text">Publié le {{ c.pubDate|date ('Y-m-d') }}.</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                </br>
+
+                                                                <!-- Modal -->
+                                                                <div class="modal fade" id="exampleModal{{ c.id }}" tabindex="-1" role="dialog"
+                                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+
+                                                                            <div class="modal-body">
+                                                                                <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de
+                                                                                    vouloir supprimer
+                                                                                    la publication?</h5>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Non
+                                                                                </button>
+                                                                                <form ACTION="{{ path("deletePubClub",{'id':c.id,'idclub':idclub}) }}">
+                                                                                    <button class="btn btn-danger">Oui</button>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-------->
+                                                                <div class="modal fade" id="updatepub{{ c.id }}" tabindex="-1" role="dialog"
+                                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-lg" role="document">
+                                                                        <div class="modal-content">
+
+                                                                            <div class="modal-body">
+                                                                                <h5 class="modal-title text-dark">
+                                                                                </h5>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div  style="width: 200px;margin-top: 20px">
+                            <div id="accordion2">
+                                <div class="card">
+                                    <button class="btn btn-outline-danger" type="button" data-toggle="modal"
+                                            data-target="#pubEnRefusé">
+                                        {% if pub_refused is empty %}
+                                        {% else %}
+                                            <span class="badge-xlg badge-pill badge-danger navbar-badge float-right" style="margin-top:-22px;width: 25px;font-size: 1.1em;margin-right:-20px;">{{ pub_refused|length }}</span>
+                                        {% endif %}
+                                        <h5 class="mb-0 " align="center">
+                                            Publications refusées
+                                        </h5>
+                                    </button>
+                                    <div class="modal fade" id="pubEnRefusé" tabindex="-1" role="dialog"
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl">
+                                            <div class="modal-content">
+                                                <div class="modal-body" style="margin-left: -26px">
+                                                    <div class="container container-fluid ">
+                                                        <div style="width: 807px;">
+                                                            {% if pub_refused is empty %}
+                                                                <p align="center">Pas de publications. </p>
+                                                            {% endif %}
+                                                            {% for c in pub_refused %}
+                                                                <div class="card card-info contain shadow rounded">
+                                                                    <div class="card-header" style="background: #F3F3F3;height: 70px" >
+                                                                        <h4 class="float-left"><a href="{{ path('displayClub') }}" class="text-dark">
+                                                                                <img class="rounded-circle"
+                                                                                     src="{{ asset('ClubPictures/' ~ clubPic)|imagine_filter('my_thumb_filter') }}">
+                                                                                {{ c.club.clubNom|upper }}
+                                                                            </a>
+                                                                        </h4>
+                                                                        <div class="dropdown float-right" style="margin-top: 10px ;margin-left: 10px">
+                                                                            <a>
+                                                                                <i class="fa-solid fa-ellipsis fa-xl" style="color:grey" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></a>
+                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="margin-left: -5px; margin-top: -5px">
+                                                                                <a class="dropdown-item"  href="#" data-toggle="modal"
+                                                                                   data-target="#exampleModal{{ c.id }}" style="color: #FA5550">
+                                                                                    <i class="fas fa-trash fa-sm" style="margin-right: 10px"></i>
+                                                                                    Supprimer
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="card-body" style="background: #F3F3F3">
+                                                                        <p class="card-text">
+                                                                            {% autoescape %}
+                                                                                {{ c.pubDescription|raw }} {# var won't be escaped #}
+                                                                            {% endautoescape %}</p>
+                                                                        {% if c.pubFileName is empty %}
+                                                                        {% else %}
+                                                                            </br>
+                                                                            <div align="right" style="margin-top: -20px;margin-bottom: -30px">
+                                                                                <p style="display: inline-block;">Attatched file:</p>
+                                                                                <a style="display: inline-block; margin: 0;"
+                                                                                   href="{{ path('DisplayPubFile',{'id':c.id}) }}">{{ c.pubFileName }}</a>
+                                                                            </div>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div align="center" style="background: #F3F3F3">{% if c.ClubImg is empty %}
+                                                                        {% else %}
+                                                                            <div align="center">
+                                                                                {% if ('.PNG' in (c.ClubImg|upper)) or ('.JPEG' in (c.ClubImg|upper)) or ('.JPG' in (c.ClubImg|upper)) or ('.JFIF' in (c.ClubImg|upper)) %}
+                                                                                    <img style="transition: transform .1s;"
+                                                                                         src="{{ asset('PubPictures/' ~ c.ClubImg)|imagine_filter('my_dim_down_scale_filter') }}">
+                                                                                {% elseif ('.MP4' in (c.ClubImg|upper)) %}
+                                                                                    <video controls height="400" width="806" >
+                                                                                        <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
+                                                                                                type="video/mp4">
+                                                                                        <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
+                                                                                                type="video/webm">
+                                                                                        <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
+                                                                                            Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien
+                                                                                                pour télécharger
+                                                                                                la vidéo</a>.</p>
+                                                                                    </video>
+                                                                                {% else %}
+                                                                                    <h4 class="text-danger"> File extension not supported try adding it as a
+                                                                                        file</h4>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        {% endif %}
+
+                                                                    </div>
+                                                                    <div class="card-footer" align="left" style="background: #F3F3F3; height: 50px">
+                                                                        <div>
+                                                                            <div class="float-left">
+                                                                                <p class="card-text">Publié le {{ c.pubDate|date ('Y-m-d') }}.</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                </br>
+
+                                                                <!-- Modal Delete ************************************-->
+                                                                <div class="modal fade" id="exampleModal{{ c.id }}" tabindex="-1" role="dialog"
+                                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+
+                                                                            <div class="modal-body">
+                                                                                <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de
+                                                                                    vouloir supprimer
+                                                                                    la publication?</h5>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Non
+                                                                                </button>
+                                                                                <form ACTION="{{ path("deletePubClub",{'id':c.id,'idclub':idclub}) }}">
+                                                                                    <button class="btn btn-danger">Oui</button>
+                                                                                </form>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Modal Update ************************************-->
+                                                                <div class="modal fade" id="updatepub{{ c.id }}" tabindex="-1" role="dialog"
+                                                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-lg" role="document">
+                                                                        <div class="modal-content">
+
+                                                                            <div class="modal-body">
+                                                                                <h5 class="modal-title text-dark">
+                                                                                </h5>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-
-                <div id="enAttente" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
-                    <div class="card-body ">
-                        {% if pub_hanging is empty %}
+            </div>
+        </div>
+        <!-- actual pubs ************************************** -->
+        <div class="container login_form" style="margin-left: 100px">
+            <div class="d-flex justify-content-center" >
+                <div class="container container-fluid ">
+                    <div style="width: 807px">
+                        {% if pubs is empty %}
                             <p align="center">Pas de publications. </p>
                         {% endif %}
-                        {% for c in pub_hanging %}
-                            <div class="card card-info contain">
-                                <div class="card-header bg-custom_lightsilver ">
-                                    <h4><a href="{{ path('displayClub') }}" class="text-dark">
+                        {% for c in pubs %}
+                            <div class="card card-info contain shadow rounded">
+                                <div class="card-header" style="background: #F3F3F3;height: 70px" >
+                                    <h4 class="float-left">
+                                        <a href="{{ path('displayClub') }}" class="text-dark">
                                             <img class="rounded-circle"
                                                  src="{{ asset('ClubPictures/' ~ clubPic)|imagine_filter('my_thumb_filter') }}">
                                             {{ c.club.clubNom|upper }}
-                                        </a></h4>
+                                        </a>
+                                    </h4>
+
+                                    <div class="dropdown float-right" style="margin-top: 10px ;margin-left: 10px">
+                                        <a><i class="fa-solid fa-ellipsis fa-xl" style="color:grey" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="margin-left: -5px; margin-top: -5px">
+                                            <a class="dropdown-item" href="{{ path('updatePubClub',{'idpub':c.id,'idclub':idclub}) }}" style="color: #7EBCF7"><i class="fas fa-pen fa-sm" style="margin-right: 10px"></i>Modifier</a>
+                                            <a class="dropdown-item"  href="#" data-toggle="modal"
+                                               data-target="#exampleModal{{ c.id }}" style="color: #FA5550"><i class="fas fa-trash fa-sm" style="margin-right: 10px"></i>Supprimer</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-body bg-custom_morelightsilver">
-                                    <p class="card-text">
-                                        {% autoescape %}
+                                <div class="card-body" style="background: #F3F3F3">
+                                    <p class="card-text" >{% autoescape %}
                                             {{ c.pubDescription|raw }} {# var won't be escaped #}
                                         {% endautoescape %}</p>
+                                    {% if c.pubFileName is empty %}
+                                    {% else %}
+                                        </br>
+                                        <div align="right" style="margin-top: -20px;margin-bottom: -30px">
+                                            <p style="display: inline-block;">Attatched file:</p>
+                                            <a style="display: inline-block; margin: 0;" href="{{ path('DisplayPubFile',{'id':c.id}) }}">{{ c.pubFileName }}</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div align="center" style="background: #F3F3F3">
                                     {% if c.ClubImg is empty %}
                                     {% else %}
                                         <div align="center">
@@ -193,74 +510,51 @@
                                                 <img style="transition: transform .1s;"
                                                      src="{{ asset('PubPictures/' ~ c.ClubImg)|imagine_filter('my_dim_down_scale_filter') }}">
                                             {% elseif ('.MP4' in (c.ClubImg|upper)) %}
-                                                <video controls height="500" width="600">
-                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
-                                                            type="video/mp4">
-                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
-                                                            type="video/webm">
+                                                <video controls height="400" width="806" >
+                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}" type="video/mp4">
+                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}" type="video/webm">
                                                     <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
-                                                        Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien
-                                                            pour télécharger
+                                                        Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien pour télécharger
                                                             la vidéo</a>.</p>
                                                 </video>
                                             {% else %}
-                                                <h4 class="text-danger"> File extension not supported try adding it as a
-                                                    file</h4>
+                                                <h4 class="text-danger"> File extension not supported try adding it as a file</h4>
                                             {% endif %}
                                         </div>
                                     {% endif %}
-                                    {% if c.pubFileName is empty %}
-                                    {% else %}
-                                        </br>
-                                        <div align="right">
-                                            <p style="display: inline-block;">Attatched file:</p>
-                                            <a style="display: inline-block; margin: 0;"
-                                               href="{{ path('DisplayPubFile',{'id':c.id}) }}">{{ c.pubFileName }}</a>
-                                        </div>
-                                    {% endif %}
+
                                 </div>
-                                <div class="card-footer bg-custom_lightsilver text-dark" align="left">
+                                <div class="card-footer" align="left" style="background: #F3F3F3; height: 50px">
                                     <div>
                                         <div class="float-left">
-                                            <strong>Publié le {{ c.pubDate|date ('Y-m-d') }}.</strong>
-                                        </div>
-                                        <div class="float-right">
-                                            <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                    data-target="#exampleModal{{ c.id }}">Supprimer
-                                            </button>
-                                            <form class="a" method="post"
-                                                  action="{{ path('updatePubClub',{'idpub':c.id,'idclub':idclub}) }}">
-                                                <button class="btn btn-dark">Modifier
-                                                </button>
-                                            </form>
+                                            <p class="card-text">Publié le {{ c.pubDate|date ('Y-m-d') }}.</p>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                             </br>
 
-                            <!-- Modal -->
+                            <!-- Delete Pub -->
                             <div class="modal fade" id="exampleModal{{ c.id }}" tabindex="-1" role="dialog"
                                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
 
                                         <div class="modal-body">
-                                            <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de
-                                                vouloir supprimer
+                                            <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer
                                                 la publication?</h5>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Non
-                                            </button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
                                             <form ACTION="{{ path("deletePubClub",{'id':c.id,'idclub':idclub}) }}">
-                                                <button class="btn btn-danger">Supprimer</button>
+                                                <button class="btn btn-danger">Oui</button>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-------->
+                            <!---Update Pub ----->
                             <div class="modal fade" id="updatepub{{ c.id }}" tabindex="-1" role="dialog"
                                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
@@ -277,341 +571,37 @@
                             </div>
 
                         {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="rightitem">
-        <div id="accordion2">
-            <div class="card">
-                <div class="card-header btn bg-danger" id="headingTwo" data-toggle="collapse" data-target="#refusées"
-                     aria-expanded="false" aria-controls="refusées">
-                    <h5 class="mb-0 text-white" align="center">
-                        Publications refusées.
-                    </h5>
-                </div>
-
-                <div id="refusées" class="collapse hide" aria-labelledby="headingTwo" data-parent="#accordion2">
-                    <div class="card-body ">
-                        {% if pub_refused is empty %}
-                            <p align="center">Pas de publications. </p>
-                        {% endif %}
-                        {% for c in pub_refused %}
-                            <div class="card card-info contain">
-                                <div class="card-header bg-custom_lightsilver ">
-                                    <h4><a href="{{ path('displayClub') }}" class="text-dark">
-                                            <img class="rounded-circle"
-                                                 src="{{ asset('ClubPictures/' ~ clubPic)|imagine_filter('my_thumb_filter') }}">
-                                            {{ c.club.clubNom|upper }}
-                                        </a></h4>
-                                </div>
-                                <div class="card-body bg-custom_morelightsilver">
-                                    <p class="card-text">{{ c.pubDescription }}</p>
-                                    {% if c.ClubImg is empty %}
-                                    {% else %}
-                                        <div align="center">
-                                            {% if ('.PNG' in (c.ClubImg|upper)) or ('.JPEG' in (c.ClubImg|upper)) or ('.JPG' in (c.ClubImg|upper)) or ('.JFIF' in (c.ClubImg|upper)) %}
-                                                <img style="transition: transform .1s;"
-                                                     src="{{ asset('PubPictures/' ~ c.ClubImg)|imagine_filter('my_dim_down_scale_filter') }}">
-                                            {% elseif ('.MP4' in (c.ClubImg|upper)) %}
-                                                <video controls height="500" width="600">
-                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
-                                                            type="video/mp4">
-                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
-                                                            type="video/webm">
-                                                    <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
-                                                        Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien
-                                                            pour télécharger
-                                                            la vidéo</a>.</p>
-                                                </video>
-                                            {% else %}
-                                                <h4 class="text-danger"> File extension not supported try adding it as a
-                                                    file</h4>
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                                    {% if c.pubFileName is empty %}
-                                    {% else %}
-                                        </br>
-                                        <div align="right">
-                                            <p style="display: inline-block;">Attatched file:</p>
-                                            <a style="display: inline-block; margin: 0;"
-                                               href="{{ path('DisplayPubFile',{'id':c.id}) }}">{{ c.pubFileName }}</a>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="card-footer bg-custom_lightsilver text-dark" align="left">
-                                    <div>
-                                        <div class="sameline">
-                                            <strong>Publié le {{ c.pubDate|date ('Y-m-d') }}.</strong>
-                                        </div>
-                                        <div class="sameline2">
-                                            <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                    data-target="#exampleModal{{ c.id }}">Supprimer
-                                            </button>
-                                            <form class="a" method="post"
-                                                  action="{{ path('updatePubClub',{'idpub':c.id,'idclub':idclub}) }}">
-                                                <button class="btn btn-dark">Modifier
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </br>
-
-                            <!-- Modal Delete ************************************-->
-                            <div class="modal fade" id="exampleModal{{ c.id }}" tabindex="-1" role="dialog"
-                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-
-                                        <div class="modal-body">
-                                            <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de
-                                                vouloir supprimer
-                                                la publication?</h5>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Non
-                                            </button>
-                                            <form ACTION="{{ path("deletePubClub",{'id':c.id,'idclub':idclub}) }}">
-                                                <button class="btn btn-danger">Supprimer</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Modal Update ************************************-->
-                            <div class="modal fade" id="updatepub{{ c.id }}" tabindex="-1" role="dialog"
-                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-
-                                        <div class="modal-body">
-                                            <h5 class="modal-title text-dark">
-                                            </h5>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    </br>
-    <!-- FIlteeer*******************-->
-    <div class="container leftitem">
-
-        </br>
-        <h4>Filter by date.</h4>
-        <form style="margin-bottom: 10px" method="post" action="{{ path('displayPubClub',{'id':idclub}) }}">
-            <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                  crossorigin="anonymous">
-            <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-            <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
-            <input type="text" id="minDate" name="minDate" value="minDate" width="200"/>
-
-            <script>
-                $('#minDate').datepicker({
-                    uiLibrary: 'bootstrap4'
-                    , format: "yyyy-mm-dd"
-
-                });
-            </script>
-            <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                  crossorigin="anonymous">
-            <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-            <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
-            <input type="text" id="maxDate" name="maxDate" value="maxDate" width="200"/>
-
-            <script>
-                $('#maxDate').datepicker({
-                    uiLibrary: 'bootstrap4'
-                    , format: "yyyy-mm-dd"
-
-                });
-            </script>
-            <button style="margin-top: 10px" class="btn btn-secondary" onclick="TDate()">Afficher les pubs.</button>
-
-            <div class="modal fade" id="datewarning" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog  modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <h5 class="modal-title text-dark">
-                                Max date should be greater than min date.
-                            </h5>
-
+                        <div class="pagination float-right dark" style="font-size: 20px">
+                            {{ knp_pagination_render(pubs) }}
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Okay</button>
-
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-
-            <script>
-                function TDate() {
-                    var minDate = document.getElementById("minDate").value;
-                    var maxDate = document.getElementById("maxDate").value;
-                    if (new Date(minDate).getTime() >= new Date(maxDate).getTime()) {
-                        minDate.value = ""
-                        $('#datewarning').modal('show');
-                        event.preventDefault();
-
-                        return false;
-                    }
-
-                    return true;
-                }
-            </script>
-            </br>
-            </br>
-
-        </form>
-
-    </div>
-
-    <!-- actual pubs ************************************** -->
-
-    <div class="rightitem">
-        {% if pubs is empty %}
-            <p align="center">Pas de publications. </p>
-        {% endif %}
-        {% for c in pubs %}
-            <div class="card card-info contain">
-                <div class="card-header bg-custom_lightsilver ">
-                    <h4><a href="{{ path('displayClub') }}" class="text-dark">
-                            <img class="rounded-circle"
-                                 src="{{ asset('ClubPictures/' ~ clubPic)|imagine_filter('my_thumb_filter') }}">
-                            {{ c.club.clubNom|upper }}
-                        </a></h4>
-                </div>
-                <div class="card-body bg-custom_morelightsilver">
-                    <p class="card-text">{% autoescape %}
-                            {{ c.pubDescription|raw }} {# var won't be escaped #}
-                        {% endautoescape %}</p>
-                    {% if c.ClubImg is empty %}
-                    {% else %}
-                        <div align="center">
-                            {% if ('.PNG' in (c.ClubImg|upper)) or ('.JPEG' in (c.ClubImg|upper)) or ('.JPG' in (c.ClubImg|upper)) or ('.JFIF' in (c.ClubImg|upper)) %}
-                                <img style="transition: transform .1s;"
-                                     src="{{ asset('PubPictures/' ~ c.ClubImg)|imagine_filter('my_dim_down_scale_filter') }}">
-                            {% elseif ('.MP4' in (c.ClubImg|upper)) %}
-                                <video controls height="500" width="600">
-                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}" type="video/mp4">
-                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}" type="video/webm">
-                                    <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
-                                        Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien pour télécharger
-                                            la vidéo</a>.</p>
-                                </video>
-                            {% else %}
-                                <h4 class="text-danger"> File extension not supported try adding it as a file</h4>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                    {% if c.pubFileName is empty %}
-                    {% else %}
                         </br>
-                        <div align="right">
-                            <p style="display: inline-block;">Attatched file:</p>
-                            <a style="display: inline-block; margin: 0;"
-                               href="{{ path('DisplayPubFile',{'id':c.id}) }}">{{ c.pubFileName }}</a>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="card-footer bg-custom_lightsilver text-dark" align="left">
-                    <div>
-                        <div class="float-left">
-                            <strong>Publié le {{ c.pubDate|date ('Y-m-d') }}.</strong>
-                        </div>
-                        <div class="float-right">
-                            <button type="button" class="btn btn-danger" data-toggle="modal"
-                                    data-target="#exampleModal{{ c.id }}">Supprimer
-                            </button>
-                            <form class="a" method="post"
-                                  action="{{ path('updatePubClub',{'idpub':c.id,'idclub':idclub}) }}">
-                                <button class="btn btn-dark">Modifier
-                                </button>
-                            </form>
-                        </div>
+                        </br>
                     </div>
                 </div>
-            </div>
-            </br>
-
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal{{ c.id }}" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-body">
-                            <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer
-                                la publication?</h5>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
-                            <form ACTION="{{ path("deletePubClub",{'id':c.id,'idclub':idclub}) }}">
-                                <button class="btn btn-danger">Supprimer</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-------->
-            <div class="modal fade" id="updatepub{{ c.id }}" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-body">
-                            <h5 class="modal-title text-dark">
-                            </h5>
-                        </div>
 
 
-                    </div>
-                </div>
             </div>
 
-        {% endfor %}
-        <div class="pagination float-right dark" style="font-size: 20px">        {{ knp_pagination_render(pubs) }}
         </div>
-        </br>
-        </br>
-
     </div>
-
     </br>
-
-
     <style>
-
+        @media screen and (min-width: 676px) {
+            .modal-dialog {
+                max-width: 820px; /* New width for default modal */
+            }
+        }
+        .dropdown:hover>.dropdown-menu {
+            display: block;
+        }
         .page-link {
             position: relative;
             display: block;
             padding: .5rem .75rem;
             margin-left: -1px;
             line-height: 1.25;
-            color: #d9d9d9 !important;
-            background-color: #303131 !important;
+            color: #000000 !important;
+            background-color: #F3F3F3 !important;
             border: 1px solid #262626 !important;
         }
 
@@ -619,14 +609,14 @@
             z-index: 2;
             color: #fff !important;
             text-decoration: none;
-            background-color: #196C4D !important;
+            background-color: #20B2AA !important;
             border-color: #dee2e6;
         }
 
         .page-item.active .page-link {
             z-index: 3;
             color: #fff;
-            background-color: #196C4D !important;
+            background-color: #20B2AA !important;
             border-color: #353535;
         }
 
@@ -640,11 +630,12 @@
         .leftitem {
             float: left;
             width: 250px;
-            margin-left: 20px;
+            margin-left: 50px;
         }
 
         .rightitem {
-            margin-left: 300px;
+            width: 807px;
+            margin-left: 500px;
             margin-right: 250px;
 
         }
@@ -660,8 +651,6 @@
         }
 
     </style>
-
-
 {% endblock %}
 {% block about %}
 {% endblock %}

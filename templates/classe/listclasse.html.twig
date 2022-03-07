@@ -1,0 +1,35 @@
+ {% block body %}
+ <h1> liste des classes </h1>
+ <table class="table table-striped">
+        <thead>
+            <th></th>
+            <th>Id</th>
+            <th>Niveau</th>
+            <th>classe</th>
+            <th>Modifier</th>
+            <th>List des etudiants</th>
+            <th>Supprimer</th>
+        </thead>
+        {% for n in classes %}
+        <tr class="a-item">
+            <td></td>
+            <td class="id">{{ n.id }}</td>
+            <td class="niveau">{{n.niveau.id}}</td>
+            <td class="classe">{{n.classe}}</td>
+            <td id="{{ n.id }}" class="c-item"><a href="#">
+                 <i class="fas fa-list"></i> </a></td>
+
+            <td class=""><a href="..{{ path('classtoetudiant', {'id': n.id }) }}">
+                <i class="fas fa-user-plus"></i> </a></td>
+
+            <td class="t-item" id="{{ n.id }}"><a href="..{{ path('suppClasse', {'id': n.id }) }}">
+                  <i  class="fas fa-trash-alt"></i> </a></td>
+        </tr >
+        {% endfor %}
+
+    </table>
+</div>
+</div>
+
+
+{% endblock %}

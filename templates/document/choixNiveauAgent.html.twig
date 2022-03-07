@@ -1,0 +1,74 @@
+{% extends "document/backDoc.html.twig" %}
+{% block cards %}
+    <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+    <!-- Flashy depends on jQuery -->
+    <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Load Flashy default JavaScript -->
+    <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
+    <div class="content-wrapper">
+    <div class="container-fluid">
+    </br>
+        {% if documents is not empty %}
+    <center>
+        <form method="post" action="{{ path('listDocuments') }}" >
+            <select name="niveauKey" id="niveauKey" class="border">
+                <option disabled selected> -- Sélectionnez un niveau -- </option>
+                {% for n in niveaux %}
+                    <option>{{ n.id }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-info">Rechercher</button>
+        </form>
+    </center>
+    </br>
+        {% endif %}
+        <div class="row d-flex justify-content-center">
+            {% if documents is empty %}
+            <p>Aucun document n'a été ajouté</p>
+            {% else %}
+            {% for d in documents %}
+                <div class="p-4">
+                    <div class="card h-100 " style="width: 18rem;">
+                        <div class="card-body pe-auto">
+                            {% if d.fichier !=null %}
+                                <a target="_blank" href="{{ path("apercuDocument",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }}</h3></a>
+                            {% else %}
+                                <a target="_blank" href="{{ path("apercuUrl",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }}</h3></a>
+                            {% endif %}                            <h6 class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis">{{ d.niveau.id }} | {{ d.matiere.id }}</h6>
+                            </br></br>
+                            <small class="float-left">By: {{ d.proprietaire }}</small>
+                            </br>
+                            <small>{{ d.dateinsert }}</small>
+                            <a class="float-right" data-toggle="modal" title="Supprimer" style="color: #FA5550" href="#" data-target="#exampleModalSupp{{ d.id }}"><i class="fas fa-trash float-right" style="margin-right: 10px"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="exampleModalSupp{{ d.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: indianred">
+                                <h5 class="modal-title" id="exampleModalLabel" style="color: white">Supprimer le document</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Êtes-vous sûr de vouloir supprimer ce document?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" style="background: darkgrey;color: white" data-dismiss="modal">Non</button>
+                                <form action="{{ path("suppDocument",{'id':d.id}) }}">
+                                    <button class="btn btn-default" style="background: indianred;color: white">Oui</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        </br>
+    </div>
+    </div>
+    {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+{% endblock %}

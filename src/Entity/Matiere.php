@@ -33,7 +33,7 @@ class Matiere
     /**
      * @ORM\ManyToOne(targetEntity=Niveau::class, inversedBy="matieres")
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank(message="Le nom de la matière est requis")
+     * @Assert\NotBlank(message="Le choix du niveau est requis")
      */
     private $niveau;
 
@@ -47,7 +47,7 @@ class Matiere
         return $this->id;
     }
 
-    public function setId(string $id): self
+    public function setId(?string $id): self
     {
         $this->id = $id;
 
@@ -95,4 +95,11 @@ class Matiere
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getId();
+    }
+
+
 }

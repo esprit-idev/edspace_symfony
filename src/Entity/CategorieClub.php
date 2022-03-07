@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CategorieClubRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,6 +33,11 @@ class CategorieClub
      * @ORM\OneToMany (targetEntity=Club::class,mappedBy="clubCategorie",orphanRemoval=true)
      */
     private $clubs;
+
+    public function __construct()
+    {
+        $this->clubs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\ClubPub;
+use App\Entity\PubLikes;
 use App\Form\ChangeClubPictureType;
 use App\Form\ClubDescription;
 use App\Form\ClubPubType;
 use App\Form\ClubType;
 use App\Repository\ClubPubRepository;
 use App\Repository\ClubRepository;
+use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use MartinGeorgiev\SocialPostBundle\SocialPostBundle;
 use mysql_xdevapi\Exception;
@@ -18,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClubPubController extends Controller
 {
-    private $respo =0;
+    private $respo =1;
     private $etud = 0;
 
     /**
@@ -193,6 +196,14 @@ class ClubPubController extends Controller
                 }
                 $pub->setClubImg($fileName);
             }
+            $fileUploaded = $formPubEdit->get('pubFile')->getData();
+            if ($fileUploaded != null) {
+                $nameFileUploaded = md5(uniqid()) . '.' . $fileUploaded->guessExtension();
+                $fileUploaded->move($this->getParameter('PubFiles_directory'), $nameFileUploaded);
+                $pub->setPubFileName($fileUploaded->getClientOriginalName());
+                $pub->setPubFile(file_get_contents($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
+                $pub->setTypeFichier(mime_content_type($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
+            }
             $em = $this->getDoctrine()->getManager();
             // $pub->setPubDate(new \DateTime());
             $em->flush();
@@ -259,6 +270,19 @@ class ClubPubController extends Controller
 
     }
 
+
+
+    /**
+     * @Route("/displayPub/{idpub}/{idclub}", name="displayPub")
+     */
+    public function displayPub($idpub,$idclub,ClubPubRepository $clubPubRepository,UserRepository $Repository,ClubRepository $ClubRepository)
+    {
+        $pub=$clubPubRepository->find($idpub);
+        $clubPic=$ClubRepository->find($idclub)->getClubPic();
+
+        return $this->render('club_pub/displayOnePub(etudiant).html.twig', [ 'c'=>$pub,'clubPic'=>$clubPic,'idclub'=>$idclub
+        ]);
+    }
 
 
 }

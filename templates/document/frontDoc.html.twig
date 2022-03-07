@@ -1,0 +1,78 @@
+{% extends "frontOffice.html.twig" %}
+{% block title %}
+    <title>Centre de partage</title>
+{% endblock %}
+    {% block centrepartage_item %}
+        <li class="nav-item active">
+            <a href="#" class="nav-link">
+                Centre de partage
+                <i class="fas fa-angle-down right"></i>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href={{ path('choixNiveau') }} class="nav-link">
+                        <p class="down">Tous les documents</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href={{ path('mesDoc') }} class="nav-link">
+                        <p class="down">Mes documents</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href={{ path('mesFavoris') }} class="nav-link">
+                        <p class="down">Mes favoris</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {% endblock %}
+
+{% block slider %}
+
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Centre de partage
+                                        </h1>
+                                        <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block custom %}
+{% endblock %}
+
+{% block special %}
+{% endblock %}
+
+{% block about %}
+{% endblock %}
+
+{% block course %}
+{% endblock %}
+
+{% block login %}
+{% endblock %}
+
+{% block event %}
+{% endblock %}
+
+{% block client %}
+{% endblock %}
+
+{% block contact %}
+{% endblock %}

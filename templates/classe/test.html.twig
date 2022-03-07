@@ -1,0 +1,19 @@
+{% extends 'frontOffice.html.twig' %}
+{% block header %}
+                                        <button class="btn btn-dark" data-toggle="modal" data-target="#upatePicture">
+                                            Modifier la description
+                                        </button>
+
+    <div class="modal fade" id="upatePicture" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 class="modal-title text-dark">
+                        {{ form(classes,{'attr': {'novalidate': 'novalidate'}}) }}
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
