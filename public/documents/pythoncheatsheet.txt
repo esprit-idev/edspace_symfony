@@ -1,0 +1,16 @@
+/**
+     * @param DocumentRepository $repository
+     * @return Response
+     * @Route ("/document/listDocuments/{role}",name="listDocuments")
+     */
+    function ListDocuments(DocumentRepository $documentRepository,Request $request,DocumentFavorisRepository ){
+        $niveau=$request->get('niveauKey');
+        $documents=$documentRepository->findBy(array('niveau'=>$niveau));
+        $user = $request->get('role');
+        if ($user == 0) {
+            return $this->render("document/listDocumentsAgent.html.twig", ['documents' => $documents]);
+        } else {
+            return $this->render("document/listDocumentsEtudiant.html.twig", ['documents' => $documents]);
+        }
+
+    }

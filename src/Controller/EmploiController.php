@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class EmploiController extends AbstractController
 {
+    private $user=0;
     private $job_type = array('stage', 'emploi');
     /**
      * @Route("/emploi", name="emploi")
@@ -29,9 +30,8 @@ class EmploiController extends AbstractController
     public function allEmploi(EmploiRepository $repo, CategorieEmploiRepository $catRepo): Response
     {
         
-        $user=1;
         $templateName = 'emploi/back/allEmploi.html.twig';
-        if($user == 1){
+        if($this->user == 1){
             $templateName = 'emploi/front/allEmploi_FO.html.twig';
         }
         $emplois = $repo->findAll();
@@ -51,9 +51,8 @@ class EmploiController extends AbstractController
      */
     public function OneEmploi($id, EmploiRepository $repo): Response
     {
-        $user=1;
         $templateName = 'emploi/back/unEmploi.html.twig';
-        if($user == 1){
+        if($this->user == 1){
             $templateName = 'emploi/front/unEmploi_FO.html.twig';
         }
         $emploi = $repo->find($id);

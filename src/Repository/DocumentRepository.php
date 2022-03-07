@@ -93,7 +93,7 @@ class DocumentRepository extends ServiceEntityRepository
             ->createQueryBuilder('s')
             ->update()
             ->set('s.signalements', 0)
-            ->where('s.id = :id')
+            ->where('s.id =:id')
             ->setParameter('id', $document->getId())
             ->getQuery()
             ->execute();
@@ -105,6 +105,37 @@ class DocumentRepository extends ServiceEntityRepository
             ->where('d.signalements>0')
             ->getQuery()
             ->getResult();
+        foreach ($document as $item){
+            array_push($documents,$item);
+        }
+        return $documents;
+    }
+
+    function FindDocByType($prop,$docType){
+        $documents=array();
+        if($docType=="tous"){
+            $document= $this->createQueryBuilder('d')
+                ->where('d.proprietaire =:prop')
+                ->setParameter('prop',$prop)
+                ->getQuery()
+                ->getResult();
+        }
+        elseif($docType=="url"){
+            $document= $this->createQueryBuilder('d')
+                ->where('d.proprietaire =:prop')
+                ->setParameter('prop',$prop)
+                ->andwhere('d.url IS NOT NULL')
+                ->getQuery()
+                ->getResult();
+        }else{
+            $document= $this->createQueryBuilder('d')
+                ->where('d.proprietaire =:prop')
+                ->setParameter('prop',$prop)
+                ->andwhere('d.type like :type')
+                ->setParameter('type','%'.$docType.'%')
+                ->getQuery()
+                ->getResult();
+        }
         foreach ($document as $item){
             array_push($documents,$item);
         }

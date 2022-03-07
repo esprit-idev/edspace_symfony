@@ -12,7 +12,9 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>{% block title %}Joson {% endblock %}</title>
+    {% block title %}
+    <title>Joson</title>
+    {% endblock %}
     {% block css %}
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
@@ -23,17 +25,13 @@
     <!-- responsive style -->
     <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/ffcbf2bd8b.js" crossorigin="anonymous"></script>
-    {% endblock css %}
+    {% endblock %}
     {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
     {% endblock %} 
 </head>
 
-<body
-        {{ stimulus_controller('symfony/ux-swup/swup',{
-         theme:'fade',
-            }) }}>
-<main id="swup">
+<body>
 <div class="hero_area">
     <!-- header section strats -->
     {% block header %}
@@ -53,44 +51,56 @@
                 <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
                     <ul class="navbar-nav  ml-auto">
                         {% block nav %}
-                            <li class="nav-item active">
+                            {% block tabaff_item %}
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ path('allPublications') }}">Tableau d'affichage<span class="sr-only">(current)</span></a>
                             </li>
+                            {% endblock %}
+                            {% block forum_item %}
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Forum</a>
+                                <a class="nav-link" href="/thread">Forum</a>
                             </li>
+                            {% endblock %}
+                            {% block clubs_item %}
                             <li class="nav-item">
                                 <a class="nav-link" href={{ path('displayClub') }}>Clubs</a>
                             </li>
+                            {% endblock %}
+                            {% block offres_item %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('allemploi') }}">Offres d'emploi</a>
                             </li>
-                            <li class="nav-item active">
-                                <a href="#" class="nav-link">
-                                    Centre de partage
-                                    <i class="fas fa-angle-down right"></i>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href=path('choixNiveau',{'role':1}) class="nav-link">
-                                            <p>Liste des documents</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href=path('mesDoc') class="nav-link">
-                                            <p>Mes documents</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href=path('mesFavoris') class="nav-link">
-                                            <p>Favoris</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                            {% endblock %}
+                            {% block centrepartage_item %}
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        Centre de partage
+                                        <i class="fas fa-angle-down right"></i>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href={{ path('choixNiveau') }} class="nav-link">
+                                                <p class="down">Tous les documents</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href={{ path('mesDoc') }} class="nav-link">
+                                                <p class="down">Mes documents</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href={{ path('mesFavoris') }} class="nav-link">
+                                                <p class="down">Mes favoris</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endblock %}
+                            {% block profile_item %}
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Mon profile</a>
                             </li>
+                            {% endblock %}
                         {% endblock %}
                     </ul>
                     <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
@@ -149,27 +159,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item ">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <div class="detail-box">
-                                    <div>
-                                        <h1>
-                                            E D U C A T I O N
-                                        </h1>
-                                        <a href="">
-                                            Read More
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
+</div>
     {% endblock %}
     <!-- end slider section -->
 </div>
@@ -613,7 +606,6 @@
 
 <script type="text/javascript" src="{{ asset('frontOffice/js/jquery-3.4.1.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('frontOffice/js/bootstrap.js') }}"></script>
-</swup>
 </body>
 
 </html>

@@ -1,56 +1,15 @@
 {% extends 'frontOffice.html.twig' %}
 {% block title %}
-    RUBRIQUE CLUB {{ nom }}{% endblock %}
-{% block header %}
-    <header class="header_section">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg custom_nav-container ">
-                <a class="navbar-brand" {# href="index.html" #}>
-                    <h3>
-                        EdSpace
-                    </h3>
-                    <span></span>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-                    <ul class="navbar-nav  ml-auto">
-                        <li class="nav-item ">
-                            {% block nav %}
-                            <a class="nav-link" {# href="index.html" #}>Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="about.html" #}> About </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="course.html" #}> Courses </a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('displayClub') }}"> Clubs </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="contact.html" #}>Contact us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" {# href="login.html" #}>Login</a>
-                        </li>
-                        {% endblock %}
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                    </form>
-                </div>
-            </nav>
-        </div>
-    </header>
-    <!-- end header section -->
+    <title>RUBRIQUE CLUB {{ nom }}</title>
+{% endblock %}
+{% block clubs_item %}
+    <li class="nav-item active">
+        <a class="nav-link" href={{ path('displayClub') }}>Clubs</a>
+    </li>
 {% endblock %}
 {% block slider %}
-
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v13.0&appId=458133249281193&autoLogAppEvents=1" nonce="02aM2lcR"></script>
     <!-- slider section -->
     <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -71,8 +30,9 @@
                                         </br>
 
                                         <div class="container">
-                                            <h5>
-                                                {{ descClub }}
+                                            <h5>{% autoescape %}
+                                                    {{ descClub|raw }} {# var won't be escaped #}
+                                                {% endautoescape %}
                                             </h5>
                                         </div>
                                     </div>
@@ -91,174 +51,210 @@
     </br>
     </br>
     <!-- FIlteeer*******************-->
+    <div class="container login_form">
+        <div class="float-right" style="width: 200px;margin-right: -150px" >
+            <div class="d-flex justify-content-center" >
+                <div class="container container-fluid ">
+                    <!-- filter ************************************** -->
+                    <div class="float-right" style="margin-top: -30px ;margin-bottom:30px ;margin-left: -150px">
+                        <h4>Filter by date</h4>
+                        <form style="margin-bottom: 10px" method="post" action="{{ path('displayPubClub',{'id':idclub}) }}">
+                            <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+                            <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+                            <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+                            <input type="text" id="minDate" name="minDate" value="minDate" width="200"/>
 
-    <div class="container leftitem">
+                            <script>
+                                $('#minDate').datepicker({
+                                    uiLibrary: 'bootstrap4'
+                                    , format: "yyyy-mm-dd"
 
-        </br>
-        <h4>Filter by date.</h4>
-        <form style="margin-bottom: 10px" method="post" action="{{ path('displayPubClub',{'id':idclub}) }}">
-            <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                  crossorigin="anonymous">
-            <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-            <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
-            <input type="text" id="minDate" name="minDate" value="minDate" width="200"/>
+                                });
+                            </script>
+                            <input type="text" id="maxDate" name="maxDate" value="maxDate" width="200"/>
+                            <script>
+                                $('#maxDate').datepicker({
+                                    uiLibrary: 'bootstrap4'
+                                    , format: "yyyy-mm-dd"
 
-            <script>
-                $('#minDate').datepicker({
-                    uiLibrary: 'bootstrap4'
-                    , format: "yyyy-mm-dd"
+                                });
+                            </script>
+                            <button style="margin-top: 10px" class="btn btn-secondary" onclick="TDate()">Afficher les pubs</button>
 
-                });
-            </script>
-            <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                  crossorigin="anonymous">
-            <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-            <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
-            <input type="text" id="maxDate" name="maxDate" value="maxDate" width="200"/>
+                            <div class="modal fade" id="datewarning" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog  modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <h5 class="modal-title text-dark">
+                                                La date max doit être supérieure à la date min
+                                            </h5>
 
-            <script>
-                $('#maxDate').datepicker({
-                    uiLibrary: 'bootstrap4'
-                    , format: "yyyy-mm-dd"
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Okay</button>
 
-                });
-            </script>
-            <button style="margin-top: 10px" class="btn btn-secondary" onclick="TDate()">Afficher les pubs.</button>
-
-            <div class="modal fade" id="datewarning" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog  modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <h5 class="modal-title text-dark">
-                                Max date should be greater than min date.
-                            </h5>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Okay</button>
-
-                        </div>
+                                        </div>
 
 
-                    </div>
-                </div>
-            </div>
-
-            <script>
-                function TDate() {
-                    var minDate = document.getElementById("minDate").value;
-                    var maxDate = document.getElementById("maxDate").value;
-                    if (new Date(minDate).getTime() >= new Date(maxDate).getTime()) {
-                        minDate.value = ""
-                        $('#datewarning').modal('show');
-                        event.preventDefault();
-
-                        return false;
-                    }
-
-                    return true;
-                }
-            </script>
-            </br>
-            </br>
-
-        </form>
-
-    </div>
-    <div class="rightitem">
-            <div class="container">
-                {% if pubs is empty %}
-                <p align="center">Pas de publications. </p>
-                {% endif %}
-                {% for c in pubs %}
-                    <div class="card card-info contain">
-                        <div class="card-header bg-custom_lightsilver ">
-                            <h4><a href="{{ path('displayClub') }}" class="text-dark">
-                                    <img class="rounded-circle"
-                                         src="{{ asset('ClubPictures/' ~ clubPic)|imagine_filter('my_thumb_filter') }}">
-                                    {{ c.club.clubNom|upper }}
-                                </a></h4>
-                        </div>
-                        <div class="card-body bg-custom_morelightsilver">
-                            <p class="card-text"> {% autoescape %}
-                                    {{ c.pubDescription|raw }} {# var won't be escaped #}
-                                {% endautoescape %}</p>
-                            {% if c.ClubImg is empty %}
-                            {% else %}
-                                <div align="center">
-                                    {% if ('.PNG' in (c.ClubImg|upper)) or ('.JPEG' in (c.ClubImg|upper)) or ('.JPG' in (c.ClubImg|upper)) or ('.JFIF' in (c.ClubImg|upper)) %}
-                                        <img  style="transition: transform .1s;" src="{{ asset('PubPictures/' ~ c.ClubImg)|imagine_filter('my_dim_down_scale_filter') }}">
-                                    {% elseif ('.MP4' in (c.ClubImg|upper)) %}
-                                        <video controls height="500" width="600">
-                                            <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}" type="video/mp4">
-                                            <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}" type="video/webm">
-                                            <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
-                                                Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien pour télécharger
-                                                    la vidéo</a>.</p>
-                                        </video>
-                                    {% else%}
-                                        <h4 class="text-danger"> File extension not supported try adding it as a file</h4>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
-                            {% if c.pubFileName is empty %}
-                            {% else %}
-                                </br>
-                                <div align="right">
-                                    <p style="display: inline-block;" >Attatched file:</p>
-                                    <a style="display: inline-block; margin: 0;" href="{{ path('DisplayPubFile',{'id':c.id})}}">{{ c.pubFileName }}</a>
-                                </div>
-                            {% endif %}
-
-                        </div>
-                        <div class="card-footer bg-custom_lightsilver text-dark" align="left" >
-                            <div>
-                                <div class="sameline">
-                                   <strong>Publié le {{ c.pubDate|date ('Y-m-d') }}.</strong>
+                                    </div>
                                 </div>
                             </div>
 
+                            <script>
+                                function TDate() {
+                                    var minDate = document.getElementById("minDate").value;
+                                    var maxDate = document.getElementById("maxDate").value;
+                                    if (new Date(minDate).getTime() >= new Date(maxDate).getTime()) {
+                                        minDate.value = ""
+                                        $('#datewarning').modal('show');
+                                        event.preventDefault();
 
+                                        return false;
+                                    }
 
-                        </div>
+                                    return true;
+                                }
+                            </script>
+
+                        </form>
 
                     </div>
-                </br>
-                {% endfor %}
+                </div>
+
             </div>
-        <div class="pagination float-right dark" style="font-size: 20px">        {{ knp_pagination_render(pubs) }}
+
+        </div>
+        <!-- actual pubs ************************************** -->
+        <div class="container login_form" style="margin-left: 100px">
+            <div class="d-flex justify-content-center" >
+                <div class="container container-fluid ">
+                    <div style="width: 807px;">
+                        {% if pubs is empty %}
+                            <p align="center">Pas de publications. </p>
+                        {% endif %}
+                        {% for c in pubs %}
+                            <div class="card card-info contain shadow rounded">
+                                <div class="card-header" style="background: #F3F3F3;height: 70px" >
+                                    <h4 class="float-left"><a href="{{ path('displayClub') }}" class="text-dark">
+                                            <img class="rounded-circle"
+                                                 src="{{ asset('ClubPictures/' ~ clubPic)|imagine_filter('my_thumb_filter') }}">
+                                            {{ c.club.clubNom|upper }}
+                                        </a>
+                                    </h4>
+                                    <div class="fb-share-button float-right" data-href="http://127.0.0.1:8000/displayPub/{{c.id}}/{{ idclub }}" data-layout="button" data-size="large" style="margin-top: 10px">
+                                        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A8000%2FdisplayPub%2F3%2F1&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">
+
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="background: #F3F3F3">
+                                    <p class="card-text"> {% autoescape %}
+                                            {{ c.pubDescription|raw }} {# var won't be escaped #}
+                                        {% endautoescape %}</p>
+                                    {% if c.pubFileName is empty %}
+                                    {% else %}
+                                        </br>
+                                        <div align="right" style="margin-top: -20px;margin-bottom: -30px">
+                                            <p style="display: inline-block;" >Attatched file:</p>
+                                            <a style="display: inline-block; margin: 0;" href="{{ path('DisplayPubFile',{'id':c.id})}}">{{ c.pubFileName }}</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div align="center" style="background: #F3F3F3">{% if c.ClubImg is empty %}
+                                    {% else %}
+                                        <div align="center">
+                                            {% if ('.PNG' in (c.ClubImg|upper)) or ('.JPEG' in (c.ClubImg|upper)) or ('.JPG' in (c.ClubImg|upper)) or ('.JFIF' in (c.ClubImg|upper)) %}
+                                                <img  style="transition: transform .1s;" src="{{ asset('PubPictures/' ~ c.ClubImg)|imagine_filter('my_dim_down_scale_filter') }}">
+                                            {% elseif ('.MP4' in (c.ClubImg|upper)) %}
+                                                <video controls height="400" width="806" >
+                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}" type="video/mp4">
+                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}" type="video/webm">
+                                                    <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
+                                                        Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien pour télécharger
+                                                            la vidéo</a>.</p>
+                                                </video>
+                                            {% else%}
+                                                <h4 class="text-danger"> File extension not supported try adding it as a file</h4>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer" align="left" style="background: #F3F3F3; height: 50px">
+                                    <div>
+                                        <div class="float-left">
+                                            <p class="card-text">Publié le {{ c.pubDate|date ('Y-m-d') }}.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </br>
+                        {% endfor %}
+                        <div class="pagination float-right dark" style="font-size: 20px">        {{ knp_pagination_render(pubs) }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
     </div>
 
 
+
     </br>
     <style>
+
+        .iconHeartEmpty::before{
+            content: "\f004";
+            margin-right: 30px;
+            font-family: FontAwesome;
+            color: #888888;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 25px;
+            position: relative;
+
+        }
+        .iconHeartActive::after{
+            content: "\f004";
+            margin-right: 30px;
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+            color: #FA5550;
+            font-size: 25px;
+            position: relative;
+
+        }
+        .hide{
+            display: none;
+        }
+
         .page-link {
             position: relative;
             display: block;
             padding: .5rem .75rem;
             margin-left: -1px;
             line-height: 1.25;
-            color: #d9d9d9 !important;
-            background-color: #303131 !important;
+            color: #000000 !important;
+            background-color: #F3F3F3 !important;
             border: 1px solid #262626 !important;
         }
+
         .page-link:hover {
             z-index: 2;
             color: #fff !important;
             text-decoration: none;
-            background-color: #196C4D !important;
+            background-color: #20B2AA !important;
             border-color: #dee2e6;
         }
+
         .page-item.active .page-link {
             z-index: 3;
             color: #fff;
-            background-color: #196C4D !important;
+            background-color: #20B2AA !important;
             border-color: #353535;
         }
         form.a {

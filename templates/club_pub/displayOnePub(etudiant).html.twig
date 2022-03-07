@@ -1,0 +1,156 @@
+{% extends 'frontOffice.html.twig' %}
+
+{% block title %}
+    <title>Clubs</title>
+{% endblock %}
+
+{% block clubs_item %}
+    <li class="nav-item active">
+        <a class="nav-link" href={{ path('displayClub') }}>Clubs</a>
+    </li>
+{% endblock %}
+
+{% block slider %}
+
+    <!-- slider section -->
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            RUBRIQUE CLUBS
+                                        </h1>
+                                        <p>
+                                            La vie associative est un atout pour les élèves ingénieurs de Sup'Com. Le
+                                            plan de la formation d’ingénieur accorde en effet une importance capitale
+                                            aux activités extra-scolaires et par suite leur consacre un créneau horaire
+                                            honorable. Cette importance émane en toute évidence du rôle primordial de la
+                                            vie associative dans l’initiation de l’élève ingénieur Sup'Comien aux enjeux
+                                            de la vie professionnelle
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end slider section -->
+{% endblock %}
+{% block special %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+    <div class="modal fade"  id="myModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true" style="background: transparent">
+        <div class="modal-dialog modal-dialog-centered" style="background: transparent" >
+            <div class="modal-content" style="background: transparent;border-color: transparent">
+                <div class="modal-body"  style="margin-left: -180px;margin-top: 50px">
+                    <div class="container container-fluid ">
+                        <div style="width: 807px;">
+                            <div class="card card-info contain shadow rounded">
+                                <div class="card-header " style="background: #F3F3F3;height: 70px">
+                                    <h4 class="float-left"><a href="{{ path('displayClub') }}" class="text-dark">
+                                            <img class="rounded-circle"
+                                                 src="{{ asset('ClubPictures/' ~ clubPic)|imagine_filter('my_thumb_filter') }}">
+                                            {{ c.club.clubNom|upper }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div class="card-body" style="background: #F3F3F3">
+                                    <p class="card-text">
+                                        {% autoescape %}
+                                            {{ c.pubDescription|raw }} {# var won't be escaped #}
+                                        {% endautoescape %}</p>
+                                    {% if c.pubFileName is empty %}
+                                    {% else %}
+                                        </br>
+                                        <div align="right" style="margin-top: -20px;margin-bottom: -30px">
+                                            <p style="display: inline-block;">Attatched file:</p>
+                                            <a style="display: inline-block; margin: 0;"
+                                               href="{{ path('DisplayPubFile',{'id':c.id}) }}">{{ c.pubFileName }}</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div align="center" style="background: #F3F3F3">{% if c.ClubImg is empty %}
+                                    {% else %}
+                                        <div align="center">
+                                            {% if ('.PNG' in (c.ClubImg|upper)) or ('.JPEG' in (c.ClubImg|upper)) or ('.JPG' in (c.ClubImg|upper)) or ('.JFIF' in (c.ClubImg|upper)) %}
+                                                <img style="transition: transform .1s;"
+                                                     src="{{ asset('PubPictures/' ~ c.ClubImg)|imagine_filter('my_dim_down_scale_filter') }}">
+                                            {% elseif ('.MP4' in (c.ClubImg|upper)) %}
+                                                <video controls height="400" width="806" >
+                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
+                                                            type="video/mp4">
+                                                    <source src="{{ asset('PubPictures/' ~ c.ClubImg) }}"
+                                                            type="video/webm">
+                                                    <p>Votre navigateur ne prend pas en charge les vidéos HTML5.
+                                                        Voici <a href="{{ asset('PubPictures/' ~ c.ClubImg) }}">un lien
+                                                            pour télécharger
+                                                            la vidéo</a>.</p>
+                                                </video>
+                                            {% else %}
+                                                <h4 class="text-danger"> File extension not supported try adding it as a
+                                                    file</h4>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                                <div class="card-footer" align="left" style="background: #F3F3F3; height: 50px">
+                                    <div>
+                                        <div class="float-left">
+                                            <p class="card-text">Publié le {{ c.pubDate|date ('Y-m-d') }}.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(window).load(function(){
+            $('#myModal').modal('show').on('hide.bs.modal', function(e){
+                e.preventDefault();
+            });
+        });
+    </script>
+    <script>
+        $('#myModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+    </script>
+{% endblock %}
+{% block about %}
+{% endblock %}
+{% block course %}
+{% endblock %}
+{% block login %}
+
+
+{% endblock %}
+{% block event %}
+
+{% endblock %}
+{% block client %}
+{% endblock %}
+{% block contact %}
+{% endblock %}
+
+
+
+
+
+

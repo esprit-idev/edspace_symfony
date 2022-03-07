@@ -16,7 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 class PublicationNewsController extends AbstractController
-{      
+{
+    private $user=0;
     /**
      * @Route("/publication", name="publication")
      */
@@ -96,11 +97,11 @@ class PublicationNewsController extends AbstractController
      */
     public function allPubs(PublicationNewsRepository $repo, CategorieNewsRepository $catRepo, Request $request): Response
     {
-        $user=1;
+
         $templateName = 'publication_news/back/allPublication.html.twig';
         $categories = $catRepo->findAll();
         $publications = $repo->findAll();
-        if($user == 1){
+        if($this->user == 1){
             $templateName = 'publication_news/front/allPublication_FO.html.twig';
         }
         return $this->render($templateName, [
@@ -119,7 +120,6 @@ class PublicationNewsController extends AbstractController
     public function OnePublication($id, PublicationNewsRepository $repo): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $user=1;
         // to check if we did refresh the browser page
         $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
         $templateName = 'publication_news/back/onePublication.html.twig';
@@ -136,7 +136,7 @@ class PublicationNewsController extends AbstractController
             $views = $publication->getVues();
             $em->flush();
         } 
-        if($user == 1){
+        if($this->user == 1){
             $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }
         return $this->render($templateName, [
@@ -265,7 +265,6 @@ class PublicationNewsController extends AbstractController
      */
     public function PostComment($id, PublicationNewsRepository $repo, Request $request): Response
     {
-        $user=1;
         $templateName = 'publication_news/back/onePublication.html.twig';
         $em = $this->getDoctrine()->getManager();
         $publications = $repo->findAll();
@@ -284,7 +283,7 @@ class PublicationNewsController extends AbstractController
         Foreach($publications as $pub){
             array_push($array, $pub->getComments());
         }
-        if($user == 1){
+        if($this->user == 1){
             $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }
         return $this->render($templateName, array(
@@ -307,7 +306,6 @@ class PublicationNewsController extends AbstractController
     public function OnePublicationLikes($id, PublicationNewsRepository $repo, Request $request): Response
     {
         $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
-        $user=1;
         $em = $this->getDoctrine()->getManager();
         $templateName = 'publication_news/back/onePublication.html.twig';
         $publication = $repo->find($id);
@@ -324,7 +322,7 @@ class PublicationNewsController extends AbstractController
             $likes = $publication->incrementLikes();
             $em->flush();
         }
-        if($user == 1){
+        if($this->user == 1){
             $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }
         return $this->render($templateName, [

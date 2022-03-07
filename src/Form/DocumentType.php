@@ -15,6 +15,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DocumentType extends AbstractType
 {
@@ -27,8 +29,14 @@ class DocumentType extends AbstractType
                 ])
             ->add('fichier',FileType::class,[
                 'data_class' => null,
-                'label'=> 'Choisissez votre document '
+                'label'=> 'Choisissez votre document ',
+                'constraints'=>[new NotBlank(['message'=>"L'attachement d'un fichier est requis"]),
+                    new File([
+                        'maxSize' => "327680k",
+                        'mimeTypesMessage'=>"Le fiichier importé est trop large"])
+                ],
             ])
+
             ->add('niveau',
                 EntityType::class,[
                     'class'=>Niveau::class,

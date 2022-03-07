@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\Matiere;
 use App\Form\MatiereType;
 use App\Repository\MatiereRepository;
+use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\DocumentRepository;
 
 class MatiereController extends AbstractController
 {
@@ -29,11 +31,17 @@ class MatiereController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/matiere/suppMatiere/{id}",name="suppMatiere")
      */
-    function SuppMatiere($id,MatiereRepository $repository){
+    function SuppMatiere($id,MatiereRepository $repository,FlashyNotifier $notifier,DocumentRepository $documentRepository){
         $matiere=$repository->find($id);
-        $em=$this->getDoctrine()->getManager();
-        $em->remove($matiere);
-        $em->flush();
+        $document=$documentRepository->findOneBy(array("matiere"=>$matiere));
+        if($document == null) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($matiere);
+            $em->flush();
+            $notifier->error("La matière a été supprimé!");
+        } else{
+            $notifier->error("Veuillez supprimer les documents concernés par cette matière!");
+        }
         return $this->redirectToRoute('ajoutMatiere');
     }
 
@@ -42,7 +50,7 @@ class MatiereController extends AbstractController
      * @return Response
      * @Route ("/matiere/ajoutMatiere",name="ajoutMatiere")
      */
-    function AjoutMatiere(Request $request,MatiereRepository $repository){
+    function AjoutMatiere(Request $request,MatiereRepository $repository,FlashyNotifier $notifier){
         $matieres=$repository->findAll();
 
         $matiere=new Matiere();
@@ -53,6 +61,7 @@ class MatiereController extends AbstractController
             $em=$this->getDoctrine()->getManager();
             $em->persist($matiere);
             $em->flush();
+            $notifier->success("Une matière a été ajoutée");
             return $this->redirectToRoute('ajoutMatiere');
         }
         return $this->render("matiere/ajoutMatiere.html.twig",["f"=>$form->createView(),'matieres'=>$matieres]);
@@ -61,7 +70,7 @@ class MatiereController extends AbstractController
     /**
      * @Route ("/matiere/modifMatiere/{id}",name="modifMatiere")
      */
-    function ModifMatiere($id,MatiereRepository $repository,Request $request){
+    function ModifMatiere($id,MatiereRepository $repository,Request $request,FlashyNotifier $notifier){
         $matiere=$repository->find($id);
         $form=$this->createForm(MatiereType::class,$matiere);
         $form->add("Modifier",SubmitType::class);
@@ -69,6 +78,7 @@ class MatiereController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $em=$this->getDoctrine()->getManager();
             $em->flush();
+            $notifier->info("La matière a été modifiée");
             return $this->redirectToRoute('ajoutMatiere');
         }
         return $this->render("matiere/modifMatiere.html.twig",["f"=>$form->createView()]);

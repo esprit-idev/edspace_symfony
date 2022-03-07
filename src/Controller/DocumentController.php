@@ -7,6 +7,7 @@ use App\Entity\DocumentFavoris;
 use App\Entity\Matiere;
 use App\Form\DocShareType;
 use App\Form\DocumentType;
+use App\Form\WebPdfType;
 use App\Form\MatiereType;
 use App\Form\ModifDocumentType;
 use App\Repository\DocumentFavorisRepository;
@@ -14,6 +15,8 @@ use App\Repository\DocumentRepository;
 use App\Repository\MatiereRepository;
 use App\Repository\NiveauRepository;
 use App\Repository\UserRepository;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Knp\Snappy\Pdf;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use PhpParser\Comment\Doc;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +30,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DocumentController extends AbstractController
 {
+    private $user=0;
     /**
      * @Route("/document", name="document")
      */
@@ -36,19 +40,18 @@ class DocumentController extends AbstractController
             'controller_name' => 'DocumentController',
         ]);
     }
-
+    
     /**
      * @param NiveauRepository $niveauRepository
      * @param Request $request
      * @return Response
-     * @Route ("/document/choixNiveau/{role}",name="choixNiveau")
+     * @Route ("/document/choixNiveau",name="choixNiveau")
      */
     function ChoixNiveau(DocumentRepository $documentRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
         $niveaux=$documentRepository->FindNiveaux();
         $documents=$documentRepository->findAll();
         $favoris=$documentFavorisRepository->findAll();
-        $user=$request->get('role');
-        if($user==0){
+        if($this->user==0){
             return $this->render("document/choixNiveauAgent.html.twig",['niveaux'=>$niveaux,'documents'=>$documents]);
         }else{
             return $this->render("document/choixNiveauEtudiant.html.twig",['niveaux'=>$niveaux,'documents'=>$documents,'favoris'=>$favoris]);
@@ -58,7 +61,7 @@ class DocumentController extends AbstractController
     /**
      * @param DocumentRepository $repository
      * @return Response
-     * @Route ("/document/listDocuments/{role}",name="listDocuments")
+     * @Route ("/document/listDocuments",name="listDocuments")
      */
     function ListDocuments(DocumentRepository $documentRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
         $favoris=$documentFavorisRepository->findAll();
@@ -81,8 +84,7 @@ class DocumentController extends AbstractController
             }
             $documents=$documentRepository->findBy(array('niveau'=>$niveau));
         }
-        $user = $request->get('role');
-        if ($user == 0) {
+        if ($this->user == 0) {
             return $this->render("document/listDocumentsAgent.html.twig", ['documents' => $documents, 'matieres' => $matieres]);
         } else {
             return $this->render("document/listDocumentsEtudiant.html.twig", ['documents' => $documents, 'matieres' => $matieres,'favoris'=>$favoris]);
@@ -123,7 +125,7 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @Route ("/document/ajoutDocument",name="ajoutDocument")
      */
-    function AjoutDocument(Request $request,NiveauRepository $repository,FlashyNotifier $notifier) : Response
+    function AjoutDocument(Request $request,FlashyNotifier $notifier) : Response
     {
         //$niveau=$request->get('niveauKey');
         //$matieres=$repository->FindMatieres($niveau);
@@ -147,13 +149,43 @@ class DocumentController extends AbstractController
             $document->setFichier(file_get_contents($this->getParameter('document_dir').'/'.$nomFic));
             $document->setType(mime_content_type($this->getParameter('document_dir').'/'.$nomFic));
             $document->setSignalements(0);
+            $document->setUrl(null);
             $em=$this->getDoctrine()->getManager();
             $em->persist($document);
             $em->flush();
             $notifier->success("Votre document a été ajouté");
-            return $this->redirectToRoute('ajoutDocument');
+            return $this->redirectToRoute('choixNiveau');;
         }
         return $this->render("document/ajoutDocument.html.twig",["f"=>$form->createView()]);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param FlashyNotifier $notifier
+     * @return mixed
+     * @Route ("/document/ajoutWebPdf",name="ajoutWebPdf")
+     */
+    function AjoutWebPDF(Request $request, FlashyNotifier $notifier){
+        $document=new Document();
+        $form=$this->createForm(WebPdfType::class,$document);
+        $form->add("Ajouter",SubmitType::class);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $nomFic=$document->getNom().'.pdf';
+            $document->setNom($nomFic);
+            $document->setDateInsert(date("d/m/y"));
+            $document->setProprietaire("Meriam2"); //get username //to-change
+            $document->setType("application/pdf");
+            $document->setSignalements(0);
+            $document->setFichier(null);
+            $em=$this->getDoctrine()->getManager();
+            $em->persist($document);
+            $em->flush();
+            $notifier->success("L'URL a été ajouté");
+            return $this->redirectToRoute('choixNiveau');
+        }
+        return $this->render("document/ajoutWebPdf.html.twig",["f"=>$form->createView()]);
     }
 
     /**
@@ -168,7 +200,7 @@ class DocumentController extends AbstractController
             $em=$this->getDoctrine()->getManager();
             $em->flush();
             $notifier->info("Votre document a été modifié");
-            return $this->redirectToRoute('choixNiveau',["role"=>1]);
+            return $this->redirectToRoute('choixNiveau');
         }
         return $this->render("document/modifDocument.html.twig",["f"=>$form->createView()]);
     }
@@ -211,13 +243,12 @@ class DocumentController extends AbstractController
      * @param $id
      * @param DocumentRepository $repository
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route ("/document/suppDocument/{id}/{role}",name="suppDocument")
+     * @Route ("/document/suppDocument/{id}",name="suppDocument")
      */
     function SuppDocument($id,DocumentRepository $repository,Request $request,FlashyNotifier $notifier){
         $this->DelDoc($id,$repository);
-        $user=$request->get('role');
         $notifier->error("Votre document a été supprimé!");
-        return $this->redirectToRoute('choixNiveau',["role"=>$user]);
+        return $this->redirectToRoute('choixNiveau');
     }
 
     /**
@@ -256,9 +287,26 @@ class DocumentController extends AbstractController
     /**
      * @Route ("/document/apercuDocument/{id}",name="apercuDocument")
      */
-    function ApercuDocument($id,DocumentRepository $repository,Request $request,FlashyNotifier $notifier){
+    function ApercuDocument($id,DocumentRepository $repository){
         $document=$repository->find($id);
         return $this->render("document/apercuDocument.html.twig",["document"=>$document]);
+    }
+
+    /**
+     * @Route ("/document/apercuUrl/{id}",name="apercuUrl")
+     */
+    function ApercuUrl($id,DocumentRepository $repository,\Knp\Snappy\Pdf $pdf){
+        $document=$repository->find($id);
+        $filename = 'myFirstSnappyPDF';
+        $url = $document->getUrl();
+        return new Response(
+            $pdf->getOutput($url),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'inline; filename="'.$filename.'.pdf"'
+            )
+        );
     }
     /**
      * @param $id
@@ -266,7 +314,7 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/document/suppDocumentSignales/{id}",name="suppDocumentSignales")
      */
-    function SuppDocumentSignale(FlashyNotifier $notifier,$id,DocumentRepository $repository,Request $request){
+    function SuppDocumentSignale(FlashyNotifier $notifier,$id,DocumentRepository $repository){
         $document=$repository->find($id);
         $em=$this->getDoctrine()->getManager();
         $em->remove($document);
@@ -280,9 +328,22 @@ class DocumentController extends AbstractController
      * @return Response
      * @Route ("/document/mesDoc", name="mesDoc")
      */
-    function AfficheMesDocuments(DocumentRepository $documentRepository){
+    function AfficheMesDocuments(DocumentRepository $documentRepository,Request $request){
         $prop="Meriam2"; //to-change
-        $documents=$documentRepository->findBy(array('proprietaire' => $prop));
+        $type=$request->get('typeKey');
+        if($type){
+            if($type=="Tous les types") $docType="tous";
+            elseif($type=="PDF") $docType="application/pdf";
+            elseif($type=="Office") $docType="officedocument";
+            elseif($type==".rar") $docType="application/x-rar";
+            elseif($type==".zip") $docType="application/zip";
+            elseif($type=="Image") $docType="image";
+            elseif($type=="Autres") $docType="autres";
+            else $docType="url";
+            $documents=$documentRepository->FindDocByType($prop,$docType);
+        } else{
+            $documents=$documentRepository->findBy(array('proprietaire' => $prop));
+        }
         return $this->render("document/mesDoc.html.twig", ['documents' => $documents]);
     }
 
@@ -293,7 +354,7 @@ class DocumentController extends AbstractController
      * @return Response
      * @Route ("/document/mesFavoris",name="mesFavoris")
      */
-    function AfficheMesFavoris(DocumentRepository $documentRepository,UserRepository $userRepository,DocumentFavorisRepository $documentFavorisRepository){
+    function AfficheMesFavoris(UserRepository $userRepository,DocumentFavorisRepository $documentFavorisRepository){
         $user=$userRepository->find(2); //to-change
         $docsInFav=$documentFavorisRepository->findBy(array('user'=>$user));
         return $this->render("document/mesFavoris.html.twig", ['docsInFav' => $docsInFav]);
@@ -306,13 +367,12 @@ class DocumentController extends AbstractController
      * @param DocumentRepository $repository
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route ("/document/signalDoc/{id}/{role}",name="signalDoc")
+     * @Route ("/document/signalDoc/{id}",name="signalDoc")
      */
-    function SignalDoc(FlashyNotifier $notifier,$id,DocumentRepository $repository,Request $request){
+    function SignalDoc(FlashyNotifier $notifier,$id,DocumentRepository $repository){
         $this->ReportDoc($id,$repository);
-        $user=$request->get('role');
         $notifier->warning("Le document a été signalé!");
-        return $this->redirectToRoute('choixNiveau',["role"=>$user]);
+        return $this->redirectToRoute('choixNiveau');
     }
 
     /**
@@ -323,9 +383,8 @@ class DocumentController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route ("/document/signalDocFavoris/{id}",name="signalDocFavoris")
      */
-    function SignalDocFavoris(FlashyNotifier $notifier,$id,DocumentRepository $repository,Request $request){
+    function SignalDocFavoris(FlashyNotifier $notifier,$id,DocumentRepository $repository){
         $this->ReportDoc($id,$repository);
-        $user=$request->get('role');
         $notifier->warning("Le document a été signalé!");
         return $this->redirectToRoute('mesFavoris');
     }
@@ -366,7 +425,7 @@ class DocumentController extends AbstractController
      * @param UserRepository $userRepository
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route ("/document/pinDoc/{id}/{role}",name="pinDoc")
+     * @Route ("/document/pinDoc/{id}",name="pinDoc")
      */
     function PinDocument(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
         $document=$documentRepository->find($id);
@@ -378,8 +437,7 @@ class DocumentController extends AbstractController
         $em->persist($docFavoris);
         $em->flush();
         $notifier->primary("Document ajouté aux favoris!");
-        $user=$request->get('role');
-        return $this->redirectToRoute('choixNiveau',["role"=>$user]);
+        return $this->redirectToRoute('choixNiveau');
     }
 
     /**
@@ -389,13 +447,12 @@ class DocumentController extends AbstractController
      * @param Request $request
      * @param DocumentFavorisRepository $documentFavorisRepository
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route ("/document/unPinDoc/{id}/{role}",name="unPinDoc")
+     * @Route ("/document/unPinDoc/{id}",name="unPinDoc")
      */
     function UnPinDocFromList(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
-        $this->UnPinDoc($id,$documentRepository,$userRepository,$request,$documentFavorisRepository);
+        $this->UnPinDoc($id,$documentRepository,$userRepository,$documentFavorisRepository);
         $notifier->primary("Document supprimé des favoris!");
-        $user=$request->get('role');
-        return $this->redirectToRoute('choixNiveau',["role"=>$user]);
+        return $this->redirectToRoute('choixNiveau');
     }
     /**
      * @param $id
@@ -404,7 +461,7 @@ class DocumentController extends AbstractController
      * @param Request $request
      * @param DocumentFavorisRepository $documentFavorisRepository
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route ("/document/unPinDocFavoris/{id}/{role}",name="unPinDocFavoris")
+     * @Route ("/document/unPinDocFavoris/{id}",name="unPinDocFavoris")
      */
     function UnPinDocFromFav(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
        $this->UnPinDoc($id,$documentRepository,$userRepository,$request,$documentFavorisRepository);
@@ -427,21 +484,56 @@ class DocumentController extends AbstractController
      * @Route ("/document/shareDoc/{id}",name="shareDoc")
      */
     public function ShareDoc(Request $request,$id,DocumentRepository $documentRepository,\Swift_Mailer $mailer,FlashyNotifier $notifier) {
+        return $this->ShareDocUrl($request,$id,$documentRepository,$mailer,$notifier,0);
+
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route ("/document/shareDocMine/{id}",name="shareDocMine")
+     */
+    public function ShareDocMine(Request $request,$id,DocumentRepository $documentRepository,\Swift_Mailer $mailer,FlashyNotifier $notifier) {
+        return $this->ShareDocUrl($request,$id,$documentRepository,$mailer,$notifier,1);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route ("/document/shareDocFavoris/{id}",name="shareDocFavoris")
+     */
+    public function ShareDocFavoris(Request $request,$id,DocumentRepository $documentRepository,\Swift_Mailer $mailer,FlashyNotifier $notifier) {
+        return $this->ShareDocUrl($request,$id,$documentRepository,$mailer,$notifier,2);
+    }
+
+    public function ShareDocUrl(Request $request,$id,DocumentRepository $documentRepository,\Swift_Mailer $mailer,FlashyNotifier $notifier,$pos) {
+        $form=$this->createForm(DocShareType::class);
         $document=$documentRepository->find($id);
         $docNom=$document->getNom();
-        $form=$this->createForm(DocShareType::class);
         $form->add("Envoyer",SubmitType::class);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $data=$form->getData();
-           $message=(new \Swift_Message($data['subject']))
-               ->setFrom("meriamesprittest@gmail.com")
-               ->setTo($data['to'])
-               ->setBody($data['body'])
-               ->attach(\Swift_Attachment::fromPath($this->getParameter('document_dir').'/'.$docNom)->setFilename($docNom)               );
-           $mailer->send($message);
+            if($document->getFichier()){
+                $message=(new \Swift_Message($data['subject']))
+                    ->setFrom("meriamesprittest@gmail.com")
+                    ->setTo($data['to'])
+                    ->setBody($data['body'])
+                    ->attach(\Swift_Attachment::fromPath($this->getParameter('document_dir').'/'.$docNom)->setFilename($docNom));
+            } else{
+                $message=(new \Swift_Message($data['subject']))
+                    ->setFrom("meriamesprittest@gmail.com")
+                    ->setTo($data['to'])
+                    ->setBody($data['body']."\n ".$document->getUrl());
+            }
+            $mailer->send($message);
             $notifier->success("Un email a été envoyé");
-           return $this->redirectToRoute('choixNiveau',["role"=>1]);
+            if($pos==0)
+                return $this->redirectToRoute('choixNiveau');
+            elseif ($pos==1)
+                return $this->redirectToRoute('mesDoc');
+            else
+                return $this->redirectToRoute('mesFavoris');
         }
         return $this->render("document/shareDoc.html.twig", ["f"=>$form->createView()]);
     }

@@ -1,80 +1,21 @@
-{% extends "frontOffice.html.twig" %}
-
-{% block nav %}
-    <li class="nav-item">
-        <a class="nav-link" href="index.html">Tableau d'affichage<span class="sr-only">(current)</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="about.html">Forum</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="course.html">Clubs</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="contact.html">Offres d'emploi</a>
-    </li>
-    <li class="nav-item active">
-        <a href="#" class="nav-link">
-            Centre de partage
-            <i class="fas fa-angle-down right"></i>
-        </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href={{ path('choixNiveau',{'role':1}) }} class="nav-link">
-                    <p class="down">Tous les documents</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href={{ path('mesDoc') }} class="nav-link">
-                    <p class="down">Mes documents</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href={{ path('mesFavoris') }} class="nav-link">
-                    <p class="down">Mes favoris</p>
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="event.html">Mon profile</a>
-    </li>
+{% extends "document/frontDoc.html.twig" %}
+{% block title %}
+    <title>Centre de partage</title>
 {% endblock %}
-
-{% block slider %}
-
-    <section class=" slider_section position-relative">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <div class="detail-box">
-                                    <div>
-                                        <h1>
-                                            Centre de partage
-                                        </h1>
-                                        <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-{% endblock %}
-
 {% block custom %}
+    <div style="background: #F3F3F3">
+        <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
+        <!-- Flashy depends on jQuery -->
+        <script src="//code.jquery.com/jquery.js"></script>
+        <!-- Load Flashy default JavaScript -->
+        <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
     </br>
     <center> <a href="{{ path("ajoutDocument") }}" class="btn btn-dark">Ajouter un document</a></center>
     </br>
     <center>
         <div class="row d-flex justify-content-center">
             <div>
-        <form method="post" action="{{ path('listDocuments',{'role':1}) }}" >
+        <form method="post" action="{{ path('listDocuments') }}" >
             <select name="matiereKey" id="matiereKey" class="border">
                 <option disabled selected> -- Sélectionnez une matière -- </option>
                 {% for m in matieres %}
@@ -84,83 +25,102 @@
             <button class="btn btn-secondary">Rechercher</button>
         </form>
             </div>
-            <div><a href="{{ path('choixNiveau',{'role':1}) }}" class="btn btn-link">Réinitialiser</a>
+            <div><a href="{{ path('choixNiveau') }}" class="btn btn-link">Réinitialiser</a>
             </div>
     </center>
 
     </br>
-    <center>
+
+    <div class="row d-flex justify-content-center">
         {% set cuEt="Meriam2" %}
-        <table class="table table-striped">
-            <thead>
-            <th></th>
-            <th></th>
-            <th>Niveau</th>
-            <th>Matière</th>
-            <th>Fichier</th>
-            <th>Date d'insertion</th>
-            <th>Propriétaire</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            </thead>
-            <tr {% for d in documents %}>
-                <td></td>
-                <td></td>
-                <td>{{ d.niveau.id }}</td>
-                <td>{{ d.matiere.id }}</td>
-                <td><a href="{{ asset('documents/'~d.nom) }}" type=d.type download>{{ d.nom }}</a> </td>
-                <td>{{ d.dateinsert }}</td>
-                <td>{{ d.proprietaire }}</td>
-                <td><a target="_blank" href="{{ path("apercuDocument",{'id':d.id}) }}" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                    {% if cuEt==d.proprietaire %}
-                    <td><a href="{{ path("modifDocument",{'id':d.id}) }}" class="btn btn-outline-info"><i class="fas fa-pen"></i></a></td>
-                    <td><a href="{{ path("suppDocument",{'id':d.id,'role':1}) }}" class="btn btn-outline-danger" onclick="return confirm('Supprimer ce document?')"><i class="fas fa-trash"></i></a>
-                {% else %}
-                    <td>-</td>
-                    <td>-</td>
-                {% endif %}
-                <td><a href="{{ path("shareDoc",{'id':d.id}) }}" class="btn btn-outline-success"><i class="fas fa-share"></i></a>
-                <td><a href="{{ path("signalDoc",{'id':d.id,'role':1}) }}" class="btn btn-outline-warning" onclick="return confirm('Signaler ce document?')"><i class="fas fa-exclamation-triangle"></i></a>
-                    {% set exist = false %}
-                    {% for f in favoris %}
-                        {% if f.document==d %}
-                            {% set exist = true %}
+        {% for d in documents %}
+            <div class="p-4">
+                <div class="card h-100" style="width: 18rem;border-radius: 15px">
+                    <div class="dropdown" style="margin-top: 10px ;margin-left: 10px">
+                        <a><i class="fa-solid fa-ellipsis fa-xl" style="color:grey" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i></a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="margin-left: -5px; margin-top: -5px">
+                            {% if cuEt==d.proprietaire %}
+                                <a class="dropdown-item" href="{{ path("modifDocument",{'id':d.id}) }}" style="color: #7EBCF7"><i class="fas fa-pen fa-sm" style="margin-right: 10px"></i>Modifier</a>
+                                <a class="dropdown-item" style="color: #FA5550" data-toggle="modal" href="#" data-target="#exampleModalSupp{{ d.id }}"><i class="fas fa-trash fa-sm" style="margin-right: 10px"></i>Supprimer</a>
+                            {% endif %}
+                            {% if d.fichier !=null %}
+                                <a href="{{ asset('documents/'~d.nom) }}" type=d.type download class="dropdown-item" style="color: grey"><i class="fas fa-arrow-down fa-sm" style="margin-right: 10px"></i>Télécharger</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="{{ path("shareDoc",{'id':d.id}) }}" style="color: darkseagreen"><i class="fas fa-share fa-sm" style="margin-right: 10px"></i>Partager</a>
+                            <a class="dropdown-item" style="color: #FFCC00" data-toggle="modal" href="#" data-target="#exampleModalSignal{{ d.id }}"><i class="fas fa-exclamation-triangle  fa-sm" style="margin-right: 10px"></i>Signaler</a>
+                        </div>
+                    </div>
+                    <div class="card-body pe-auto">
+                        {% if d.fichier !=null %}
+                            <a target="_blank" href="{{ path("apercuDocument",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }}</h3></a>
+                        {% else %}
+                            <a target="_blank" href="{{ path("apercuUrl",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }}</h3></a>
                         {% endif %}
-                    {% endfor %}
-                    {% if exist %}
-                <td><a href="{{ path("unPinDoc",{'id':d.id,'role':1}) }}" class="btn btn-outline-info"><i class="fas fa-heart-broken"></i></a></td>
-            {% else %}
-                <td><a href="{{ path("pinDoc",{'id':d.id,'role':1}) }}" class="btn btn-outline-info"><i class="fas fa-heart"></i></a></td>
-                {% endif %}
-                <td></td>
-            </tr {% endfor %}>
-        </table>
-    </center>
+                        <h6 class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis">{{ d.niveau.id }} | {{ d.matiere.id }}</h6>
+                        </br></br>
+                        <small class="float-left">By: {{ d.proprietaire }}</small>
+                        </br>
+                        <small>{{ d.dateinsert }}</small>
+                        {% set exist = false %}
+                        {% for f in favoris %}
+                            {% if f.document==d %}
+                                {% set exist = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if exist %}
+                            <a class="float-right" data-toggle="tooltip" title="Détacher" href="{{ path("unPinDoc",{'id':d.id}) }}" style="color: #FB849D"><i class="fas fa-heart-broken fa-lg float-right"></i></a>
+                        {% else %}
+                            <a class="float-right" data-toggle="tooltip" title="Épingler" href="{{ path("pinDoc",{'id':d.id}) }}" style="color: #FB849D"><i class="fas fa-heart fa-lg float-right"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModalSupp{{ d.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background: indianred">
+                            <h5 class="modal-title" id="exampleModalLabel" style="color: white">Supprimer le document</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Êtes-vous sûr de vouloir supprimer ce document?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" style="background: darkgrey;color: white" data-dismiss="modal">Non</button>
+                            <form action="{{ path("suppDocument",{'id':d.id}) }}">
+                                <button class="btn btn-default" style="background: indianred;color: white">Oui</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModalSignal{{ d.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background: #FFCC00">
+                            <h5 class="modal-title" id="exampleModalLabel" style="color: white">Signaler le document</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Êtes-vous sûr de vouloir signaler ce document?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" style="background: darkgrey;color: white" data-dismiss="modal">Non</button>
+                            <form action="{{ path("signalDoc",{'id':d.id}) }}">
+                                <button class="btn btn-default" style="background: #FFCC00;color: white">Oui</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     </br>
-{% endblock %}
+    </div>
+    {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
 
-{% block special %}
-{% endblock %}
-
-{% block about %}
-{% endblock %}
-
-{% block course %}
-{% endblock %}
-
-{% block login %}
-{% endblock %}
-
-{% block event %}
-{% endblock %}
-
-{% block client %}
-{% endblock %}
-
-{% block contact %}
 {% endblock %}

@@ -1,11 +1,12 @@
 {% extends 'backOffice.html.twig' %}
+{% block title %}<title>Catégories d'offre d'emploi</title>{% endblock %}
 {% block leftNavBar %}
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="index3.html" class="nav-link">Categorie des Emplois</a>
+            <a href="#" class="nav-link">Catégories d'offre d'emploi</a>
         </li>
     </ul>
 {% endblock %}
@@ -34,7 +35,7 @@
 {% block cards %}
     <div class="content-wrapper">
     <div class="container-fluid">
-    <div class="float-right p-4"><a href="{{ path('addCategoryEmploi')}}" class="btn btn-primary"> ajouter une Categorie </a></div>
+    <div class="float-left p-4"><a href="{{ path('addCategoryEmploi')}}" class="btn btn-primary"> Ajouter une Categorie </a></div>
     <table class="table table-bordered table-hover">
         <thead>
             <th>ID</th>
