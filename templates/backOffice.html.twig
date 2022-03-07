@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/summernote/summernote-bs4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backOffice/style.css?version=2') }}">
     {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
     {% endblock %}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
@@ -136,7 +137,7 @@
                          alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block">Nom de l'agent</a>
+                    {# <a href="{{path('show')}}" class="d-block">{{ app.user.username}} {{ app.user.prenom }}</a> #}
                 </div>
             </div>
             <!-- Sidebar Menu -->
@@ -203,7 +204,8 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                     <a href="#"{# {{ path('classes') }#} class="nav-link">
+                                    <a href={{ path('Classe') }} class="nav-link">
+
                                         <i class="far fa-circle nav-icon"></i><p>Classes</p>
 
                                     </a>
@@ -376,6 +378,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
+
 <script src="{{ asset('backOffice/plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('backOffice/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -406,6 +409,7 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('backOffice/dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
+<script src="{{asset('backOffice/app.js?v=3')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backOffice/dist/js/pages/dashboard.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>

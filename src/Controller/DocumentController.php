@@ -30,7 +30,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DocumentController extends AbstractController
 {
-    private $user=0;
+    private $user=1;
     /**
      * @Route("/document", name="document")
      */

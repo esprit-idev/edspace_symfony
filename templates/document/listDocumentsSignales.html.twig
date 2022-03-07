@@ -28,7 +28,7 @@
                     <div class="p-4">
                         <div class="card h-100" style="width: 18rem;">
                             <div class="card-body pe-auto">
-                                <a class="float-right" data-toggle="tooltip" title="Ignorer" style="color: grey" data-toggle="modal" href="#" data-target="#exampleModalIgnore{{ d.id }}"><i class="fas fa-minus float-right" style="margin-right: 10px"></i></a>
+                                <a class="float-right" data-toggle="modal" title="Ignorer" style="color: grey" href="#" data-target="#exampleModalIgnore{{ d.id }}"><i class="fas fa-minus float-right" style="margin-right: 10px"></i></a>
                                 {% if d.fichier !=null %}
                                     <a target="_blank" href="{{ path("apercuDocument",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }} (signalx{{ d.signalements }})</h3></a>
                                 {% else %}
@@ -39,7 +39,7 @@
                                 <small class="float-left">By: {{ d.proprietaire }}</small>
                                 </br>
                                 <small>{{ d.dateinsert }}</small>
-                                <a class="float-right" data-toggle="tooltip" title="Supprimer" style="color: #FA5550" data-toggle="modal" href="#" data-target="#exampleModalSupp{{ d.id }}"><i class="fas fa-trash float-right" style="margin-right: 10px"></i></a>
+                                <a class="float-right" data-toggle="modal" title="Supprimer" style="color: #FA5550" href="#" data-target="#exampleModalSupp{{ d.id }}"><i class="fas fa-trash float-right" style="margin-right: 10px"></i></a>
                             </div>
                         </div>
                     </div>

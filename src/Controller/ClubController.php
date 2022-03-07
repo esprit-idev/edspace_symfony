@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClubController extends AbstractController
 {
-    private $admin = 0;
+    private $admin = 1;
 
     /**
      * @Route("/club", name="club")

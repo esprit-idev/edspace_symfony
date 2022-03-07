@@ -28,8 +28,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClubPubController extends Controller
 {
-    private $respo =0;
-    private $etud = 1;
+    private $respo =1;
+    private $etud = 0;
 
     /**
      * @Route("/club/pub", name="club_pub")
