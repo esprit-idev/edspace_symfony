@@ -1,3 +1,9 @@
+<style>
+
+:root {
+  --cc: #4db3a5;
+}
+
 html, body {
     background: #efefef;      
     height:100%;  
@@ -15,7 +21,7 @@ html, body {
     position: fixed;
     bottom: 50px;
     right: 50px;
-    background: #4db3a5;
+    background: var(--cc);
     width: 80px;
     height: 80px;  
     border-radius: 50%;
@@ -65,7 +71,7 @@ html, body {
     cursor:pointer;
   }
   .chat-box-header {
-    background: #4db3a5;
+    background: var(--cc);
     height:50px;
     border-top-left-radius:5px;
     border-top-right-radius:5px; 
@@ -210,7 +216,7 @@ html, body {
   .chat-msg.self > .cm-msg-text {  
     float:right;
     margin-right:10px;
-    background: #4db3a5;
+    background: var(--cc);
     color:white;
   }
   .cm-msg-button>ul>li {
@@ -252,6 +258,7 @@ html, body {
   color:#888;
 /*   box-shadow: 0px 5px 35px 9px #464a92; */
   box-shadow: 0px 5px 35px 9px #ccc;
+
 }
 
 .option .fa-search{
@@ -259,7 +266,7 @@ padding-right: 10px;
 }
 
 .theme {
-  display: flex;
+  display: none;
   align-items: center;
 background: #FFFF;
 justify-content:center;
@@ -281,10 +288,23 @@ box-shadow: 0px 5px 35px 9px #ccc;
 .dot {
   height: 25px;
   width: 25px;
-  margin: 0 20px;
+  margin: 0 15px;
   border-radius: 50%;
   display: inline-block;
 }
   .tblue{
-    background-color: #bbb;
+    background-color: #d2deed;
   }
+
+  .tpink{
+    background-color: #fac4d4;
+  }
+
+  .tgreen{
+    background-color: #4db3a5;
+  }
+
+  .torange{
+    background-color: #f6b171;
+  }
+  </style>

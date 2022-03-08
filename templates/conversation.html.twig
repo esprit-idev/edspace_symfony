@@ -1,6 +1,19 @@
 {# {% extends 'frontOffice.html.twig' %} #}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="{{ asset('/frontOffice/css/templatemo-nomad-force.css') }}" rel="stylesheet">
+    <link href="{{ asset('/frontOffice/css/responsive.css') }}" rel="stylesheet" />
+{% endblock css %}
 
 {% block custom %}
+<script src="https://kit.fontawesome.com/ffcbf2bd8b.js" crossorigin="anonymous"></script>
+
+
 {% include 'style2.html.twig' %}
  
 <div class="chat" id="body"> 

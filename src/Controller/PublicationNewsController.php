@@ -15,6 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
+use App\Entity\User;
+use App\Entity\Message;
+use App\Entity\Classe;
+use DateTime;
 class PublicationNewsController extends AbstractController
 {
     /**
@@ -199,6 +203,30 @@ class PublicationNewsController extends AbstractController
      */
     public function searchPubByCategoryName(Request $request, PublicationNewsRepository $repo, CategorieNewsRepository $catRepo){
 
+        $test=$this->getUser()->getId();
+        $em=$this->getDoctrine()->getManager();
+        $user1=$em->getRepository(User::class)->find($test);
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+        $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+      
+        $message=$this
+        ->getDoctrine()
+        ->getManager()
+        ->getRepository(Message::class)
+        ->findBy(array(),array('postDate' => 'ASC'));
+        $mymsg=[];
+        $othersmsg=[];
+        foreach($message as $i){
+            if($i->getUser()->getId()==$user1->getId()){
+                $mymsg[]=$i;
+            }
+            else{
+                $othersmsg[]=$i;
+            }
+        }
+
+
         $templateName = 'publication_news/front/allPublication_FO.html.twig';
         $publications = $repo->findAll();
         // $publication= $repo->find($id);
@@ -209,7 +237,12 @@ class PublicationNewsController extends AbstractController
             $publications = $repo->findNewsByCategory($category); 
             // $publications = $repo->SortByDateASC();  
         }
-        return $this->render($templateName, array('publications' => $publications,'categories' => $categories));
+        return $this->render($templateName, array('publications' => $publications,'memebers'=> $memebers,
+        'user' => $user1,
+        'classe'=> $classe,
+        'message'=> $message,
+        'mymsg' => $mymsg,
+        'others' =>$othersmsg,'categories' => $categories));
     }
 
     /**
