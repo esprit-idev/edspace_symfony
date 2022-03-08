@@ -1,5 +1,10 @@
 {% extends 'backOffice.html.twig' %}
+
+
+
 {% block leftNavBar %}
+
+{%  include 'styles.html.twig' %}
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -78,7 +83,6 @@
                           <label for="inputNiveau" class="form-label">Niveau :</label>
                           <br>
                           <select name="niveau" id="niveau2" class="col-md-12" >
-                          <option id="selected"  class="niveau" value ="" selected></option>
                           {% for n in niveau %}
                         <option value="{{n.id}}">{{n.id}}</option>
                         {% endfor %}
@@ -97,10 +101,9 @@
   </div>
   <br>
                      <div class="d-flex justify-content-between bt">
-                        <div>
-                        </div>
+
                             <div class="new">
-                                <a href="#" id="19" class="btn btn-primary btn-lg">Ajouter une classe</a>
+                                <a href="#" id="19" class="btn btn-primary">Ajouter une classe</a>
                             </div>
                         </div>
 

@@ -149,6 +149,8 @@ $(function() {
       $("#chat-circle").toggle('scale');
       $(".chat-box").toggle('scale');
       memebers.style.display = "none";
+      option.style.display = "none";
+      theme.style.display = "none";
     })  
 
   })

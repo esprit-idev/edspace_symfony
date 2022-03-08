@@ -25,7 +25,7 @@ class ConversationController extends AbstractController
     public function start(): Response
     {
 
-        $user=$this->getUser()->getId();
+       //$user=$this->getUser()->getId();
         $em=$this->getDoctrine()->getManager();
         $user1=$em->getRepository(User::class)->find(1);
         $em1=$this->getDoctrine()->getRepository(User::class);
