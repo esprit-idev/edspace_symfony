@@ -24,7 +24,7 @@
 	</div>
   <div  class="chat-members">
         {% for n in memebers %}
-      <i class="fas fa-image"></i> <a href="#">  {{n.prenom}} {{n.username}} </a>  <br>
+      <i class="fa fa-user"></i> <a onclick="return false;" href="#">  {{n.prenom}} {{n.username}} </a>  <br>
 
         {% endfor %}
   </div>
@@ -43,7 +43,7 @@
 
   <div class="chat-box">
     <div class="chat-box-header">
-   <a href="#" id="members"> <i class="fa fa-user" aria-hidden="true" ></i> </a>
+   <a href="#" onclick="return false;" id="members"> <i class="fa fa-user" aria-hidden="true" ></i> </a>
    CLASSE: {{classe.niveau.id}}{{classe.classe}}
       <span class="chat-box-toggle"><button type="button" class="btn-close btn-close-white" aria-label="Close"></button></span>
     </div>
