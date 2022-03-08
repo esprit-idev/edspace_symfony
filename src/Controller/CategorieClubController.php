@@ -13,36 +13,36 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CategorieClubController extends AbstractController
 {
-    /**
-     * @Route("/categorie/club", name="categorie_club")
-     */
-    public function index(): Response
-    {
-        return $this->render('categorie_club/index.html.twig', [
-            'controller_name' => 'CategorieClubController',
-        ]);
-    }
 
     /**
      * @Route("/displayClubCategories", name="displayClubCategories")
      */
     public function displayClubCategories(CategorieClubRepository $rep): Response
     {
-        $categorie=$rep->findAll();
-        return $this->render('categorie_club/displayClubCategories.html.twig', [
-            'categorie'=> $categorie,
-        ]);
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent) {
+            $categorie = $rep->findAll();
+            return $this->render('categorie_club/displayClubCategories.html.twig', [
+                'categorie' => $categorie,
+            ]);
+        }
+        else return new Response(null, 403);
+
     }
     /**
      * @Route("/deleteClubCategories/{id}", name="deleteClubCategories")
      */
     public function deleteClubCategories($id,CategorieClubRepository $rep): Response
     {
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent){
         $categorie = $rep->find($id);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($categorie);
         $entityManager->flush();
         return $this->redirectToRoute('displayClubCategories');
+        }
+        else return new Response(null, 403);
 
     }
     /**
@@ -50,6 +50,8 @@ class CategorieClubController extends AbstractController
      */
     public function updateClubCategories($id,Request $request,CategorieClubRepository $rep): Response
     {
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent){
         $categorie = $rep->find($id);
         $form=$this->createForm(CategorieClubType::class,$categorie);
         $form->add('Valider', SubmitType::class);
@@ -63,6 +65,8 @@ class CategorieClubController extends AbstractController
         return $this->render('categorie_club/updateClubCategories.html.twig', [
             'formCategorie' => $form->createView()
         ]);
+        }
+        else return new Response(null, 403);
     }
 
     /**
@@ -70,6 +74,8 @@ class CategorieClubController extends AbstractController
      */
     public function addClubCategories(Request $request,CategorieClubRepository $rep): Response
     {
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent){
         $categorie = new CategorieClub();
         $form = $this->createForm(CategorieClubType::class, $categorie);
         $form->add('Ajouter', SubmitType::class);
@@ -84,5 +90,7 @@ class CategorieClubController extends AbstractController
         return $this->render('categorie_club/addClubCategories.html.twig', [
             'formCategorie' => $form->createView()
         ]);
+        }
+        else return new Response(null, 403);
     }
 }

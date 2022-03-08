@@ -45,6 +45,7 @@
     <!-- end slider section -->
 {% endblock %}
 {% block special %}
+    {% include "conversation.html.twig" %}
     </br>
     <div class="container " align="center">
         <form method="post" action="{{ path('displayClub') }}">
@@ -65,7 +66,7 @@
         {% set i = 1 %}
         <div class="row">
             {% if clubs is empty %}
-                <p>Pas de clubs dans cette categorie
+                <p>Pas de clubs.
                 </p>
             {% else %}
                 {% for c in clubs %}

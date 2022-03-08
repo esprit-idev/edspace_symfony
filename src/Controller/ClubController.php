@@ -21,24 +21,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClubController extends AbstractController
 {
-    private $admin = 1;
-
-    /**
-     * @Route("/club", name="club")
-     */
-    public function index(): Response
-    {
-        return $this->render('club/index.html.twig', [
-            'controller_name' => 'ClubController',
-        ]);
-    }
-
 
     /**
      * @Route("/displayClub", name="displayClub")
      */
     public function displayClub(Request $request,ClubRepository $rep,ClubPubRepository $repository,CategorieClubRepository $categorieClubRepository): Response
     {
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        $hasAccessResponsable = $this->isGranted('ROLE_RESPONSABLEC');
+
         $categories=$categorieClubRepository->findAll();
         if($request->get('catego')!=null){
             $categorieSelected=$request->get('catego');
@@ -48,13 +40,16 @@ class ClubController extends AbstractController
         }
         else{ $club = $rep->findAll();
     }
-        if ($this->admin) {
+        if ($hasAccessAgent) {
             return $this->render('club/displayClub(admin).html.twig', [
                 'clubs' => $club,'categories'=>$categories
             ]);
-        } else return $this->render('club/displayClub(student).html.twig', [
-            'clubs' => $club,'categories'=>$categories
-        ]);
+        } elseif ($hasAccessStudent || $hasAccessResponsable) {
+            return $this->render('club/displayClub(student).html.twig', [
+                'clubs' => $club,'categories'=>$categories
+            ]);
+        }
+        else return new Response(null, 403);
 
     }
 
@@ -63,16 +58,19 @@ class ClubController extends AbstractController
      */
     public function deleteClub($id, ClubRepository $rep ,UserRepository $userRepository): Response
     {
-        $club = $rep->find($id);
-        $club->getClubResponsable()->setRoles(['ROLE_RESPONSABLE']);
-        $entityManager = $this->getDoctrine()->getManager();
-        $respoClubid=$club->getClubResponsable();
-        $user=$userRepository->find($respoClubid);
-        $user->setClub(null);
-        $user->setRoles([]);
-        $entityManager->remove($club);
-        $entityManager->flush();
-        return $this->redirectToRoute('displayClub');
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent) {
+            $club = $rep->find($id);
+            $entityManager = $this->getDoctrine()->getManager();
+            $respoClubid = $club->getClubResponsable();
+            $user = $userRepository->find($respoClubid);
+            $user->setClub(null);
+            $user->setRoles(["ROLE_STUDENT"]);
+            $entityManager->remove($club);
+            $entityManager->flush();
+            return $this->redirectToRoute('displayClub');
+        }
+        else return new Response(null, 403);
     }
 
     /**
@@ -81,30 +79,31 @@ class ClubController extends AbstractController
     public function updateClub(\Symfony\Component\HttpFoundation\Request $request, $id, ClubRepository $rep,UserRepository $userRepository): Response
     {
 
-
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent) {
             $club = $rep->find($id);
-            $emails=$userRepository->findEmails($id);
+            $emails = $userRepository->findEmails($id);
             $form = $this->createForm(ClubType::class, $club);
-            $form->add('clubResponsable',EntityType::class, [
-            'label' => 'Email du responsable ',
-            'attr' => [
-                'placeholder' => "ex@ex.com",
-                'class' => 'name'
-            ],
-            'class' => User::class,
-            'placeholder' => 'Choisissez unrespo',
-            'query_builder' => $emails,
-            'choice_label' => 'email',
-        ]);
+            $form->add('clubResponsable', EntityType::class, [
+                'label' => 'Email du responsable ',
+                'attr' => [
+                    'placeholder' => "ex@ex.com",
+                    'class' => 'name'
+                ],
+                'class' => User::class,
+                'placeholder' => 'Choisissez unrespo',
+                'query_builder' => $emails,
+                'choice_label' => 'email',
+            ]);
             $form->add('Update', SubmitType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $d=$userRepository->findOneBy(array('club'=>$club));
+                $d = $userRepository->findOneBy(array('club' => $club));
                 $d->setClub(null);
-                $d->setRoles([]);
-                $respoClubid=$form->get('clubResponsable')->getData();
-                $userRepository->find($respoClubid)->setRoles(['ROLE_RESPONSABLE']); //add not set
-                $user=$userRepository->find($respoClubid);
+                $d->setRoles(["ROLE_STUDENT"]);
+                $respoClubid = $form->get('clubResponsable')->getData();
+                $userRepository->find($respoClubid)->setRoles(["ROLE_STUDENT", "ROLE_RESPONSABLEC"]); //add not set
+                $user = $userRepository->find($respoClubid);
                 $user->setClub($club);
                 $em = $this->getDoctrine()->getManager();
                 $em->flush();
@@ -114,6 +113,8 @@ class ClubController extends AbstractController
             return $this->render('club/updateClub.html.twig', [
                 'formClub' => $form->createView(), 'nomClub' => $club->getClubNom()
             ]);
+        }
+        else return new Response(null, 403);
 
     }
 
@@ -122,6 +123,8 @@ class ClubController extends AbstractController
      */
     public function addClub(\Symfony\Component\HttpFoundation\Request $request, UserRepository $userRepository): Response
     {
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if ($hasAccessAgent) {
         $club = new Club();
         $form = $this->createForm(ClubType::class, $club);
         $form->add('clubResponsable',EntityType::class, [
@@ -137,8 +140,13 @@ class ClubController extends AbstractController
                 $qb = $repository->createQueryBuilder('u');
 
                 return $qb
+
                     ->where('u.roles NOT LIKE :roles')
-                    ->setParameter('roles','%"'.'ROLE_RESPONSABLE'.'"%');
+                    ->setParameter('roles','%"'."ROLE_ADMIN".'"%')
+                    ->andwhere('u.club is NULL')
+                    ->orderBy('u.email','ASC')
+                    ;
+
                 // find all users where 'role' is NOT '['ROLE_RESPONSABLE']'
             },
             'choice_label' => 'email',
@@ -150,7 +158,7 @@ class ClubController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $respoClubid=$form->get('clubResponsable')->getData();
-            $userRepository->find($respoClubid)->setRoles(['ROLE_RESPONSABLE']); //add not set
+            $userRepository->find($respoClubid)->setRoles(["ROLE_STUDENT","ROLE_RESPONSABLEC"]); //add not set
             $user=$userRepository->find($respoClubid);
             $user->setClub($club);
             $club->setClubPic("defaultProfilePicture.png");
@@ -163,5 +171,7 @@ class ClubController extends AbstractController
         return $this->render('club/addClub.html.twig', [
             'formClub' => $form->createView()
         ]);
+    }
+        else return new Response(null, 403);
     }
 }

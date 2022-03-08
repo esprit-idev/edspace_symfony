@@ -17,7 +17,7 @@ use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 class PublicationNewsController extends AbstractController
 {
-    private $user=0;
+    private $user=1;
     /**
      * @Route("/publication", name="publication")
      */

@@ -28,18 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ClubPubController extends Controller
 {
-    private $respo =1;
-    private $etud = 0;
 
-    /**
-     * @Route("/club/pub", name="club_pub")
-     */
-    public function index(): Response
-    {
-        return $this->render('club_pub/index.html.twig', [
-            'controller_name' => 'ClubPubController',
-        ]);
-    }
 
     /**
      * @Route("/displayPubClub/{id}", name="displayPubClub")
@@ -47,6 +36,9 @@ class ClubPubController extends Controller
     public function displayPubClub(PaginatorInterface $paginator,$id, Request $request, ClubPubRepository $repPub, ClubRepository $repClub): Response
     {
 
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        $hasAccessResponsable = $this->isGranted('ROLE_RESPONSABLEC');
 
         $club = $repClub->find($id);
         $clubPic = $club->getClubPic();
@@ -85,23 +77,24 @@ class ClubPubController extends Controller
             return $this->redirectToRoute('displayPubClub', ['id' => $id]);
         }
 
-        /*display publciation*/
+        /*display publciation filtred by date*/
+
         $minDate = $request->get('minDate');
-        //  $minDateFormatted = date('Y-m-d', strtotime(str_replace('/', '-', $minDate)));
         $maxDate = $request->get('maxDate');
 
-        //  $maxDateFormatted = date('Y-m-d', strtotime(str_replace('/', '-', $maxDate)));
-        //  var_dump($minDateFormatted);
-
-        //  var_dump($maxDateFormatted);
         if (($minDate == null && $maxDate == null) || ($minDate == "minDate" && $maxDate == "maxDate") || ($minDate == "minDate" && $maxDate != "maxDate") || ($minDate != "minDate" && $maxDate == "maxDate")) {
             $allPub = $repPub->find_all_approved_pub_ordredByDate($id);
         } elseif ($minDate != 'minDate' && $maxDate != 'maxDate') {
             $allPub = $repPub->find_all_pub_between_dates($minDate, $maxDate, $id);
         }
-        $pubdisplay=$paginator->paginate($allPub,$request->query->getInt('page',1),2);
         $pub_hanging = $repPub->find_all_hanging_pub_ordredByDate($id);
         $pub_refused = $repPub->find_all_refused_pub_ordredByDate($id);
+
+        /*paginatorr*/
+
+        $pubdisplay=$paginator->paginate($allPub,$request->query->getInt('page',1),2);
+
+        /*add pub */
 
         $pubadd = new ClubPub();
         $form = $this->createForm(ClubPubType::class, $pubadd);
@@ -141,20 +134,22 @@ class ClubPubController extends Controller
         }
 
         /* redirection*/
-
-        if ($this->etud) {
-            return $this->render('club_pub/displayPubClub(etudiant).html.twig', [
-                'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic
-            ]);
-        }
-        if ($this->respo) {
+        if ($hasAccessResponsable && $this->getUser()->getClub()==$club) {
             return $this->render('club_pub/displayPubClub(responsable).html.twig', [
                 'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic, 'formDesc' => $formDesc->createView(), 'formPic' => $formPic->createView(), 'pub_hanging' => $pub_hanging, 'pub_refused' => $pub_refused
             ]);
         }
+        elseif ($hasAccessStudent) {
+            return $this->render('club_pub/displayPubClub(etudiant).html.twig', [
+                'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic
+            ]);
+        }
+        elseif ($hasAccessAgent) {
         return $this->render('club_pub/displayPubClub(admin).html.twig', [
             'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic, 'pub_hanging' => $pub_hanging, 'pub_refused' => $pub_refused
-        ]);
+        ]);}
+
+            else return new Response(null, 403);
 
     }
 
@@ -163,6 +158,7 @@ class ClubPubController extends Controller
      */
     public function deletePubClub($idclub, $id, ClubPubRepository $rep): Response
     {
+
         $pub = $rep->find($id);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($pub);
@@ -178,7 +174,8 @@ class ClubPubController extends Controller
     public function updatePubClub($idclub, $idpub, Request $request, ClubPubRepository $rep): Response
     {
 
-
+        $hasAccessResponsable = $this->isGranted('ROLE_RESPONSABLEC');
+        if($hasAccessResponsable){
         $pub = $rep->find($idpub);
         $formPubEdit = $this->createForm(ClubPubType::class, $pub);
         $formPubEdit->add('Valider', SubmitType::class);
@@ -204,6 +201,8 @@ class ClubPubController extends Controller
                 $pub->setPubFile(file_get_contents($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
                 $pub->setTypeFichier(mime_content_type($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
             }
+            $pub->setIsPosted(0);
+
             $em = $this->getDoctrine()->getManager();
             // $pub->setPubDate(new \DateTime());
             $em->flush();
@@ -214,9 +213,13 @@ class ClubPubController extends Controller
         return $this->render('club_pub/updatePubClub(respo).html.twig', [
             'formPubEdit' => $formPubEdit->createView(), 'currentImg' => $currentImg
         ]);
+        }
+        else return new Response(null, 403);
+
     }
 
 
+    /* to download files*/
     /**
      * @Route("/DisplayPubFile/{id}", name="DisplayPubFile")
      */
