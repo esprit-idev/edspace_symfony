@@ -14,6 +14,8 @@ use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mercure\Discovery;
+
+
 class ConversationController extends AbstractController
 {
 
@@ -22,6 +24,8 @@ class ConversationController extends AbstractController
      */
     public function start(): Response
     {
+
+        $user=$this->getUser()->getId();
         $em=$this->getDoctrine()->getManager();
         $user1=$em->getRepository(User::class)->find(1);
         $em1=$this->getDoctrine()->getRepository(User::class);
@@ -44,7 +48,7 @@ class ConversationController extends AbstractController
             }
         }
         
-
+     //   app.user.name;
         return $this->render('conversation/conversation.html.twig', [
             'memebers'=> $memebers,
             'user' => $user1,
@@ -145,6 +149,11 @@ class ConversationController extends AbstractController
 
 
 
+
+
+
+
+
     /**
      * @Route("/addconv", name="addconv")
      * @param Request $request
@@ -213,9 +222,6 @@ class ConversationController extends AbstractController
         ]),
         );
 
-        // Publisher's JWT must contain this topic, a URI template it matches or * in mercure.publish or you'll get a 401
-        // Subscriber's JWT must contain this topic, a URI template it matches or * in mercure.subscribe to receive the update
-       
         $publisher($update);
 
         return $this->json('Done');
