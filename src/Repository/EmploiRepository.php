@@ -72,5 +72,13 @@ class EmploiRepository extends ServiceEntityRepository
         ->createQuery('SELECT count(p) FROM APP\ENTITY\Emploi p');
         return $qb->getSingleScalarResult();
     }
+    public function ListEmploiByCategory($id)
+    {
+    $em = $this->getEntityManager();
+    $query=$em
+    ->createQuery("SELECT e FROM APP\ENTITY\Emploi e JOIN e.categoryName c where c.id=:id")
+    ->setParameter('id',$id);
+    return $query->getResult();
+    }
 
 }

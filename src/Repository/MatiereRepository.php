@@ -60,4 +60,10 @@ class MatiereRepository extends ServiceEntityRepository
         }
         return $matieres;
     }
+    public function CountMatieres(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(n) FROM APP\ENTITY\Matiere n');
+        return $qb->getSingleScalarResult();
+    }
 }

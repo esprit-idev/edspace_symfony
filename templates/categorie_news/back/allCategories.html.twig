@@ -38,16 +38,28 @@
     <div class="float-right p-4"><a href="{{ path('addCategoryNews')}}" class="btn btn-primary"> Ajouter une Categorie </a></div>
     <table class="table table-bordered table-hover">
         <thead>
-            <th>ID</th>
             <th>Categorie</th>
             <th>Modifier</th>
             <th>Supprimer</th>
         </thead>
         <tr {% for category in categories %}>
-            <td class="col-sm-2">{{ category.id }} </td>
             <td class="col-sm-4">{{category.categoryName}}</td>
             <td class="col-sm-2"><a href="{{ path("updateCategoryNews",{'id':category.id}) }}" class="btn btn-info">Modifier</a></td>
-            <td class="col-sm-2"><a href="{{ path("deleteCategory",{'id':category.id}) }}" class="btn btn-danger">Supprimer</a>
+            <td class="col-sm-2"><button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal3{{category.id}}">Supprimer</button></td>
+            <div class="modal fade" id="exampleModal3{{category.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer la catégorie?</h5>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                                    <form ACTION="{{ path("deleteCategoryNews",{'id':category.id}) }}">
+                                        <button class="btn btn-danger" >Supprimer</button>
+                                    </form>                                        </div>
+                            </div>
+                        </div>
+                    </div>
         </tr {% endfor %}>
     </table>
     </div>
