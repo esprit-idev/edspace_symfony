@@ -100,7 +100,7 @@ class CategorieNewsController extends AbstractController
     /**
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @Route("/deleteCategory/{id}", name="deleteCategory")
+     * @Route("/deleteCategory/{id}", name="deleteCategoryNews")
      */
     public function DeleteCategory($id, CategorieNewsRepository $repo): Response
     {

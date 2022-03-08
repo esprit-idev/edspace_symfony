@@ -6,14 +6,13 @@ use App\Repository\EmploiRepository;
 use App\Form\EmploiFormType;
 use App\Repository\CategorieEmploiRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class EmploiController extends AbstractController
 {
-    private $user=0;
-    private $job_type = array('stage', 'emploi');
     /**
      * @Route("/emploi", name="emploi")
      */
@@ -29,10 +28,11 @@ class EmploiController extends AbstractController
      */
     public function allEmploi(EmploiRepository $repo, CategorieEmploiRepository $catRepo): Response
     {
-        
-        $templateName = 'emploi/back/allEmploi.html.twig';
-        if($this->user == 1){
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        if($hasAccessStudent){
             $templateName = 'emploi/front/allEmploi_FO.html.twig';
+        }else{
+            $templateName = 'emploi/back/allEmploi.html.twig';
         }
         $emplois = $repo->findAll();
         $categories = $catRepo->findAll();
@@ -51,9 +51,11 @@ class EmploiController extends AbstractController
      */
     public function OneEmploi($id, EmploiRepository $repo): Response
     {
-        $templateName = 'emploi/back/unEmploi.html.twig';
-        if($this->user == 1){
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        if($hasAccessStudent){
             $templateName = 'emploi/front/unEmploi_FO.html.twig';
+        }else{
+            $templateName = 'emploi/back/unEmploi.html.twig';
         }
         $emploi = $repo->find($id);
         return $this->render($templateName, [
@@ -72,6 +74,8 @@ class EmploiController extends AbstractController
      */
     public function AddEmploi(Request $request, EmploiRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $emplois = $repo->findAll();
         $emploi = new Emploi();
         $form = $this->createForm(EmploiFormType::class,$emploi);
@@ -91,6 +95,9 @@ class EmploiController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('allemploi');
         }
+        }else{
+            return new Response("Not authorized", 403);
+        }
         return $this->render('emploi/back/addEmploi.html.twig', [
             'form_title' => 'Ajouter une proposition d\' emploi',
             'form_add' => $form->createView(),
@@ -106,13 +113,30 @@ class EmploiController extends AbstractController
      */
     public function UpdateEmploi(Request $request, $id, EmploiRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $entityManager = $this->getDoctrine()->getManager();
         $emploi = $repo->find($id);
         $form = $this->createForm(EmploiFormType::class, $emploi);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $path = $this->getParameter('kernel.project_dir').'/public/images';
+            $image = $emploi->getImage();
+            $file = $image->getFile();
+            if($file != null){
+                $imageName = md5(uniqid()).'.'.$file->guessExtension();
+                try{
+                    $file->move($path, $imageName);
+                }catch(FileException $e){
+                    return $e;
+                }
+                $image->setName($imageName);
+            } 
             $entityManager->flush();
             return $this->redirectToRoute('allemploi');
+        }
+        }else{
+            return new Response("Not authorized", 403);
         }
         return $this->render('emploi/back/modifierEmploi.html.twig', [
             'form_title' => 'Modifier une publication d\'emploi',
@@ -129,13 +153,18 @@ class EmploiController extends AbstractController
      */
     public function DeleteEmploi($id, EmploiRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $entityManager = $this->getDoctrine()->getManager();
         $emploi = $repo->find($id);
         $entityManager->remove($emploi);
         $entityManager->flush();
 
         return $this->redirectToRoute('allemploi');
-
+        }
+        else{
+            return new Response("Not authorized", 403);
+        }
     }
 
     /**

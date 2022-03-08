@@ -47,4 +47,10 @@ class ClasseRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function CountClasse(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(n) FROM APP\ENTITY\Classe n');
+        return $qb->getSingleScalarResult();
+    }
 }

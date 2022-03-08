@@ -37,14 +37,14 @@ class Emploi
 
     /**
      * @ORM\ManyToOne(targetEntity=CategorieEmploi::class, inversedBy="emplois")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @Assert\NotBlank(message="add category !")
      */
     private $categoryName;
 
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Ajouter une Image")
      */
     private $image;
 
