@@ -68,4 +68,22 @@ class CategorieNewsRepository extends ServiceEntityRepository
         ->createQuery('SELECT count(p) FROM APP\ENTITY\CategorieNews p');
         return $qb->getSingleScalarResult();
     }
+    
+    public function findProductsOfCategory()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c, p')
+            ->leftJoin('c.publicationNews','p')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findCount()
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s,count(p)')
+            ->leftJoin('s.publicationNews','p')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\ClubPub;
+use App\Entity\User;
+use App\Entity\Message;
+use App\Entity\Classe;
 use App\Entity\PubLikes;
 use App\Form\ChangeClubPictureType;
 use App\Form\ClubDescription;
@@ -44,6 +47,31 @@ class ClubPubController extends Controller
         $clubPic = $club->getClubPic();
         $desc = $club->getClubDescription();
 
+        /* messaging */
+
+        if($hasAccessResponsable){
+            $em=$this->getDoctrine()->getManager();
+            $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+
+            $message=$this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository(Message::class)
+                ->findBy(array(),array('postDate' => 'ASC'));
+            $mymsg=[];
+            $othersmsg=[];
+            foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
+        }
         /*photo club*/
 
         $formPic = $this->createForm(ChangeClubPictureType::class, $club);
@@ -136,12 +164,37 @@ class ClubPubController extends Controller
         /* redirection*/
         if ($hasAccessResponsable && $this->getUser()->getClub()==$club) {
             return $this->render('club_pub/displayPubClub(responsable).html.twig', [
-                'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic, 'formDesc' => $formDesc->createView(), 'formPic' => $formPic->createView(), 'pub_hanging' => $pub_hanging, 'pub_refused' => $pub_refused
+                'pubs' => $pubdisplay,
+                'formPub' => $form->createView(),
+                'nom' => $club, 'idclub' => $id,
+                'descClub' => $desc,
+                'clubPic' => $clubPic,
+                'formDesc' => $formDesc->createView(),
+                'formPic' => $formPic->createView(),
+                'pub_hanging' => $pub_hanging,
+                'pub_refused' => $pub_refused,
+                'memebers'=> $memebers,
+                'user' => $user1,
+                'classe'=> $classe,
+                'message'=> $message,
+                'mymsg' => $mymsg,
+                'others' =>$othersmsg
             ]);
         }
         elseif ($hasAccessStudent) {
             return $this->render('club_pub/displayPubClub(etudiant).html.twig', [
-                'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic
+                'pubs' => $pubdisplay,
+                'formPub' => $form->createView(),
+                'nom' => $club,
+                'idclub' => $id,
+                'descClub' => $desc,
+                'clubPic' => $clubPic,
+                'memebers'=> $memebers,
+                'user' => $user1,
+                'classe'=> $classe,
+                'message'=> $message,
+                'mymsg' => $mymsg,
+                'others' =>$othersmsg
             ]);
         }
         elseif ($hasAccessAgent) {
@@ -149,7 +202,7 @@ class ClubPubController extends Controller
             'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic, 'pub_hanging' => $pub_hanging, 'pub_refused' => $pub_refused
         ]);}
 
-            else return new Response(null, 403);
+        else return $this->render('/403.html.twig');
 
     }
 
@@ -214,7 +267,7 @@ class ClubPubController extends Controller
             'formPubEdit' => $formPubEdit->createView(), 'currentImg' => $currentImg
         ]);
         }
-        else return new Response(null, 403);
+        else return $this->render('/403.html.twig');
 
     }
 

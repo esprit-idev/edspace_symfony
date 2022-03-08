@@ -1,3 +1,31 @@
+
+var messageBody = document.querySelector('.chat-logs');
+messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+const colo=document.querySelectorAll('.dot');
+colo.forEach(e =>{
+  e.addEventListener('click',()=>{
+    
+    if(e.id=='blue'){
+      document.documentElement.style.setProperty('--cc', '#d2deed');
+    }
+
+    if(e.id=='pink'){
+      document.documentElement.style.setProperty('--cc', '#fac4d4');
+    }
+
+    if(e.id=='green'){
+      document.documentElement.style.setProperty('--cc', '#4db3a5');
+    }
+    if(e.id=='orange'){
+      document.documentElement.style.setProperty('--cc', '#f6b171');
+    }
+
+    })
+})
+
+
+
 const memebers=document.querySelector('.chat-members');
 
 var x =document.getElementById("members");
@@ -11,11 +39,14 @@ if (memebers.style.display == "none") {
 
 var searchb=document.getElementById("searchm");
 const option=document.querySelector('.option');
+const theme=document.querySelector('.theme');
 searchb.addEventListener('click',function() {
 if (option.style.display == "none") {
   option.style.display = "flex";
+  theme.style.display = "flex";
 } else {
   option.style.display = "none";
+  theme.style.display = "none";
 }
 })
 
@@ -117,6 +148,8 @@ $(function() {
       $("#chat-circle").toggle('scale');
       $(".chat-box").toggle('scale');
       memebers.style.display = "none";
+      option.style.display = "none";
+      theme.style.display = "none";
     })  
 
   })

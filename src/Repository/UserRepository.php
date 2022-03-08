@@ -55,5 +55,10 @@ class UserRepository extends ServiceEntityRepository
         ;
     }*/
 
-
+    public function CountUsers(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(n) FROM APP\ENTITY\User n');
+        return $qb->getSingleScalarResult();
+    }
 }

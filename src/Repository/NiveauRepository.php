@@ -47,4 +47,11 @@ class NiveauRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function CountNiveaux(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(n) FROM APP\ENTITY\Niveau n');
+        return $qb->getSingleScalarResult();
+    }
+
 }

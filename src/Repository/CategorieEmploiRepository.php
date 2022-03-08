@@ -54,4 +54,13 @@ class CategorieEmploiRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findEmploisOfCategory()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c, e')
+            ->leftJoin('c.emplois','e')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

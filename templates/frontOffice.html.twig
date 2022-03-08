@@ -24,14 +24,14 @@
     <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
     <!-- responsive style -->
     <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
-      <link href="{{ asset('frontOffice/css/style2.css?version=3') }}" rel="stylesheet" />
+    <link href="{{ asset('frontOffice/css/style2.css?version=3') }}" rel="stylesheet" />
+    <link href="{{ asset('/frontOffice/css/aos.css" rel="stylesheet') }}">
     <script src="https://kit.fontawesome.com/ffcbf2bd8b.js" crossorigin="anonymous"></script>
     {% endblock %}
     {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
     {% endblock %} 
 </head>
-
 <body>
 <div class="hero_area">
     <!-- header section strats -->
@@ -604,10 +604,19 @@
 {% endblock footer %}
 
 <!-- footer section -->
-<script type="text/javascript" src="{{ asset('frontOffice/js/jquery-3.4.1.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('frontOffice/js/bootstrap.js') }}"></script>
-<script type="text/javascript" src="{{ asset('frontOffice/js/app.js?version=2') }}"></script>
+        <script src="{{ asset('/frontOffice/js/aos.js') }}"></script>
 
+<script type="text/javascript" src="{{ asset('/frontOffice/js/jquery-3.4.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/frontOffice/js/bootstrap.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/frontOffice/js/app.js?version=2') }}"></script>
+<script src=" {{ asset('/frontOffice/js/custom.js') }}"></script>
+{# <script type="text/javascript"> AOS.init(); </script>
+ #}
+ <script>
+  $(window).on("scroll", function () {
+     AOS.init();
+ });
+</script>
 </body>
 
 </html>

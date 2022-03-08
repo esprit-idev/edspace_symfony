@@ -9,6 +9,8 @@
     <!-- responsive style -->
     <link href="{{ asset('/frontOffice/css/templatemo-nomad-force.css') }}" rel="stylesheet">
     <link href="{{ asset('/frontOffice/css/responsive.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" media="all"> 
+
 {% endblock css %}
 
 {% block tabaff_item %}
@@ -49,43 +51,47 @@
 {% endblock %}
 
 {% block custom %}
+
+{% include "conversation.html.twig" %}
+
     <section class="news section-padding" id="news">
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
-                            <h2 class="mb-5 text-center" data-aos="fade-up">News & Events</h2>
+                            <h2 class="mb-5 text-center" data-aos="fade-up">LES NOUVELLES</h2>
                         </div>
-                        <div class="col-12 d-flex justify-content-center mb-4">
+                        <div class="col-12 d-flex justify-content-center mb-5">
                          <form method="POST" action="{{ path('searchByCat') }}" class="form-row">
                             <div class="pr-2">
                             <select name="categoryKey" id="categoryKey" class="form-select form-control">
-                                <option disabled selected> -- Sélectionnez une catégorie -- </option>
+                                <option disabled selected> Sélectionnez une catégorie </option>
                                 {% for c in categories %}
                                     <option>{{ c.categoryName }}</option>
                                 {% endfor %}
                             </select>
                             </div>
-                            <div><button value="recherche" class="btn btn-secondary">Rechercher</button></div>
+                            <div><button value="recherche" class="btn pl-4 pr-4"  style="background-color:#133e3f; color: #ffffff;">Rechercher</button></div>
                         </form>
                         </div>
+                        <div class="row d-flex justify-content-center">
                         {% for pub in publications %}
-                        <div class="col-lg-6 col-12 mb-5 mb-lg-0">
-                            <div class="news-thumb" data-aos="fade-up">
-                                <a href="{{ path("onePublication",{'id':pub.id,'likes':pub.likes}) }}" class="news-image-hover news-image-hover-warning">
+                        <div class="col-lg-5">
+                            <div class="portfolio-thumb " data-aos="fade-up">
+                                <a href="{{ path("onePublication",{'id':pub.id,'likes':pub.likes}) }}" class="news-image-hover news-image-hover-warning" data-aos="fade-up">
                                     <img src="{{ asset('images/') ~ pub.image.name}}" class="img-fluid large-news-image news-image" alt="">
                                 </a>
-
                                 <div class="news-category bg-warning text-white">{{pub.categoryName.getCategoryName()}}</div>
                                 
-                                <div class="news-text-info">
-                                    <h5 class="news-title">
-                                        <a href="{{ path('onePublication', {id: pub.id, 'likes' : pub.likes}) }}" class="news-title-link">{{pub.title}}</a>
+                                <div class="portfolio-info">
+                                    <h5 class="portfolio-title mb-0">
+                                        <a href="{{ path('onePublication', {id: pub.id, 'likes' : pub.likes}) }}" class="portfolio-title mb-0">{{pub.title}}</a>
                                     </h5>
-                                    <span class="text-muted">{{pub.date.format('d/m/y')}}</span>
+                                    <span class="text-danger">{{pub.date.format('d/m/y')}}</span>
                                 </div>
                             </div> 
                         </div>
                         {% endfor %}
+                        </div>
                     </div>
                 </div>
             </section>
@@ -112,10 +118,10 @@
 {% block contact %}
 {% endblock %}
 {% block js %}
+        <script src="{{ asset('/frontOffice/js/aos.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/bootstrap.bundle.min.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/jquery.sticky.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/jquery.min.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/aos.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/jquery.magnific-popup.min.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/magnific-popup-options.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/scrollspy.min.js') }}"></script>

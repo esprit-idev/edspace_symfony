@@ -36,7 +36,9 @@ https://templatemo.com/tm-567-nomad-force
   --font-weight-bold:           700;
   --font-weight-black:          900;
 }
-
+html {
+  overflow-x: hidden
+  }
 body,
 html {
   height: 100%;
@@ -95,6 +97,9 @@ p {
   font-size: var(--p-font-size);
   font-weight: var(--font-weight-light);
   letter-spacing: 0.5px;
+}
+.fate {
+  -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent);
 }
 /*---------------------------------------
   NEWS & EVENTS               
