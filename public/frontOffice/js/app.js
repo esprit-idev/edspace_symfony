@@ -26,7 +26,6 @@ colo.forEach(e =>{
 
 
 
-
 const memebers=document.querySelector('.chat-members');
 
 var x =document.getElementById("members");

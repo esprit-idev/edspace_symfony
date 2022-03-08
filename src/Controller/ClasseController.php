@@ -222,8 +222,10 @@ return new Response('success');
         $et=[];
         if(count($etudiants)>0){
         foreach($etudiants as $i){
-            if(is_null($i->getClasse())){
+            if(is_null($i->getClasse()) ){
+                if($i->getRoles()=="ROLE_STUDENT"){
                 $et[]=$i;
+                }
             }
             else{
             if($i->getClasse()->getId() != $id){
