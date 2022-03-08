@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\DocumentRepository;
 
+
 class MatiereController extends AbstractController
 {
     /**
@@ -32,17 +33,22 @@ class MatiereController extends AbstractController
      * @Route ("/matiere/suppMatiere/{id}",name="suppMatiere")
      */
     function SuppMatiere($id,MatiereRepository $repository,FlashyNotifier $notifier,DocumentRepository $documentRepository){
-        $matiere=$repository->find($id);
-        $document=$documentRepository->findOneBy(array("matiere"=>$matiere));
-        if($document == null) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($matiere);
-            $em->flush();
-            $notifier->error("La matière a été supprimé!");
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent) {
+            $matiere = $repository->find($id);
+            $document = $documentRepository->findOneBy(array("matiere" => $matiere));
+            if ($document == null) {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($matiere);
+                $em->flush();
+                $notifier->error("La matière a été supprimé!");
+            } else {
+                $notifier->error("Veuillez supprimer les documents concernés par cette matière!");
+            }
+            return $this->redirectToRoute('ajoutMatiere');
         } else{
-            $notifier->error("Veuillez supprimer les documents concernés par cette matière!");
+            return new Response(null, 403);
         }
-        return $this->redirectToRoute('ajoutMatiere');
     }
 
     /**
@@ -51,8 +57,9 @@ class MatiereController extends AbstractController
      * @Route ("/matiere/ajoutMatiere",name="ajoutMatiere")
      */
     function AjoutMatiere(Request $request,MatiereRepository $repository,FlashyNotifier $notifier){
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent) {
         $matieres=$repository->findAll();
-
         $matiere=new Matiere();
         $form=$this->createForm(MatiereType::class,$matiere);
         $form->add("Ajouter",SubmitType::class);
@@ -65,12 +72,17 @@ class MatiereController extends AbstractController
             return $this->redirectToRoute('ajoutMatiere');
         }
         return $this->render("matiere/ajoutMatiere.html.twig",["f"=>$form->createView(),'matieres'=>$matieres]);
+        } else{
+            return new Response(null, 403);
+        }
     }
 
     /**
      * @Route ("/matiere/modifMatiere/{id}",name="modifMatiere")
      */
     function ModifMatiere($id,MatiereRepository $repository,Request $request,FlashyNotifier $notifier){
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent) {
         $matiere=$repository->find($id);
         $form=$this->createForm(MatiereType::class,$matiere);
         $form->add("Modifier",SubmitType::class);
@@ -82,6 +94,9 @@ class MatiereController extends AbstractController
             return $this->redirectToRoute('ajoutMatiere');
         }
         return $this->render("matiere/modifMatiere.html.twig",["f"=>$form->createView()]);
+    } else{
+            return new Response(null, 403);
+        }
     }
 
 }

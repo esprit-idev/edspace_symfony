@@ -28,9 +28,9 @@
         {% endif %}
         <div class="row d-flex justify-content-center">
             {% if documents is empty %}
-                <p>Aucun document n'a été ajouté</p>
+                <p>Aucun document n'a été trouvé</p>
             {% else %}
-                {% set cuEt="Meriam2" %}
+                {% set cuEt=app.user.username~" "~app.user.prenom %}
                 {% for d in documents %}
                     <div class="p-4">
                         <div class="card h-100" style="width: 18rem; border-radius: 15px">

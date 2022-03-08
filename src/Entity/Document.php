@@ -82,7 +82,7 @@ class Document
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Url(message= "L'URL saisie est invalide")
+     * @Assert\Url(message= "URL saisie invalide")
      */
     private $url;
 
