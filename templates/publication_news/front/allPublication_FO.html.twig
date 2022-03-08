@@ -50,8 +50,9 @@
 
 {% block custom %}
 
+{% if user.roles =="ROLE_STUDENT" %}
 {% include "conversation.html.twig" %}
-
+{% endif %}
     <section class="news section-padding" id="news">
                 <div class="container">
                     <div class="row">
