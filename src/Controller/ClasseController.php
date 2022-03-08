@@ -24,30 +24,34 @@ class ClasseController extends AbstractController
      */
     public function index(): Response
     {
-        
-            if($this->getUser()->getRoles()=="ROLE_ADMIN"){
+
+
+
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
+            $em1=$this->getDoctrine()->getRepository(Niveau::class);
+            $niveau=$em1->findAll(Niveau::class);
             
-        $em1=$this->getDoctrine()->getRepository(Niveau::class);
-        $niveau=$em1->findAll(Niveau::class);
-        
-
-        
-
-        
-       
-
-        $em=$this->getDoctrine()->getRepository(Classe::class);
-        $classes=$em->findAll(Classe::class);
-
-        
-
-        return $this->render('classe/classes.html.twig', [
-            'classes' => $classes,
-            'niveau'=> $niveau,
-        ]);
+    
+            
+    
+            
+           
+    
+            $em=$this->getDoctrine()->getRepository(Classe::class);
+            $classes=$em->findAll(Classe::class);
+    
+            
+    
+            return $this->render('classe/classes.html.twig', [
+                'classes' => $classes,
+                'niveau'=> $niveau,
+            ]);}
+     
+            return $this->render('/403.html.twig');
     }
-    return $this->render('/403.html.twig');
-    }
+
+ 
     
 
 
@@ -102,7 +106,8 @@ class ClasseController extends AbstractController
 
     public function suppClasse($id): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $em2=$this->getDoctrine()->getManager();
         $classe=$em2->getRepository(Classe::class)->find($id);
         $em=$this->getDoctrine()->getManager();
@@ -116,6 +121,9 @@ class ClasseController extends AbstractController
         $em2->flush();
 
         return $this->redirectToRoute('Classe');
+    }
+    return $this->render('/403.html.twig');
+
     }
 
 
@@ -178,7 +186,8 @@ return new Response('success');
 
     public function addClasse(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+           $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         if($request->request->count() > 0){
             $em1=$this->getDoctrine()->getRepository(Niveau::class);
 
@@ -192,6 +201,10 @@ return new Response('success');
 
         }
         return $this->redirectToRoute('Classe');
+
+    }
+    return $this->render('/403.html.twig');
+
     }
 
 
@@ -205,7 +218,8 @@ return new Response('success');
 
     public function addEt($id,Request $request): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+          $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
 
         $em2=$this->getDoctrine()->getRepository(Classe::class);
         $classe=$em2->find($id);
@@ -250,6 +264,10 @@ return new Response('success');
            
         ]);
     }
+    return $this->render('/403.html.twig');
+
+
+    }
 
 
 
@@ -258,7 +276,8 @@ return new Response('success');
      */
     public function listet($id): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+          $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $em2=$this->getDoctrine()->getRepository(Classe::class);
         $classe=$em2->find($id);
         
@@ -292,7 +311,9 @@ return new Response('success');
             "Attachment" => true
         ]);
     }
-        
+    return $this->render('/403.html.twig');   
+
+}
 
 
 
