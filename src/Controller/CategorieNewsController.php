@@ -28,26 +28,17 @@ class CategorieNewsController extends AbstractController
      */
     public function allCategories(CategorieNewsRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $categories = $repo->findAll();
+        }else{
+            return $this->render('/403.html.twig');
+        }
         return $this->render('categorie_news/back/allCategories.html.twig', [
             'controller_name' => 'CategorieNewsController',
             'categories' => $categories,
         ]);
     }
-
-    // #consulter 
-
-    // /**
-    //  * @param $id
-    //  * @Route("/oneCategoryNews", name="oneCategoryNews")
-    //  */
-    // public function OneCategoryNews($id, CategorieNewsRepository $repo): Response
-    // {
-    //     $categorie = $repo->find($id);
-    //     return $this->render('categorie_news/oneCategory.html.twig', [
-    //         'categorie' => $categorie,
-    //     ]);
-    // }
 
     # add categorie
 
@@ -56,15 +47,20 @@ class CategorieNewsController extends AbstractController
      */
     public function AddCategory(Request $request, CategorieNewsRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $categories = $repo->findAll();
         $category = new CategorieNews();
         $form = $this->createForm(CategorieNewsFormType::class,$category);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($category);
-            $entityManager->flush();
-            return $this->redirectToRoute('allCategoriesNews');
+            if($form->isSubmitted() && $form->isValid()){
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($category);
+                $entityManager->flush();
+                return $this->redirectToRoute('allCategoriesNews');
+            }
+        }else{
+            return $this->render('/403.html.twig');
         }
         return $this->render('categorie_news/back/addCategory.html.twig', [
             'form_title' => 'Ajouter une categorie de News',
@@ -81,6 +77,8 @@ class CategorieNewsController extends AbstractController
      */
     public function UpdateCategoryNews(Request $request, $id, CategorieNewsRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $entityManager = $this->getDoctrine()->getManager();
         $category = $repo->find($id);
         $form = $this->createForm(CategorieNewsFormType::class, $category);
@@ -88,6 +86,9 @@ class CategorieNewsController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $entityManager->flush();
             return $this->redirectToRoute('allCategoriesNews');
+        }
+        }else{
+            return $this->render('/403.html.twig');
         }
         return $this->render('categorie_news/back/updateCategory.html.twig', [
             'form_title' => 'Modifier une categorie',
@@ -104,11 +105,15 @@ class CategorieNewsController extends AbstractController
      */
     public function DeleteCategory($id, CategorieNewsRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $entityManager = $this->getDoctrine()->getManager();
         $category = $repo->find($id);
         $entityManager->remove($category);
         $entityManager->flush();
-
+        }else{
+            return $this->render('/403.html.twig');
+        }
         return $this->redirectToRoute('allCategoriesNews');
 
     }
@@ -117,12 +122,17 @@ class CategorieNewsController extends AbstractController
      */
     public function SearchCategory(CategorieNewsRepository $repo, Request $request): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $categories = $repo->findAll();
-        if($request->isMethod('POST')){
-            $categoryName = $request->get('catTitle');
-            if($categoryName !== ''){
-                $categories = $repo->SearchByName($categoryName);
+            if($request->isMethod('POST')){
+                $categoryName = $request->get('catTitle');
+                if($categoryName !== ''){
+                    $categories = $repo->SearchByName($categoryName);
+                }
             }
+        }else{
+            return $this->render('/403.html.twig');
         }
         return $this->render('categorie_news/back/allCategories.html.twig', 
             array('categories' => $categories,)

@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Message;
+use App\Entity\Classe;
+use App\Entity\User;
 
 class EmploiController extends AbstractController
 {
@@ -28,8 +31,36 @@ class EmploiController extends AbstractController
      */
     public function allEmploi(EmploiRepository $repo, CategorieEmploiRepository $catRepo): Response
     {
+        $user1='';
+        $em1='';
+        $memebers='';
+        $classe='';
+        $message='';
         $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        //messages
+        $test=$this->getUser()->getId();
+            $em=$this->getDoctrine()->getManager();
+            $mymsg=[];
+            $othersmsg=[];
         if($hasAccessStudent){
+            $user1=$em->getRepository(User::class)->find($test);
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+            $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+            //messages 
+            foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
             $templateName = 'emploi/front/allEmploi_FO.html.twig';
         }else{
             $templateName = 'emploi/back/allEmploi.html.twig';
@@ -40,6 +71,11 @@ class EmploiController extends AbstractController
             'controller_name' => 'EmploiController',
             'emplois' => $emplois,
             'categories' => $categories,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'memebers'=> $memebers,
         ]);
     }
 
@@ -52,18 +88,46 @@ class EmploiController extends AbstractController
     public function OneEmploi($id, EmploiRepository $repo): Response
     {
         $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        $emploi = $repo->find($id);
+         //messages
+         $test=$this->getUser()->getId();
+             $em=$this->getDoctrine()->getManager();
+             $user1=$em->getRepository(User::class)->find($test);
+             $em1=$this->getDoctrine()->getRepository(User::class);
+             $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+             $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+             $message=$this
+             ->getDoctrine()
+             ->getManager()
+             ->getRepository(Message::class)
+             ->findBy(array(),array('postDate' => 'ASC'));
+             $mymsg=[];
+             $othersmsg=[];
         if($hasAccessStudent){
+            //messages 
+            foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
             $templateName = 'emploi/front/unEmploi_FO.html.twig';
         }else{
             $templateName = 'emploi/back/unEmploi.html.twig';
         }
-        $emploi = $repo->find($id);
         return $this->render($templateName, [
             'emploi' => $emploi,
             'emploi_title' => $emploi->getTitle(),
             'emploi_date' =>$emploi->getDate(),
             'emploi_content' => $emploi->getContent(),
-            'emploi_category' => $emploi->getCategoryName()
+            'emploi_category' => $emploi->getCategoryName(),
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'memebers'=> $memebers,
         ]);
     }
 
@@ -187,16 +251,45 @@ class EmploiController extends AbstractController
      * @Route("/allemploi/searchByCat", name="searchByEmploi")
      */
     public function searchPubByCategoryName(Request $request, EmploiRepository $repo, CategorieEmploiRepository $catRepo){
-
-        $templateName = 'emploi/front/allEmploi_FO.html.twig';
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        $test=$this->getUser()->getId();
+            $em=$this->getDoctrine()->getManager();
+            $user1=$em->getRepository(User::class)->find($test);
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+            $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+            $mymsg=[];
+            $othersmsg=[];
+            if($hasAccessStudent){
+                //messages 
+                foreach($message as $i){
+                    if($i->getUser()->getId()==$user1->getId()){
+                        $mymsg[]=$i;
+                    }
+                    else{
+                        $othersmsg[]=$i;
+                    }
+                }
+                $templateName = 'emploi/front/allEmploi_FO.html.twig';
+            }else{
+                $templateName = 'emploi/back/allEmploi.html.twig';
+            }
         $emplois = $repo->findAll();
-        // $publication= $repo->find($id);
         $categories = $catRepo->findAll();
         if($request->isMethod('POST')){
             $category = $request->get('categoryKey');
             $emplois = $repo->findNewsByCategory($category); 
-            // $publications = $repo->SortByDateASC();  
         }
-        return $this->render($templateName, array('emplois' => $emplois,'categories' => $categories));
+        return $this->render($templateName, array('emplois' => $emplois,'categories' => $categories,'user' => $user1,
+        'classe'=> $classe,
+        'message'=> $message,
+        'mymsg' => $mymsg,
+        'memebers'=> $memebers,)
+    );
     }
 }

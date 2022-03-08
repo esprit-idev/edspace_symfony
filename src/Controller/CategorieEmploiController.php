@@ -31,7 +31,7 @@ class CategorieEmploiController extends AbstractController
         if($hasAccessStudent){
         $categories = $repo->findAll();
         }else{
-            return new Response("Not authorized", 403);
+            return $this->render('/403.html.twig');
         }
         return $this->render('categorie_emploi/allCategories.html.twig', [
             'controller_name' => 'CategorieEmploiController',
@@ -87,7 +87,7 @@ class CategorieEmploiController extends AbstractController
                 return $this->redirectToRoute('allCategoriesEmploi');
             }
         }else{
-            return new Response("Not authorized", 403);
+            return $this->render('/403.html.twig');
         }
         return $this->render('categorie_emploi/updateCategory.html.twig', [
             'form_title' => 'Modifier une categorie',
@@ -113,7 +113,7 @@ class CategorieEmploiController extends AbstractController
 
         return $this->redirectToRoute('allCategoriesEmploi');
         }else{
-            return new Response("Not authorized", 403);
+            return $this->render('/403.html.twig');
         }
     }
     /**

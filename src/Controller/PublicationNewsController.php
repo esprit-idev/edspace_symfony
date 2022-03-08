@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
-use Symfony\UX\Chartjs\Model\Chart;
 use App\Entity\User;
 use App\Entity\Message;
 use App\Entity\Classe;
@@ -26,11 +24,33 @@ class PublicationNewsController extends AbstractController
      */
     public function allPubs(PublicationNewsRepository $repo, CategorieNewsRepository $catRepo, Request $request): Response
     {
-        
         $categories = $catRepo->findAll();
         $publications = $repo->findAll();
         $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        $test=$this->getUser()->getId();
+            $em=$this->getDoctrine()->getManager();
+            $user1=$em->getRepository(User::class)->find($test);
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+            $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+            $mymsg=[];
+            $othersmsg=[];
         if($hasAccessStudent){
+             //messages 
+            foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
+            //endmessages
             $templateName = 'publication_news/back/allPublication.html.twig';
         }
         else{
@@ -40,6 +60,11 @@ class PublicationNewsController extends AbstractController
             'controller_name' => 'PublicationNewsController',
             'publications' => $publications,
             'categories' =>$categories,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'memebers'=> $memebers,
         ]);
     }
 
@@ -61,15 +86,38 @@ class PublicationNewsController extends AbstractController
         $views = $publication->getVues();
         $comments = $publication->getComments();
         $comment = count(array($comments));
-        if($pageWasRefreshed){
-            $views = $publication->increment();
-            $em->flush();
-        }else{
-            $views = $publication->getVues();
-            $em->flush();
-        }
+        //messages
+        $test=$this->getUser()->getId();
+            $em=$this->getDoctrine()->getManager();
+            $user1=$em->getRepository(User::class)->find($test);
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+            $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+            $mymsg=[];
+            $othersmsg=[];
+            if($pageWasRefreshed){
+                $views = $publication->increment();
+                $em->flush();
+            }else{
+                $views = $publication->getVues();
+                $em->flush();
+            }
         $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
         if($hasAccessStudent){
+             //messages 
+             foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
             $templateName = 'publication_news/back/onePublication.html.twig';
         }
         else{
@@ -85,6 +133,11 @@ class PublicationNewsController extends AbstractController
             'comments' =>$comments,
             'num' => $comment,
             'views' =>$views,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'memebers'=> $memebers,
         ]);
     }
      # add a publication
@@ -115,7 +168,7 @@ class PublicationNewsController extends AbstractController
             return $this->redirectToRoute('allPublications');
         }
         }else{
-            return new Response("Not authorized", 403);
+            return $this->render('/403.html.twig');
         }
         return $this->render('publication_news/back/addPublication.html.twig', [
             'form_title' => 'Ajouter une publication',
@@ -156,7 +209,7 @@ class PublicationNewsController extends AbstractController
             return $this->redirectToRoute('allPublications');
         }
         }else{
-            return new Response("Not authorized", 403);
+            return $this->render('/403.html.twig');
         }
         return $this->render('publication_news/back/updatePublication.html.twig', [
             'form_title' => 'Modifier une publication',
@@ -178,7 +231,7 @@ class PublicationNewsController extends AbstractController
 
         return $this->redirectToRoute('allPublications');
         }else{
-            return new Response("Not authorized", 403);
+            return $this->render('/403.html.twig');
         }
     }
     /**
@@ -272,7 +325,7 @@ class PublicationNewsController extends AbstractController
                 array_push($array, $pub->getComments());
             }
         }else{
-            return new Response("Not authorized", 403);
+            return $this->render('/403.html.twig');
         }
 
         return $this->render($templateName, array(
@@ -314,7 +367,7 @@ class PublicationNewsController extends AbstractController
             }
                 $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }else{
-            return new Response("Not authorized", 403);
+            return $this->render('/403.html.twig');
         }
         return $this->render($templateName, [
             'publications' => $publication,
