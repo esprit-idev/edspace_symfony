@@ -1,4 +1,5 @@
 {% extends "frontOffice.html.twig" %}
+{% block title %}<title>Publications | {{publication_title}}</title>{% endblock title %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <!-- fonts style -->
@@ -11,6 +12,14 @@
     <link href="{{ asset('/frontOffice/css/bootstrap-icons.css') }}" rel="stylesheet" > 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" media="all"> 
         <link href="{{ asset('/frontOffice/css/aos.css" rel="stylesheet') }}">
+        <style>
+    .paragraph{
+    color: #717275;
+    font-size: 20px;
+    font-weight: var(--font-weight-light);
+    letter-spacing: 20px;
+    }
+    </style> 
 
 {% endblock css %}
 
@@ -61,7 +70,7 @@
                                         <figcaption class="figure-caption text-end">{{publication_title}}</figcaption>
                                     </figure>
                                 </div>
-                                <p class="me-4" data-aos="fade-up">{{publication_content}}</p>
+                                <p class="paragraph me-4" data-aos="fade-up">{{publication_content}}</p>
                             </div>
                             <div class="social-share d-flex mt-5">
                                 <span class="mr-4">Share this article:</span>

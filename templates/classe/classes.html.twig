@@ -111,7 +111,8 @@
 
 
 
-<input type="text" class="form-control" placeholder="Chercher une classe..." id="search">
+<input type="text" class="s" placeholder="Chercher une classe..." id="search">
+
     <table class="table table-striped">
         <thead>
             <th></th>
@@ -130,7 +131,7 @@
             <td class="niveau">{{n.niveau.id}}</td>
             <td class="classe">{{n.classe}}</td>
             <td id="{{ n.id }}" class="c-item"><a href="#">
-                 <i class="fas fa-list"></i> </a></td>
+                 <i class="fas fa-wrench"></i> </a></td>
 
             <td class=""><a href="..{{ path('classtoetudiant', {'id': n.id }) }}">
                 <i class="fas fa-user-plus"></i> </a></td>

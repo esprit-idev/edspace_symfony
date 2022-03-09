@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220308092844 extends AbstractMigration
+final class Version20220309004316 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -46,7 +46,7 @@ final class Version20220308092844 extends AbstractMigration
         $this->addSql('ALTER TABLE document ADD CONSTRAINT FK_D8698A76B3E9C81 FOREIGN KEY (niveau_id) REFERENCES niveau (id)');
         $this->addSql('ALTER TABLE document_favoris ADD CONSTRAINT FK_2D5C62EEA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE document_favoris ADD CONSTRAINT FK_2D5C62EEC33F7837 FOREIGN KEY (document_id) REFERENCES document (id)');
-        $this->addSql('ALTER TABLE emploi ADD CONSTRAINT FK_74A0B0FAB6CFDCA8 FOREIGN KEY (category_name_id) REFERENCES categorie_emploi (id)');
+        $this->addSql('ALTER TABLE emploi ADD CONSTRAINT FK_74A0B0FAB6CFDCA8 FOREIGN KEY (category_name_id) REFERENCES categorie_emploi (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE emploi ADD CONSTRAINT FK_74A0B0FA3DA5256D FOREIGN KEY (image_id) REFERENCES image (id)');
         $this->addSql('ALTER TABLE matiere ADD CONSTRAINT FK_9014574AB3E9C81 FOREIGN KEY (niveau_id) REFERENCES niveau (id)');
         $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307F8F5EA509 FOREIGN KEY (classe_id) REFERENCES classe (id)');

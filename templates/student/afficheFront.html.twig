@@ -1,0 +1,80 @@
+{% extends "frontOffice.html.twig" %}
+
+{% block Student %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{{path('affiche')}}">Liste des etudiants</a>
+    </li>
+{% endblock %}
+
+
+
+{% block slider %}
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                          Liste des Etudiants
+                                        </h1>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block custom %}
+     {% include "conversation.html.twig" %}
+    <table class="table table-bordered">
+        <thread>
+            <tr>
+                <th scope="col">Prenom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Adresse</th>
+                <th>Classe</th>
+
+            </tr>
+        </thread>
+        <tbody>
+        <tr {% for e in etudiant %}>
+            {% if e.classe == app.user.classe %}
+                <td>{{ e.username }}</td>
+                <td>{{ e.prenom }}</td>
+                <td>{{ e.email }}</td>
+                <td>{{ e.classe.classe }}</td>
+            {% endif %}
+        </tr{% endfor %}>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block special %}
+{% endblock %}
+
+{% block about %}
+{% endblock %}
+
+{% block course %}
+{% endblock %}
+
+{% block login %}
+{% endblock %}
+
+{% block event %}
+{% endblock %}
+
+{% block client %}
+{% endblock %}
+
+{% block contact %}
+{% endblock %}

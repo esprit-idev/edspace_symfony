@@ -1,0 +1,135 @@
+{% extends "frontOffice.html.twig" %}
+{% block title %}EdSpace | Emplois{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="{{ asset('/frontOffice/css/templatemo-nomad-force.css') }}" rel="stylesheet">
+    <link href="{{ asset('/frontOffice/css/responsive.css') }}" rel="stylesheet" />
+
+{% endblock css %}
+{% block profile_item %}
+
+    <li class="nav-item active">
+        <a class="nav-link" href="{{path('show')}}">Mon profil</a>
+    </li>
+    <li class="nav-item">
+        <a href={{ path('app_logout')}} class="nav-link">
+            <p>logout</p>
+        </a>
+    </li>
+{% endblock %}
+
+{% block slider %}
+
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Edit Photo
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}
+{% block custom %}
+    {% include "conversation.html.twig" %}
+    <div class="container">
+        <div class="main-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                {{ form(form) }}
+                            </div>
+                            <hr class="my-4">
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-5">
+                                <div class="col-sm-5">
+                                    <h5 class="mb-0">Full Name</h5>
+                                </div>
+                                <div class="text-muted font-size-sm">
+                                    <h6>{{ app.user.username }} {{ app.user.prenom }}</h6>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h5 class="mb-0">Email</h5>
+                                </div>
+                                <div class="text-muted font-size-sm">
+                                    <h6>{{ app.user.email }}</h6>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-9 text-secondary">
+                                    <a href="{{ path('ProfilEdit') }}" type="button" class="btn btn-primary px-4" > Edit Profil</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block special %}
+{% endblock %}
+
+{% block about %}
+{% endblock %}
+
+{% block course %}
+{% endblock %}
+
+{% block login %}
+{% endblock %}
+
+{% block event %}
+{% endblock %}
+
+{% block client %}
+{% endblock %}
+
+{% block contact %}
+{% endblock %}
+{% block js %}
+    <script src=" {{ asset('frontOffice/js/bootstrap.bundle.min.js') }}"></script>
+    <script src=" {{ asset('frontOffice/js/jquery.sticky.js') }}"></script>
+    <script src=" {{ asset('frontOffice/js/jquery.min.js') }}"></script>
+    <script src=" {{ asset('frontOffice/js/aos.js') }}"></script>
+    <script src=" {{ asset('frontOffice/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src=" {{ asset('frontOffice/js/magnific-popup-options.js') }}"></script>
+    <script src=" {{ asset('frontOffice/js/scrollspy.min.js') }}"></script>
+    <script src=" {{ asset('frontOffice/js/custom.js') }}"></script>
+{% endblock js %}
+
+

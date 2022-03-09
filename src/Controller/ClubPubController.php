@@ -49,7 +49,7 @@ class ClubPubController extends Controller
 
         /* messaging */
 
-        if($hasAccessResponsable){
+        if($hasAccessResponsable || $hasAccessStudent){
             $em=$this->getDoctrine()->getManager();
             $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
             $em1=$this->getDoctrine()->getRepository(User::class);

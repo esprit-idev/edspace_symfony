@@ -1,82 +1,29 @@
-{% extends "frontOffice.html.twig" %}
+{% extends "backOffice.html.twig" %}
+{% block title %}<title>Ajouter des Admins</title>{% endblock %}
+{% block leftNavBar %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="index3.html" class="nav-link">Liste des etudiants</a>
+        </li>
+    </ul>
+{% endblock%}
+{% block cards %}
+    <div class="content-wrapper">
+        <div class="container-fluid">
 
-{% block nav %}
-    <li class="nav-item">
-        <a class="nav-link" href="index.html">Tableau d'affichage<span class="sr-only">(current)</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="about.html">Forum</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="course.html">Clubs</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="contact.html">Offres d'emploi</a>
-    </li>
-    <li class="nav-item active">
-        <a class="nav-link" href="listDocuments">Centre de partage</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="event.html">Mon profile</a>
-    </li>
-{% endblock %}
-{% block slider %}
+            <body>
+            </br>
+            {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+            {{ form_end(form) }}
 
-    <section class=" slider_section position-relative">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <div class="detail-box">
-                                    <div>
-                                        <h1>
-                                            Centre de partage
-                                        </h1>
-                                        <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </br>
+
+
+            </body>
         </div>
-    </section>
+    </div>
 {% endblock %}
 
-{% block custom %}
-    </br>
-    {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
-
-    {{ form_end(form) }}
-    </br>
-{% endblock %}
-
-{% block special %}
-{% endblock %}
-
-{% block about %}
-{% endblock %}
-
-
-{% block course %}
-{% endblock %}
-
-{% block login %}
-{% endblock %}
-
-{% block event %}
-{% endblock %}
-
-{% block client %}
-{% endblock %}
-
-{% block contact %}
-{% endblock %}
