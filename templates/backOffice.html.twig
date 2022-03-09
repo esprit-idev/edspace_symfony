@@ -3,13 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard</title>
+    {% block title %}<title>AdminLTE 3</title>{% endblock %}
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/fontawesome-free/css/all.min.css') }}">
+    <script src="https://kit.fontawesome.com/ffcbf2bd8b.js" crossorigin="anonymous"></script>
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
@@ -27,15 +28,13 @@
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/summernote/summernote-bs4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backOffice/style.css?version=2') }}">
     {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
-    {% endblock %}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+    {% endblock %}
 </head>
-<body class="sidebar-mini layout-fixed"
-{{ stimulus_controller('symfony/ux-swup/swup',{
-         theme:'fade',
-     }) }}>
-<div class="wrapper" id="swup">
+<body class="sidebar-mini layout-fixed">
+<div class="wrapper">
 
     <!-- Preloader -->
     {# <div class="preloader flex-column justify-content-center align-items-center">
@@ -58,7 +57,6 @@
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
-            <!-- Navbar Search -->
             {% block searchbar %}
             <li class="nav-item">
                 <a class="nav-link" data-widget="navbar-search" href="#" role="button">
@@ -67,8 +65,7 @@
                 <div class="navbar-search-block">
                     <form class="form-inline">
                         <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search"
-                                   aria-label="Search">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-navbar" type="submit">
                                     <i class="fas fa-search"></i>
@@ -81,96 +78,15 @@
                     </form>
                 </div>
             </li>
-            {% endblock searchbar %}
-            <!-- Messages Dropdown Menu -->
-            <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-comments"></i>
-                    <span class="badge badge-danger navbar-badge">3</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <a href="#" class="dropdown-item">
-                        <!-- Message Start -->
-                        <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 mr-3 img-circle">
-                            <div class="media-body">
-                                <h3 class="dropdown-item-title">
-                                    Brad Diesel
-                                    <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                                </h3>
-                                <p class="text-sm">Call me whenever you can...</p>
-                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                            </div>
-                        </div>
-                        <!-- Message End -->
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <!-- Message Start -->
-                        <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user8-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 img-circle mr-3">
-                            <div class="media-body">
-                                <h3 class="dropdown-item-title">
-                                    John Pierce
-                                    <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                                </h3>
-                                <p class="text-sm">I got your message bro</p>
-                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                            </div>
-                        </div>
-                        <!-- Message End -->
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <!-- Message Start -->
-                        <div class="media">
-                            <img src="{{ asset('backOffice/dist/img/user1-128x128.jpg') }}" alt="User Avatar"
-                                 class="img-size-50 img-circle mr-3">
-                            <div class="media-body">
-                                <h3 class="dropdown-item-title">
-                                    Brad Diesel2
-                                    <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                                </h3>
-                                <p class="text-sm">The subject goes here</p>
-                                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                            </div>
-                        </div>
-                        <!-- Message End -->
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                </div>
-            </li>
-            {% block notif %}
-            <!-- Notifications Dropdown Menu -->
-            <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-bell"></i>
-                    <span class="badge badge-warning navbar-badge">15</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <span class="dropdown-item dropdown-header">15 Notifications</span>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-envelope mr-2"></i> 4 new messages
-                        <span class="float-right text-muted text-sm">3 mins</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-file mr-2"></i> 3 new reports
-                        <span class="float-right text-muted text-sm">2 days</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                </div>
-            </li>
             {% endblock %}
             <li class="nav-item">
                 <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                     <i class="fas fa-expand-arrows-alt"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ path('app_logout') }}" role="button">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </a>
             </li>
         </ul>
@@ -180,9 +96,18 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="{{ path('publication')}}" class="brand-link">
-            <img src="/logo1.svg"/>
+        <center>
+        <a href="{{path('publication')}}" class="brand-link">
+            <img src="/logo_small.svg"/>
         </a>
+        </center>
+
+        <!--center>
+            <div style="margin: 5px 5px 5px -10px;" align="center"><h5><i style="color: #4bc5b8;margin-right: 10px" class="nav-icon fas fa-graduation-cap fa-lg"></i>EdSpace</h5></div>
+
+        <h3 style="color: white;font-weight: bold;text-transform: uppercase; margin-top: 10px">EDSPACE</h3>
+        <span style="color: darkgrey; font-size: 16px;font-weight: bold;margin-top: -10px" >Esprit</span>
+        </center-->
 
         <!-- Sidebar -->
         <div class="sidebar">
@@ -195,7 +120,7 @@
                                                 alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="{{path('show')}}" class="d-block">{{ app.user.username}} {{ app.user.prenom }}</a>
+                    {# <a href="{{path('show')}}" class="d-block">{{ app.user.username}} {{ app.user.prenom }}</a> #}
                 </div>
             </div>
             <!-- Sidebar Menu -->
@@ -205,9 +130,10 @@
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
+                        {% block tabaff_side %}
                         <li class='nav-item'>
                                 <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-graduation-cap"></i>
+                                <i class="nav-icon fas fa-newspaper"></i>
                                 <p>
                                     News
                                     <i class="fas fa-angle-left right"></i>
@@ -216,24 +142,26 @@
                             <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{{ path('allPublications') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
+                                    <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         Tableau d'affichage
                                     </p>
                                 </a>
                             </li>
-                        
+
                         <li class="nav-item">
                         <a href="{{ path('allCategoriesNews') }}" class="nav-link">
-                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <i class="far fa-circle nav-icon"></i>
                             <p>
-                                Categorie de news
+                                Categorie news
                             </p>
                         </a>
                         </li>
+                            </ul>
                         </li>
-                        </ul>
+                        {% endblock %}
                         <li class="nav-header">GESTION</li>
+                        {% block etudiant_side %}
                         <li class="nav-item">
                             <a href="{{path('affiche')}}" class="nav-link">
                                 <i class="fas fa-users mr-2"></i>
@@ -242,6 +170,8 @@
                                 </p>
                             </a>
                         </li>
+                        {% endblock %}
+                        {% block niveau_side %}
                         <li class="nav-item">
                             <a href="{{path('affiche')}}" class="nav-link">
                                 <i class="fas fa-users mr-2"></i>
@@ -265,7 +195,8 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    {# <a href={{ path('classes') }} class="nav-link"> #}
+                                    <a href={{ path('Classe') }} class="nav-link">
+
                                         <i class="far fa-circle nav-icon"></i><p>Classes</p>
 
                                     </a>
@@ -278,6 +209,8 @@
                                 </li>
                             </ul>
                         </li>
+                        {% endblock %}
+                        {% block clubs_side %}
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-shapes"></i>
@@ -304,11 +237,11 @@
 
                             </ul>
                         </li>
-
-                    </li>
+                        {% endblock %}
+                        {% block emploi_side %}
                     <li class="nav-item">
                      <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-graduation-cap"></i>
+                                <i class="nav-icon fas fa-briefcase"></i>
                                 <p>
                                     Emploi
                                     <i class="fas fa-angle-left right"></i>
@@ -317,28 +250,30 @@
                         <ul class='nav nav-treeview'>
                         <li class="nav-item">
                             <a href="{{ path('allemploi') }}" class="nav-link">
-                                <i class="nav-icon fas fa-bullhorn"></i>
+                                <i class="far fa-circle nav-icon"></i>
                                 <p>
-                                    Propositions d'emploi
+                                    Offres d'emploi
                                 </p>
                             </a>
                         </li>
                          <li class="nav-item">
                         <a href="{{ path('allCategoriesEmploi') }}" class="nav-link">
-                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <i class="far fa-circle nav-icon"></i>
                             <p>
-                                Categorie d'emploi
+                                Catégories des offres
                             </p>
                         </a>
                     </li>
                     </ul>
 
                     </li>
+                        {% endblock %}
                    
                     <li class="nav-header">SUIVI</li>
+                        {% block forum_side %}
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-graduation-cap"></i>
+                            <i class="nav-icon fas fa-comments "></i>
                             <p>
                                 Forum
                                 <i class="fas fa-angle-left right"></i>
@@ -347,24 +282,25 @@
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href= '{{ path('thread_index') }}' class="nav-link">
-                                    <i class="fas fa-arrow-right"></i>
+                                    <i class="far fa-circle nav-icon"></i>
                                     <p>Check Forum</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href='{{ path('thread_type_index') }}' class="nav-link">
-                                   <i class="fas fa-arrow-right"></i>
+                                   <i class="far fa-circle nav-icon"></i>
                                     <p>Topics</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href='{{ path('threads_admin') }}' class="nav-link">
-                                    <i class="fas fa-arrow-right"></i>
+                                    <i class="far fa-circle nav-icon"></i>
                                     <p>Manage Threads</p>
                                 </a>
                             </li>
                         </ul>
                     </li>
+                        {% endblock %}
                     {% block sideCentePartage %}
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -376,7 +312,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href={{ path('choixNiveau',{'role':0}) }} class="nav-link">
+                                <a href={{ path('choixNiveau') }} class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Liste des documents</p>
                                 </a>
@@ -424,17 +360,6 @@
 
     {% endblock %}
 
-    <!-- /.content-wrapper -->
-    {% block footer %}
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-            All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.2.0
-            </div>
-        </footer>
-    {% endblock %}
-
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Control sidebar content goes here -->
@@ -444,6 +369,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
+
 <script src="{{ asset('backOffice/plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('backOffice/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -474,6 +400,7 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('backOffice/dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
+<script src="{{asset('backOffice/app.js?v=3')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backOffice/dist/js/pages/dashboard.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>

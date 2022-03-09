@@ -73,7 +73,7 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $classe;
 
@@ -92,6 +92,11 @@ class User implements UserInterface
     private $reponses;
 
     /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="user")
+     */
+    private $message;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $reset_token;
@@ -107,6 +112,7 @@ class User implements UserInterface
         $this->threads = new ArrayCollection();
         $this->documentsFavoris = new ArrayCollection();
         $this->reponses = new ArrayCollection();
+        $this->message = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -320,6 +326,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($reponse->getUser() === $this) {
                 $reponse->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessage(): Collection
+    {
+        return $this->message;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->message->contains($message)) {
+            $this->message[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->message->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
             }
         }
 

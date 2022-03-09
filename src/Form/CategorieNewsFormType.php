@@ -15,7 +15,7 @@ class CategorieNewsFormType extends AbstractType
     {
         $builder
             ->add('categoryName', TextType::class,[
-                'label' => 'Nom du Categorie',
+                'label' => 'Nom de la catégorie',
                 'required' => true,
             ])
             ->add('ajouter', SubmitType::class,[

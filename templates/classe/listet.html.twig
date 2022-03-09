@@ -1,0 +1,27 @@
+
+    <table class="table table-striped">
+        <thead>
+            <th></th>
+            <th>Id</th>
+            <th>Classe</th>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Email</th>
+            <th>Supprimer</th>
+        </thead>
+        {% for n in etudiant %}
+        <tr class="a-item">
+            <td></td>
+            <td class="Eid">{{ n.id }}</td>
+            <td class="Eclasse">{{n.classe.classe}}</td>
+            <td class="Enom">{{n.username}}</td>
+            <td class="Eprenom">{{n.prenom}}</td>
+
+            <td class="Eemail">{{n.email}}</td>
+
+            <td class="t-item" id="{{ n.id }}"><a href="{{ path('suppClasse', {'id': n.id }) }}">
+                  <i  class="fas fa-trash-alt"></i> </a></td>
+        </tr >
+        {% endfor %}
+
+    </table>

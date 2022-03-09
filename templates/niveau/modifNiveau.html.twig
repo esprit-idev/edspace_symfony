@@ -1,19 +1,20 @@
 {% extends "backOffice.html.twig" %}
+{% block title %}<title>MÀJ d'un niveau</title>{% endblock %}
 {% block leftNavBar %}
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="index3.html" class="nav-link">Niveaux</a>
+            <a href="#" class="nav-link">Modifier un niveau</a>
         </li>
     </ul>
 {% endblock%}
 {% block cards %}
 <div class="content-wrapper">
     <div class="container-fluid">
-<h1>Modifier Niveau</h1>
-{{ form(f,{'attr':{'novalidate':'novalidate'}}) }}
+{{ form_start(f,{'attr':{'novalidate':'novalidate'}}) }}
+{{ form_end(f) }}
     </div>
 </div>
 {% endblock %}

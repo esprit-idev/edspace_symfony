@@ -1,5 +1,5 @@
 {% extends "frontOffice.html.twig" %}
-{% block title %}EdSpace | Emplois{% endblock title %}
+{% block title %}<titre>Mon Profil</titre>{% endblock title %}
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <!-- fonts style -->
@@ -11,24 +11,15 @@
     <link href="{{ asset('/frontOffice/css/responsive.css') }}" rel="stylesheet" />
 
 {% endblock css %}
-{% block nav %}
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('allPublications') }}">Tableau d'affichage<span class="sr-only">(current)</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="about.html">Forum</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="course.html">Clubs</a>
-    </li>
+{% block profile_item %}
+
     <li class="nav-item active">
-        <a class="nav-link" href="{{ path('allemploi') }}">Offres d'emploi</a>
+        <a class="nav-link" href="{{path('show')}}">Mon profil</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="listDocuments">Centre de partage</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="event.html">Déconnexion</a>
+        <a href={{ path('app_logout')}} class="nav-link">
+            <p>logout</p>
+        </a>
     </li>
 {% endblock %}
 
@@ -73,7 +64,7 @@
                         <div class="d-flex flex-column align-items-center text-center">
                             <img src={{ asset('uploads/' ~ app.user.image) }} alt="Admin" class="rounded-circle p-1" width="110">
                             <div class="mt-3">
-                                <h4>{{ app.user.username }} {{ app.user.prenom }}</h4>
+                                <p class="text-muted font-size-sm"><b>{{ app.user.username }} {{ app.user.prenom }}</b></p>
                                 <p class="text-secondary mb-1"></p>
                                 <p class="text-muted font-size-sm">{{ app.user.email }}</p>
                                 <a class="btn btn-primary" href="{{ path('photo') }}">edit photo</a>
@@ -91,19 +82,18 @@
                     <div class="card-body">
                         <div class="row mb-5">
                             <div class="col-sm-5">
-                                <h5 class="mb-0">Full Name</h5>
+                                <h5 class="text-muted font-size-sm">Full Name</h5>
                             </div>
-                            <div class="text-muted font-size-sm">
-                                <h6>{{ app.user.username }} {{ app.user.prenom }}</h6>
+                            <div class="mt-3">
+                                <p class="text-muted font-size-sm"><b>{{ app.user.username }} {{ app.user.prenom }}</b></p>
                             </div>
                         </div>
+                        <div class="col-sm-5">
+                            <h5 class="text-muted font-size-sm">Email</h5>
+                        </div>
                         <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h5 class="mb-0">Email</h5>
-                            </div>
-                            <div class="text-muted font-size-sm">
-                                <h6>{{ app.user.email }}</h6>
-                            </div>
+
+                            <p class="text-muted font-size-sm">{{ app.user.email }}</p>
                         </div>
 
                         <div class="row">

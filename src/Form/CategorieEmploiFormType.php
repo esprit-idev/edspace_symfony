@@ -15,7 +15,7 @@ class CategorieEmploiFormType extends AbstractType
     {
         $builder
             ->add('categoryName', TextType::class, [
-                'label' => 'Nom du categorie',
+                'label' => 'Nom de la catégorie',
                 'required' => true,
             ])
             ->add('ajouter', SubmitType::class)

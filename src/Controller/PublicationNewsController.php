@@ -2,111 +2,70 @@
 
 namespace App\Controller;
 
-use App\Entity\CategorieNews;
 use App\Entity\PublicationNews;
 use App\Form\PublicationNewsFormType;
+use App\Repository\CategorieEmploiRepository;
 use App\Repository\CategorieNewsRepository;
 use App\Repository\EmploiRepository;
 use App\Repository\PublicationNewsRepository;
-use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
-use Symfony\UX\Chartjs\Model\Chart;
+use App\Entity\User;
+use App\Entity\Message;
+use App\Entity\Classe;
+use DateTime;
 class PublicationNewsController extends AbstractController
-{      
-    /**
-     * @Route("/publication", name="publication")
-     */
-    public function index(PublicationNewsRepository $repo, ChartBuilderInterface $chartBuilder, CategorieNewsRepository $catRepo, EmploiRepository $E_Repo): Response
-    {
-        $publications = $repo->findAll();
-        $categories = $catRepo->findAll();
-        $pubNum = $repo->CountPublications();
-        $emploiNum = $E_Repo->CountEmploi();
-        $pubs = array();
-        $arrayCategoryName = array();
-        Foreach($categories as $category){
-            array_push($arrayCategoryName, $category->getCategoryName());
-            array_push($pubs, $category->getId());
-        }
-        $chart = $chartBuilder->createChart(Chart::TYPE_PIE);
-        $chart->setData([
-            'labels' => $arrayCategoryName,
-            'datasets' => [
-                [
-                    'label' => 'N Publications Par Categorie',
-                    'backgroundColor' => [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)',
-                        'rgb(255, 5, 86)',
-                        'rgb(255, 05, 86)',
-                    ],
-                    'borderColor' => 'rgb(255, 255, 255)',
-                    'data' => $pubs,
-                ],
-            ],
-        ]);
-        $chart->setOptions([
-            'scales' => [
-                'y' => [
-                    'suggestedMin' => 0,
-                    'suggestedMax' => 100,
-                ],
-            ],
-        ]);
+{
 
-        //line chart 
-        $chartLine = $chartBuilder->createChart(Chart::TYPE_BAR);
-        $chartLine->setData([
-            'labels' => $arrayCategoryName,
-            'datasets' => [
-                [
-                    'label' => 'Nombre de Publication Par Categorie',
-                    'backgroundColor' => [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                    ],
-                    'borderColor' => 'rgb(255, 255, 255)',
-                    'data' => [12, 4,0,1],
-                ],
-            ],
-        ]);
-        $chartLine->setOptions([
-            'scales' => [
-                'y' => [
-                    'suggestedMin' => 0,
-                    'suggestedMax' => 100,
-                ],
-            ],
-        ]);
-        return $this->render('/home.html.twig', [
-            'controller_name' => 'PublicationNewsController',
-            'publications' => $pubNum,
-            'emplois' => $emploiNum,
-            'chart' => $chart,
-            'chartLine' => $chartLine,
-        ]);
-    }
     /**
      * @Route("/allpublications", name="allPublications")
      */
     public function allPubs(PublicationNewsRepository $repo, CategorieNewsRepository $catRepo, Request $request): Response
     {
-        $user=1;
-        $templateName = 'publication_news/back/allPublication.html.twig';
         $categories = $catRepo->findAll();
         $publications = $repo->findAll();
-        if($user == 1){
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        $test=$this->getUser()->getId();
+            $em=$this->getDoctrine()->getManager();
+            $user1=$em->getRepository(User::class)->find($test);
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+            $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+            $mymsg=[];
+            $othersmsg=[];
+        if($hasAccessStudent){
+             //messages 
+            foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
+            //endmessages
+            $templateName = 'publication_news/back/allPublication.html.twig';
+        }
+        else{
             $templateName = 'publication_news/front/allPublication_FO.html.twig';
         }
         return $this->render($templateName, [
             'controller_name' => 'PublicationNewsController',
             'publications' => $publications,
             'categories' =>$categories,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'memebers'=> $memebers,
         ]);
     }
 
@@ -118,25 +77,51 @@ class PublicationNewsController extends AbstractController
      */
     public function OnePublication($id, PublicationNewsRepository $repo): Response
     {
+        
         $em = $this->getDoctrine()->getManager();
-        $user=1;
         // to check if we did refresh the browser page
         $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
-        $templateName = 'publication_news/back/onePublication.html.twig';
         $publication = $repo->find($id);
         $publications = $repo->findAll();
         $likes = $publication->getLikes();
         $views = $publication->getVues();
         $comments = $publication->getComments();
         $comment = count(array($comments));
-        if($pageWasRefreshed){
-            $views = $publication->increment();
-            $em->flush();
-        }else{
-            $views = $publication->getVues();
-            $em->flush();
-        } 
-        if($user == 1){
+        //messages
+        $test=$this->getUser()->getId();
+            $em=$this->getDoctrine()->getManager();
+            $user1=$em->getRepository(User::class)->find($test);
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+            $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+            $mymsg=[];
+            $othersmsg=[];
+            if($pageWasRefreshed){
+                $views = $publication->increment();
+                $em->flush();
+            }else{
+                $views = $publication->getVues();
+                $em->flush();
+            }
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
+             //messages 
+             foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
+            $templateName = 'publication_news/back/onePublication.html.twig';
+        }
+        else{
             $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }
         return $this->render($templateName, [
@@ -149,6 +134,11 @@ class PublicationNewsController extends AbstractController
             'comments' =>$comments,
             'num' => $comment,
             'views' =>$views,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'memebers'=> $memebers,
         ]);
     }
      # add a publication
@@ -156,7 +146,9 @@ class PublicationNewsController extends AbstractController
      * @Route("/addpublication", name="addPublication")
      */
     public function AddPublications(Request $request, PublicationNewsRepository $repo): Response
-    {
+    {   
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $publications = $repo->findAll();
         $publication = new PublicationNews();
         $form = $this->createForm(PublicationNewsFormType::class,$publication);
@@ -176,6 +168,9 @@ class PublicationNewsController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('allPublications');
         }
+        }else{
+            return $this->render('/403.html.twig');
+        }
         return $this->render('publication_news/back/addPublication.html.twig', [
             'form_title' => 'Ajouter une publication',
             'form_add' => $form->createView(),
@@ -191,6 +186,8 @@ class PublicationNewsController extends AbstractController
      */
     public function UpdatePublication(Request $request, PublicationNewsRepository $repo, $id): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $entityManager = $this->getDoctrine()->getManager();
         $publication = $repo->find($id);
         $form = $this->createForm(PublicationNewsFormType::class,$publication);
@@ -199,11 +196,21 @@ class PublicationNewsController extends AbstractController
             $path = $this->getParameter('kernel.project_dir').'/public/images';
             $image = $publication->getImage();
             $file = $image->getFile();
-            $imageName = md5(uniqid()).'.'.$file->guessExtension();
-            $file->move($path, $imageName);
-            $image->setName($imageName);
+            if($file != null){
+                $imageName = md5(uniqid()).'.'.$file->guessExtension();
+                try{
+                    $file->move($path, $imageName);
+                }catch(FileException $e){
+                    return $e;
+                }
+                $image->setName($imageName);
+            } 
+            
             $entityManager->flush();
             return $this->redirectToRoute('allPublications');
+        }
+        }else{
+            return $this->render('/403.html.twig');
         }
         return $this->render('publication_news/back/updatePublication.html.twig', [
             'form_title' => 'Modifier une publication',
@@ -216,16 +223,20 @@ class PublicationNewsController extends AbstractController
      */
     public function DeletePublication(PublicationNewsRepository $repo, $id): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
          $entityManager = $this->getDoctrine()->getManager();
          $publication = $repo->find($id);
          $entityManager->remove($publication);
          $entityManager->flush();
 
         return $this->redirectToRoute('allPublications');
-
+        }else{
+            return $this->render('/403.html.twig');
+        }
     }
     /**
-     * @Route("/allpublications/search", name="search")
+     * @Route("/allpublications/search", name="searchNews")
      */
     public function searchPublication(Request $request, PublicationNewsRepository $repo){
 
@@ -246,6 +257,30 @@ class PublicationNewsController extends AbstractController
      */
     public function searchPubByCategoryName(Request $request, PublicationNewsRepository $repo, CategorieNewsRepository $catRepo){
 
+        $test=$this->getUser()->getId();
+        $em=$this->getDoctrine()->getManager();
+        $user1=$em->getRepository(User::class)->find($test);
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+        $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+      
+        $message=$this
+        ->getDoctrine()
+        ->getManager()
+        ->getRepository(Message::class)
+        ->findBy(array(),array('postDate' => 'ASC'));
+        $mymsg=[];
+        $othersmsg=[];
+        foreach($message as $i){
+            if($i->getUser()->getId()==$user1->getId()){
+                $mymsg[]=$i;
+            }
+            else{
+                $othersmsg[]=$i;
+            }
+        }
+
+
         $templateName = 'publication_news/front/allPublication_FO.html.twig';
         $publications = $repo->findAll();
         // $publication= $repo->find($id);
@@ -256,7 +291,12 @@ class PublicationNewsController extends AbstractController
             $publications = $repo->findNewsByCategory($category); 
             // $publications = $repo->SortByDateASC();  
         }
-        return $this->render($templateName, array('publications' => $publications,'categories' => $categories));
+        return $this->render($templateName, array('publications' => $publications,'memebers'=> $memebers,
+        'user' => $user1,
+        'classe'=> $classe,
+        'message'=> $message,
+        'mymsg' => $mymsg,
+        'others' =>$othersmsg,'categories' => $categories));
     }
 
     /**
@@ -265,28 +305,30 @@ class PublicationNewsController extends AbstractController
      */
     public function PostComment($id, PublicationNewsRepository $repo, Request $request): Response
     {
-        $user=1;
-        $templateName = 'publication_news/back/onePublication.html.twig';
-        $em = $this->getDoctrine()->getManager();
-        $publications = $repo->findAll();
-        $publication = $repo->find($id);
-        $likes = $publication->getLikes();
-        $views = $publication->getVues();
-        $comments = $publication->getComments();
-        $comment = count(array($comments));
-
-        if($request->isMethod('POST')){
-            $comment = $request->get('comment');
-            $publication->setComments($comment);
-            $em->flush();
-        }
-        $array = array();
-        Foreach($publications as $pub){
-            array_push($array, $pub->getComments());
-        }
-        if($user == 1){
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        if($hasAccessStudent){
             $templateName = 'publication_news/front/onePublication_FO.html.twig';
+            $em = $this->getDoctrine()->getManager();
+            $publications = $repo->findAll();
+            $publication = $repo->find($id);
+            $likes = $publication->getLikes();
+            $views = $publication->getVues();
+            $comments = $publication->getComments();
+            $comment = count(array($comments));
+
+            if($request->isMethod('POST')){
+                $comment = $request->get('comment');
+                $publication->setComments($comment);
+                $em->flush();
+            }
+            $array = array();
+            Foreach($publications as $pub){
+                array_push($array, $pub->getComments());
+            }
+        }else{
+            return $this->render('/403.html.twig');
         }
+
         return $this->render($templateName, array(
             'publications' => $publication,
             'publication_title' => $publication->getTitle(),
@@ -299,33 +341,34 @@ class PublicationNewsController extends AbstractController
             'num' => $comment
         ));
     }
-    
     /**
      * @param $id
      * @Route("/unepublicationLikes/{id}", name="onePublicationLikes")
      */
     public function OnePublicationLikes($id, PublicationNewsRepository $repo, Request $request): Response
     {
+        //check if page is being refreshed
         $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
-        $user=1;
-        $em = $this->getDoctrine()->getManager();
-        $templateName = 'publication_news/back/onePublication.html.twig';
-        $publication = $repo->find($id);
-        $nextPublication = $repo->getPreviousUser($publication->getTitle());
-        $likes = $publication->getLikes();
-        $views = $publication->getVues();
-        $comments = $publication->getComments();
-        $comment = count(array($comments));
-        if($pageWasRefreshed){
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        if($hasAccessStudent){
+            $em = $this->getDoctrine()->getManager();
+            $publication = $repo->find($id);
+            $nextPublication = $repo->getPreviousUser($publication->getTitle());
             $likes = $publication->getLikes();
+            $views = $publication->getVues();
             $comments = $publication->getComments();
-            $em->flush();
+            $comment = count(array($comments));
+            if($pageWasRefreshed){
+                $likes = $publication->getLikes();
+                $comments = $publication->getComments();
+                $em->flush();
+            }else{
+                $likes = $publication->incrementLikes();
+                $em->flush();
+            }
+                $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }else{
-            $likes = $publication->incrementLikes();
-            $em->flush();
-        }
-        if($user == 1){
-            $templateName = 'publication_news/front/onePublication_FO.html.twig';
+            return $this->render('/403.html.twig');
         }
         return $this->render($templateName, [
             'publications' => $publication,

@@ -25,18 +25,18 @@ class Classe
     private $classe;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="classe")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="classe", orphanRemoval=true)
      */
     private $messages;
 
     /**
      * @ORM\ManyToOne(targetEntity=Niveau::class, inversedBy="classes")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $niveau;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="classe", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="classe", orphanRemoval=false)
      */
     private $users;
 

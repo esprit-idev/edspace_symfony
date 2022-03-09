@@ -9,25 +9,14 @@
     <link href="{{ asset('/frontOffice/css/templatemo-nomad-force.css') }}" rel="stylesheet">
     <link href="{{ asset('/frontOffice/css/responsive.css') }}" rel="stylesheet" />
     <link href="{{ asset('/frontOffice/css/bootstrap-icons.css') }}" rel="stylesheet" > 
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" media="all"> 
+        <link href="{{ asset('/frontOffice/css/aos.css" rel="stylesheet') }}">
+
 {% endblock css %}
-{% block nav %}
+
+{% block tabaff_item %}
     <li class="nav-item active">
         <a class="nav-link" href="{{ path('allPublications') }}">Tableau d'affichage<span class="sr-only">(current)</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="about.html">Forum</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="course.html">Clubs</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('allemploi') }}">Offres d'emploi</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="listDocuments">Centre de partage</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="event.html">Déconnexion</a>
     </li>
 {% endblock %}
 
@@ -35,11 +24,6 @@
 
     <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="container">
@@ -63,17 +47,18 @@
 {% endblock %}
 
 {% block custom %}
+{% include "conversation.html.twig" %}
     <section class="news-detail section-padding">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-8 col-10 mx-auto">
-                            <h2 class="mb-3" data-aos="fade-up">{{publication_title}}</h2>
+                            <h2 class="mb-4" data-aos="fade-up">{{publication_title}}</h2>
                             <div class="clearfix my-4 mt-lg-0 mt-5">
                                 <div class="col-md-6 float-md-right mb-3 ms-md-3" data-aos="fade-up">
                                     <figure class="figure">
-                                        <img src="{{ asset('images/') ~ publication_image}}" class="img-fluid news-image" alt="">
+                                        <img src="{{ asset('images/') ~ publication_image}}" class="img-fluid news-image" alt="{{publication_title}}">
 
-                                        <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
+                                        <figcaption class="figure-caption text-end">{{publication_title}}</figcaption>
                                     </figure>
                                 </div>
                                 <p class="me-4" data-aos="fade-up">{{publication_content}}</p>
@@ -156,18 +141,12 @@
 {% endblock %}
 
 {% block js %}
-        <script src=" {{ asset('frontOffice/js/bootstrap.bundle.min.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/jquery.sticky.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/jquery.min.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/aos.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/jquery.magnific-popup.min.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/magnific-popup-options.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/scrollspy.min.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/custom.js') }}"></script>
-        {# <script>
-        let $likes = document.getElementById('likes');
-        $likes.addEventListener('click', ()=>{
-            $likes+=1
-        })
-        </script> #}
+        <script src="{{ asset('/frontOffice/js/aos.js') }}"></script>
+
+        <script src=" {{ asset('/frontOffice/js/bootstrap.bundle.min.js') }}"></script>
+        <script src=" {{ asset('/frontOffice/js/jquery.sticky.js') }}"></script>
+        <script src=" {{ asset('/frontOffice/js/jquery.min.js') }}"></script>
+        <script src=" {{ asset('/frontOffice/js/jquery.magnific-popup.min.js') }}"></script>
+        <script src=" {{ asset('/frontOffice/js/magnific-popup-options.js') }}"></script>
+        <script src=" {{ asset('/frontOffice/js/custom.js') }}"></script>
 {% endblock js %}

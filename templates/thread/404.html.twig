@@ -1,121 +1,140 @@
-<!DOCTYPE html>
-<html>
+{% extends 'frontOffice.html.twig' %}
 
-<head>
-    <!-- Basic -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <!-- Site Metas -->
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+{% block title %}
+    <title>Forum</title>
+{% endblock %}
+   {% block css %}
 
-    <title>Joson</title>
+       <!-- bootstrap core css -->
+       <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
+       <!-- fonts style -->
+       <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
+       <!-- Custom styles for this template -->
+       <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
+       <!-- responsive style -->
+       <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/v4-shims.min.js" integrity="sha512-7qQljqOcfujtn+H4jLGbhDviLED/sMZ+gnJeExpfXKLQMzuOT0/3mGaqUgbqjAPrMsDMZ/6uVNqtXuallND7WQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   {% endblock %}
+{% block forum_item %}
 
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
-    <!-- fonts style -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
-    <!-- Custom styles for this template -->
-    <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
-    <!-- responsive style -->
-    <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/v4-shims.min.js" integrity="sha512-7qQljqOcfujtn+H4jLGbhDviLED/sMZ+gnJeExpfXKLQMzuOT0/3mGaqUgbqjAPrMsDMZ/6uVNqtXuallND7WQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-</head>
-
-<body>
-<div class="hero_area">
-                <!-- header section strats -->
-                {% block header %}
-                <header class="header_section">
-                    <div class="container-fluid">
-                        <nav class="navbar navbar-expand-lg custom_nav-container ">
-                            <a class="navbar-brand" href="#">
-                                <h3>
-                                    Joson
-                                </h3>
-                                <span> college</span>
-                            </a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-
-                            <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-                                <ul class="navbar-nav  ml-auto">
-                                    {% block nav %}
-                                        <li class="nav-item active">
-                                            <a class="nav-link" href="#">Tableau d'affichage</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/thread">Forum<span class="sr-only">(current)</span></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href={# {{ path('displayClub') }} #}>Clubs</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#">Offres d'emploi</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href={# {{ path('listDocuments') }} #}>Centre de partage</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#">Mon profile</a>
-                                        </li>
-                                    {% endblock %}
-                                </ul>
-                                <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                                    <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                                </form>
+    <li class="nav-item active">
+        <a class="nav-link" href="/thread">Forum</a>
+    </li>
+{% endblock %}
+{% block slider %}
+    <div>
+        <h3><footer class="blockquote-footer text-right"> <cite title="Source Title">What are you seeking today ?</cite></footer></h3>
+    </div>
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Forum
+                                        </h1>
+                                        <small>
+                                            <footer class="footer text"> <cite title="Source Title">Your safe place to ask for anything you want with a vaste community</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
                             </div>
-                        </nav>
+                        </div>
                     </div>
-                </header>
-                {% endblock %}
-
-
-
-
-                <div>
-                <h3><footer class="blockquote-footer text-right"> <cite title="Source Title">What are you seeking today ?</cite></footer></h3>
                 </div>
-                <div class="container">
-                
-
-
+                <div class="carousel-item ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Threads
+                                        </h1>
+                                        <small>
+                                            <footer class="footer text"> <cite title="Source Title">Ask in the thread section and wait for the response</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <br>
-                <div class="container" style="position: static; padding-left:450px;padding-top:200px ">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="error-template">
-                <h1>
-                    Oops!</h1>
-                <h2>
-                    404 Not Found</h2>
-                <div class="error-details">
-                    Sorry, an error has occured, Requested query not found!
-                </div>
-                <div class="error-actions">
-                    <a href="/thread" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"><i class="fa fa-home" aria-hidden="true"></i></span>
-                        Take Me Home </a><a href="/thread" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-envelope"></span> Contact Support </a>
+                <div class="carousel-item ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Comments
+                                        </h1>
+                                        <small>
+                                            <footer class="footer text"> <cite title="Source Title">If you think you can be of use to other people help solving problems</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </section>
+
+{% endblock %}
+               {% block custom %}
+
+                   <div class="container" style="position: static; padding-left:450px;padding-top:200px ">
+                       <div class="row">
+                           <div class="col-md-12">
+                               <div class="error-template">
+                                   <h1>
+                                       Oops!</h1>
+                                   <h2>
+                                       404 Not Found</h2>
+                                   <div class="error-details">
+                                       Sorry, an error has occured, Requested query not found!
+                                   </div>
+                                   <div class="error-actions">
+                                       <a href="/thread" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"><i class="fa fa-home" aria-hidden="true"></i></span>
+                                           Take Me Home </a><a href="/thread" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-envelope"></span> Contact Support </a>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
 
 
 
 
 
-            <script type="text/javascript" src="{{ asset('frontOffice/js/jquery-3.4.1.min.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('frontOffice/js/bootstrap.js') }}"></script>
-                
-</div>
-</body>
-</html>
+                   <script type="text/javascript" src="{{ asset('frontOffice/js/jquery-3.4.1.min.js') }}"></script>
+                   <script type="text/javascript" src="{{ asset('frontOffice/js/bootstrap.js') }}"></script>
+
+                   </div>
+               {% endblock %}
+{% block special %}
+{% endblock %}
+{% block about %}
+{% endblock %}
+{% block course %}
+{% endblock %}
+{% block login %}
+{% endblock %}
+{% block event %}
+{% endblock %}
+{% block client %}
+{% endblock %}
+{% block contact %}
+{% endblock %}
