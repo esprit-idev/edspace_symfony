@@ -210,7 +210,7 @@ class DocumentController extends AbstractController
                 //$document->setNiveau($niveau);
                 $document->setNom($nomFic);
                 $document->setDateInsert(date("d/m/y"));
-                $document->setProprietaire($prop); //get username //to-change
+                $document->setProprietaire($prop);
                 $document->setFichier(file_get_contents($this->getParameter('document_dir') . '/' . $nomFic));
                 $document->setType(mime_content_type($this->getParameter('document_dir') . '/' . $nomFic));
                 $document->setSignalements(0);
@@ -275,7 +275,7 @@ class DocumentController extends AbstractController
                 $nomFic = $document->getNom() . '.pdf';
                 $document->setNom($nomFic);
                 $document->setDateInsert(date("d/m/y"));
-                $document->setProprietaire($prop); //get username //to-change
+                $document->setProprietaire($prop);
                 $document->setType("application/pdf");
                 $document->setSignalements(0);
                 $document->setFichier(null);
@@ -629,6 +629,7 @@ class DocumentController extends AbstractController
      */
     function AfficheMesFavoris(UserRepository $userRepository,DocumentFavorisRepository $documentFavorisRepository){
         $hasAccessStudent= $this->isGranted('ROLE_STUDENT');
+        $userId=$this->getUser()->getId();
         if($hasAccessStudent) {
             $em=$this->getDoctrine()->getManager();
             $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
@@ -651,7 +652,7 @@ class DocumentController extends AbstractController
                     $othersmsg[]=$i;
                 }
             }
-        $user=$userRepository->find(2); //to-change
+        $user=$userRepository->find($userId);
         $docsInFav=$documentFavorisRepository->findBy(array('user'=>$user));
         return $this->render("document/mesFavoris.html.twig", ['docsInFav' => $docsInFav,
             'memebers'=> $memebers,
@@ -752,9 +753,10 @@ class DocumentController extends AbstractController
      */
     function PinDocument(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
         $hasAccessStudent= $this->isGranted('ROLE_STUDENT');
+        $userId=$this->getUser()->getId();
         if($hasAccessStudent) {
         $document=$documentRepository->find($id);
-        $user=$userRepository->find(2); //to-change
+        $user=$userRepository->find($userId);
         $docFavoris=new DocumentFavoris();
         $docFavoris->setDocument($document);
         $docFavoris->setUser($user);
@@ -808,9 +810,10 @@ class DocumentController extends AbstractController
     }
 
     function UnPinDoc($id,DocumentRepository $documentRepository,UserRepository $userRepository,DocumentFavorisRepository $documentFavorisRepository){
-        $userid=$userRepository->find(2); //to-change
+        $userId=$this->getUser()->getId();
+        $user=$userRepository->find($userId);
         $document=$documentRepository->find($id);
-        $docInFav=$documentFavorisRepository->findOneBy(array('document'=>$document,'user'=>$userid));
+        $docInFav=$documentFavorisRepository->findOneBy(array('document'=>$document,'user'=>$user));
         $em=$this->getDoctrine()->getManager();
         $em->remove($docInFav);
         $em->flush();

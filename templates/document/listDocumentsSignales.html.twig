@@ -29,13 +29,16 @@
                         <div class="card h-100" style="width: 18rem;">
                             <div class="card-body pe-auto">
                                 <a class="float-right" data-toggle="modal" title="Ignorer" style="color: grey" href="#" data-target="#exampleModalIgnore{{ d.id }}"><i class="fas fa-minus float-right" style="margin-right: 10px"></i></a>
+                                <strong style="color: indianred" >(Nb de signalements: {{ d.signalements }})</strong>
+                                </br></br>
                                 {% if d.fichier !=null %}
-                                    <a target="_blank" href="{{ path("apercuDocument",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }} (signalx{{ d.signalements }})</h3></a>
+                                    <a target="_blank" href="{{ path("apercuDocument",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }}</h3></a>
                                 {% else %}
-                                    <a target="_blank" href="{{ path("apercuUrl",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }} (signalx{{ d.signalements }})</h3></a>
+                                    <a target="_blank" href="{{ path("apercuUrl",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }}</h3></a>
                                 {% endif %}
                                 <h6 class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis">{{ d.niveau.id }} | {{ d.matiere.id }}</h6>
-                                </br></br>
+                                </br>
+                                </br>
                                 <small class="float-left">By: {{ d.proprietaire }}</small>
                                 </br>
                                 <small>{{ d.dateinsert }}</small>

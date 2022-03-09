@@ -15,31 +15,36 @@
         <div class="container-fluid">
             <div class="float-left" style="margin-top: 10px;margin-bottom: 10px">
                 <form ACTION="{{ path("addClubCategories") }}" >
-                    <button class="btn btn-success" >Ajouter</button>
+                    <button class="btn btn-info" >Ajouter une catégorie</button>
                 </form>
             </div>
-
+<center>
             <TABLE class="table table-striped">
                 <tr>
+                    <th></th>
+                    <th></th>
                     <th>Catégorie</th>
-                    <th>Supprimer</th>
-                    <th>Modifier</th>
+                    <th></th>
+                    <th></th>
 
                 </tr>
                 <tr> {% for c in categorie %}
+                    <td></td>
+                    <td></td>
                     <td>{{ c.categorieNom }}</td>
                     <td>
-                        <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal3{{ c.id }}">Supprimer</button>
+                        <a class="btn btn-outline-danger hovertext" data-hover="Supprimer" data-toggle="modal" data-target="#exampleModal3{{ c.id }}">
+                            <i class="fas fa-trash fa-sm"></i>
+                        </a>
                     </td>
                     <td>
-                        <form ACTION="{{ path("updateClubCategories",{'id':c.id}) }}">
-                            <button class="btn btn-info">Modifier</button>
-                        </form>
+                        <a class="btn btn-outline-info hovertext" data-hover="Modifier" href="{{ path("updateClubCategories",{'id':c.id}) }}">
+                            <i class="fas fa-pen fa-sm"></i>
+                        </a>
                     </td>
                     <div class="modal fade" id="exampleModal3{{ c.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
-
                                 <div class="modal-body">
                                     <h5 class="modal-title text-dark" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer la catégorie?</h5>
                                 </div>
@@ -47,7 +52,8 @@
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
                                     <form ACTION="{{ path("deleteClubCategories",{'id':c.id}) }}">
                                         <button class="btn btn-danger" >Supprimer</button>
-                                    </form>                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -56,7 +62,39 @@
 
                 </tr>
             </TABLE>
+</center>
         </div>
 
     </div>
+    <style>
+        .hovertext {
+            position: relative;
+        }
+
+        .hovertext:before {
+            margin-left: -70px;
+            content: attr(data-hover);
+            visibility: hidden;
+            opacity: 0;
+            background-color: dimgrey;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 10px 10px 10px 10px;
+            transition: opacity 1s ease-in-out;
+
+            position: absolute;
+            z-index: 1;
+            left: 0;
+            top: 110%;
+        }
+
+        .hovertext:hover:before {
+            opacity: 1;
+            visibility: visible;
+        }
+        table.fixed { table-layout: fixed; }
+        th,td { word-wrap: break-word; }
+
+    </style>
 {% endblock %}
