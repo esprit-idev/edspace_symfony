@@ -30,7 +30,8 @@ class AdminController extends AbstractController
      * @Route("/AfficheA",name="afficheA")
      */
     public function Affiche(UserRepository $repository , Request $request){
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
         $rep=$this->getDoctrine()->getRepository(User::class);
          //$admin=$repository->findAll();
        $admin=$repository->findByRole('ROLE_ADMIN');
@@ -42,18 +43,26 @@ class AdminController extends AbstractController
             // Items per page
            // 3
       //  );
-        return $this->render ('Admin/Affiche.html.twig',['admin'=>$admin]);
+        if ($hasAccessAgent){
+        return $this->render ('Admin/Affiche.html.twig',['admin'=>$admin]);}
+        elseif ($hasAccessStudent) {
+            return $this->render('/403.html.twig');}
     }
     /**
      * @Route("/suppA/{id}", name="deleteA")
      */
     public function Delete($id, UserRepository $repository)
-    { $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    { $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+       // $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $admin=$repository->find($id);
         $em=$this->getDoctrine()->getManager();
         $em->remove($admin);
         $em->flush();
-        return $this->redirectToRoute('afficheA');
+        if ($hasAccessAgent){
+        return $this->redirectToRoute('afficheA');}
+        elseif ($hasAccessStudent) {
+            return $this->render('/403.html.twig');}
     }
 
     /**
@@ -61,6 +70,8 @@ class AdminController extends AbstractController
      * @Route ("/admin/add", name="ajoutA")
      */
     public function add(Request $request, UserPasswordEncoderInterface $encoder){
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $admin=new User();
         $form=$this->createForm(AdminType::class,$admin);
@@ -75,9 +86,12 @@ class AdminController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('afficheA');
         }
+        if ($hasAccessAgent){
         return $this->render('admin/add.html.twig',[
             'form'=>$form->createView()
-        ]);
+        ]);}
+        elseif ($hasAccessStudent) {
+            return $this->render('/403.html.twig');}
     }
     /**
      * @Route("admin/update/{id}",name="updateA")
