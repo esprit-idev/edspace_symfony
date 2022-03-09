@@ -92,9 +92,6 @@ h6 {
   font-size: var(--h6-font-size);
 }
 
-p {
-  letter-spacing: 0.5px;
-}
 .fate {
   -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent);
 }

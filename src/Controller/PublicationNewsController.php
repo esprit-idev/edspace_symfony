@@ -19,6 +19,7 @@ use App\Entity\Classe;
 use DateTime;
 class PublicationNewsController extends AbstractController
 {
+
     /**
      * @Route("/allpublications", name="allPublications")
      */

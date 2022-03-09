@@ -29,19 +29,8 @@ class AdminType extends AbstractType
                     'class'=>'form-control'
                 ]
             ])
-            ->add('password', PasswordType::class)
-            ->add('roles', ChoiceType::class , [
-                'choices'=>[
-                    'Etudiant'=>'ROLE_STUDENT',
-                    'Administrateur'=>'ROLE_ADMIN',
-                    'Responsable du club'=>'ROLE_RESPONSABLEC'
-                ],
-                'expanded'=>true,
-                'multiple'=>true,
-                'label'=>'Roles'
-            ])
-            
-        ;
+            ->add('password', PasswordType::class);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

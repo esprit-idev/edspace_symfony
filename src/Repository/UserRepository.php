@@ -28,10 +28,11 @@ class UserRepository extends ServiceEntityRepository
         return $qb
             // find all users where 'role' is NOT '['ROLE_RESPONSABLE']'
             ->where('u.roles NOT LIKE :roles')
-            ->setParameter('roles','%"'.'ROLE_RESPONSABLE'.'"%')
+            ->setParameter('roles','%"'."ROLE_ADMIN".'"%')
+            ->andwhere('u.club is NULL')
             ->orwhere('u.club = :id')
             ->setParameter('id',$id)
-
+            ->orderBy('u.email','ASC')
             ;
     }
 
@@ -65,4 +66,5 @@ class UserRepository extends ServiceEntityRepository
             return $qb->getQuery()->getSingleScalarResult();
         
     }
+
 }

@@ -136,7 +136,7 @@ class IndexController extends AbstractController
                 ],
             ],
         ]);
-        if(!$hasAccessStudent){
+        if($hasAccessStudent){
             $template = '/home.html.twig';
             }else{
                 $template = '/403.html.twig';

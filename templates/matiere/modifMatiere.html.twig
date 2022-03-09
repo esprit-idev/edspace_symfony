@@ -1,6 +1,7 @@
 {% extends "backOffice.html.twig" %}
 {% block title %}<title>MÀJ d'une matière</title>{% endblock %}
 {% block leftNavBar %}
+    {% if is_granted('ROLE_ADMIN') %}
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -9,8 +10,10 @@
             <a href="#" class="nav-link">Modifier une matière</a>
         </li>
     </ul>
+    {% endif %}
 {% endblock%}
 {% block cards %}
+    {% if is_granted('ROLE_ADMIN') %}
     <link rel="stylesheet" href="{{ asset('bundles/mercuryseriesflashy/css/flashy.css') }}">
     <!-- Flashy depends on jQuery -->
     <script src="//code.jquery.com/jquery.js"></script>
@@ -22,4 +25,7 @@
     </div>
 </div>
     {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+    {% else %}
+
+    {% endif %}
 {% endblock %}

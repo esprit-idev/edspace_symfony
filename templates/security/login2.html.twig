@@ -30,13 +30,13 @@
                         </div>
                     {% endfor %}
                     <form method="post">
-                        {% if error %}
+                         {% if error %}
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         {% endif %}
 
                         {% if app.user %}
                             <div class="mb-3">
-                                You are logged in as {{ app.user.username }}, <a href={# "{{ path('app_logout') }}" #}>Logout</a>
+                                You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
                             </div>
                         {% endif %}
                         <div class="divider d-flex align-items-center my-4">
@@ -57,7 +57,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <!-- Checkbox -->
                             <div class="form-check mb-0">
-                                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
+                                <input class="form-check-input me-2" type="checkbox" name="_remember_me" value="" id="remember_me" />
                                 <label class="form-check-label" for="form2Example3">
                                     Remember me
                                 </label>
@@ -68,9 +68,11 @@
                                value="{{ csrf_token('authenticate') }}"
                         >
                         <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="submit" class="btn btn-primary btn-lg"
+                            <button type="submit" id="10" class="btn btn-primary btn-lg"
                                     style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
                         </div>
+                      {# {{form(form)  }}#}
+
 
                 </div>
             </div>
@@ -85,4 +87,15 @@
             <!-- Right -->
         </div>
     </section>
+    <script>
+        const x=document.getElementById("10");
+        x.addEventListener('Click',()=>{
+            alert('erreur');
+            const email=document.getElementById('inputEmail');
+            const pass=document.getElementById('inputPassword');
+            if(email.value.trim()==''){
+                alert('erreur');
+            }
+        })
+    </script>
 {% endblock %}

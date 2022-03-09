@@ -34,7 +34,7 @@ class StudentType extends AbstractType
             ])
             ->add('password', PasswordType::class)
             ->add('isBanned')
-            ->add('roles', ChoiceType::class , [
+            /*->add('roles', ChoiceType::class , [
                 'choices'=>[
                     'Etudiant'=>'ROLE_STUDENT',
                     'Administrateur'=>'ROLE_ADMIN',
@@ -43,7 +43,7 @@ class StudentType extends AbstractType
                 'expanded'=>true,
                 'multiple'=>true,
                 'label'=>'Roles'
-            ])
+            ])*/
 
             ->add('classe',EntityType::class,[
                 'class'=>Classe::class,

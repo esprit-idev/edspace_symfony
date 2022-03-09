@@ -5,10 +5,12 @@ namespace App\Form;
 use App\Entity\Matiere;
 use App\Entity\Niveau;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Unique;
 
 class MatiereType extends AbstractType
 {
@@ -31,6 +33,10 @@ class MatiereType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Matiere::class,
+
+    'constraints' => [
+        new UniqueEntity(['fields' => ['id'], 'entityClass' => 'App\Entity\Matiere', 'message' => 'Cette matière existe déjà'])
+    ],
         ]);
     }
 }

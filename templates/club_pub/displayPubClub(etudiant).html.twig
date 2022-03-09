@@ -47,6 +47,7 @@
     <!-- end slider section -->
 {% endblock %}
 {% block special %}
+    {% include "conversation.html.twig" %}
     </br>
     </br>
     </br>
@@ -205,29 +206,11 @@
 
     </br>
     <style>
-
-        .iconHeartEmpty::before{
-            content: "\f004";
-            margin-right: 30px;
-            font-family: FontAwesome;
-            color: #888888;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 25px;
-            position: relative;
-
+        html, body {
+            background: #fff;
+            height:100%;
         }
-        .iconHeartActive::after{
-            content: "\f004";
-            margin-right: 30px;
-            font-family: FontAwesome;
-            font-style: normal;
-            font-weight: normal;
-            color: #FA5550;
-            font-size: 25px;
-            position: relative;
 
-        }
         .hide{
             display: none;
         }
