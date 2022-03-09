@@ -69,6 +69,8 @@ class ProfilController extends AbstractController
         $form=$this->createForm(EditProfilType::class , $user);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $hash=$encoder->encodePassword($user ,$user->getPassword());
+            $user->setPassword($hash);
             $em=$this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
