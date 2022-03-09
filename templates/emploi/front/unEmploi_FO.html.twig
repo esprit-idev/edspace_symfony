@@ -1,4 +1,5 @@
 {% extends "frontOffice.html.twig" %}
+{% block title %}<title>Offres | {{emploi_title}}</title>{% endblock title %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <!-- fonts style -->
@@ -8,7 +9,16 @@
     <!-- responsive style -->
     <link href="{{ asset('/frontOffice/css/templatemo-nomad-force.css') }}" rel="stylesheet">
     <link href="{{ asset('/frontOffice/css/responsive.css') }}" rel="stylesheet" />
-    <link href="{{ asset('/frontOffice/css/bootstrap-icons.css') }}" rel="stylesheet" > 
+    <link href="{{ asset('/frontOffice/css/bootstrap-icons.css') }}" rel="stylesheet" >
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" media="all"> 
+    <style>
+    p {
+    color: #717275;
+    font-size: 20px;
+    font-weight: var(--font-weight-light);
+    letter-spacing: 20px;
+    }
+    </style> 
 {% endblock css %}
 {% block offres_item %}
     <li class="nav-item active">
@@ -48,9 +58,17 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-8 col-10 mx-auto">
-                            <h2 class="mb-3 animated" data-aos="fade-up">{{emploi_title}}</h2>
-                            <p class="mb-3 opacity-50 font-weight-bold">{{emploi_category}}</hp>
-                            <p class="me-4" data-aos="fade-up">{{emploi_content}}</p>
+                            <h2 class="mb-4" data-aos="fade-up">{{emploi_title}}</h2>
+                            <div class="clearfix my-4 mt-lg-0 mt-5">
+                                <div class="col-md-6 float-md-right mb-3 ms-md-3" data-aos="fade-up">
+                                    <figure class="figure mt-2">
+                                        <img src="{{ asset('images/') ~ emploi_image}}" class="img-fluid news-image" alt="{{emploi_title}}">
+
+                                        <figcaption class="figure-caption text-end">{{emploi_title}}</figcaption>
+                                    </figure>
+                                </div>
+                                <p class="me-4" data-aos="fade-up">{{emploi_content}}</p>
+                            </div>
                             <div class="clearfix my-4 mt-lg-0 mt-5">
                                 <div class="col-md-6 float-md-end mb-3 ms-md-3" data-aos="fade-up">
                                     <figure class="figure">
@@ -89,6 +107,7 @@
 {% endblock %}
 
 {% block js %}
+        <script src="{{ asset('/frontOffice/js/aos.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/bootstrap.bundle.min.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/jquery.sticky.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/jquery.min.js') }}"></script>

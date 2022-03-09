@@ -32,8 +32,7 @@ class UserRepository extends ServiceEntityRepository
             ->andwhere('u.club is NULL')
             ->orwhere('u.club = :id')
             ->setParameter('id',$id)
-            ->orderBy('u.email','ASC')
-            ;
+            ->orderBy('u.email','ASC');
     }
 
     public function findByRole($role) {
@@ -55,12 +54,16 @@ class UserRepository extends ServiceEntityRepository
         ;
     }*/
 
-
-    public function CountUsers(){
-        $em = $this->getEntityManager();
-        $qb= $em
-        ->createQuery('SELECT count(n) FROM APP\ENTITY\User n');
-        return $qb->getSingleScalarResult();
+    public function CountUsers($roleStudent, $roleRespo){
+            $qb = $this->_em->createQueryBuilder();
+            $qb->select('count(u)')
+                ->from($this->_entityName, 'u')
+                ->where('u.roles LIKE :roles1')
+                ->setParameter('roles1', '%"' . $roleStudent . '"%')
+                ->orWhere('u.roles LIKE :roles2')
+                ->setParameter('roles2', '%"' . $roleRespo . '"%');
+            return $qb->getQuery()->getSingleScalarResult();
+        
     }
 
 }

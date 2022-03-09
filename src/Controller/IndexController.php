@@ -34,6 +34,8 @@ class IndexController extends AbstractController
      */
     public function indexChart(PublicationNewsRepository $repo, ChartBuilderInterface $chartBuilder,CategorieEmploiRepository $Erepo, CategorieNewsRepository $catRepo, EmploiRepository $E_Repo, NiveauRepository $nRepo, MatiereRepository $mRepo, DocumentRepository $dRepo, ClasseRepository $classeRepo, UserRepository $userRepo, ClubRepository $clubRepo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        $template='';
         //publications by category data
         $categories = $catRepo->findProductsOfCategory();
         $labels = array();
@@ -134,8 +136,13 @@ class IndexController extends AbstractController
                 ],
             ],
         ]);
+        if($hasAccessStudent){
+            $template = '/home.html.twig';
+            }else{
+                $template = '/403.html.twig';
+            }
 
-        return $this->render('/home.html.twig', [
+        return $this->render($template, [
             'controller_name' => 'PublicationNewsController',
             'publicationCount' => $repo->CountPublications(),
             'emplois' => $E_Repo->CountEmploi(),
@@ -148,7 +155,7 @@ class IndexController extends AbstractController
             'matieres' => $mRepo->CountMatieres(),
             'documents' =>$dRepo->CountDocuments(),
             'classes' => $classeRepo->CountClasse(),
-            'Users' => $userRepo->CountUsers(),
+            'Users' => $userRepo->CountUsers('ROLE_STUDENT','ROLE_RESPONSABLE'),
             'Clubs' => $clubRepo->CountClubs(),
         ]);
     }

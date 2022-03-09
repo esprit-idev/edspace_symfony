@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ProfilController extends AbstractController
 {
@@ -63,7 +64,7 @@ class ProfilController extends AbstractController
     /**
      * @Route ("/profil/edit",name="ProfilEdit")
      */
-    public function editProfile(Request $request){
+    public function editProfile(Request $request, UserPasswordEncoderInterface $encoder){
         //$user= new User();
         $user=$this->getUser();
         $form=$this->createForm(EditProfilType::class , $user);
@@ -72,7 +73,6 @@ class ProfilController extends AbstractController
             $hash=$encoder->encodePassword($user ,$user->getPassword());
             $user->setPassword($hash);
             $em=$this->getDoctrine()->getManager();
-            $em->persist($user);
             $em->flush();
             $this->addFlash('message','Profil mis a jour');
             return $this->redirectToRoute('show');
