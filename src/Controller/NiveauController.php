@@ -33,6 +33,8 @@ class NiveauController extends AbstractController
      */
     function SuppNiveau($id, NiveauRepository $repository){
 
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $em2=$this->getDoctrine()->getManager();
         $classes=$em2->getRepository(Classe::class)->findBy(['niveau'=> $id]);
         foreach($classes as $i){
@@ -42,14 +44,18 @@ class NiveauController extends AbstractController
             $user->setClasse(NULL);
             $em3->flush($user);
             }
-            
+
+
         }
+        
 
         $niveau=$repository->find($id);
         $em=$this->getDoctrine()->getManager();
         $em->remove($niveau);
         $em->flush();
         return $this->redirectToRoute('ajoutNiveau');
+    }
+        return $this->redirectToRoute('Classe');
     }
 
     /**
@@ -59,6 +65,8 @@ class NiveauController extends AbstractController
      * @Route ("/niveau/ajoutNiveau",name="ajoutNiveau")
      */
     function AjoutNiveau(Request $request,NiveauRepository $repository){
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $niveaux=$repository->findAll();
         $niveau= new Niveau();
         $form=$this->createForm(NiveauType::class,$niveau);
@@ -72,6 +80,8 @@ class NiveauController extends AbstractController
         }
         return $this->render("niveau/ajoutNiveau.html.twig",['f'=>$form->createView(),'niveaux'=>$niveaux]);
     }
+    return $this->redirectToRoute('Classe');
+}
 
     /**
      * @param NiveauRepository $repository
@@ -81,6 +91,9 @@ class NiveauController extends AbstractController
      * @Route ("/niveau/modifNiveau/{id}",name="modifNiveau")
      */
     function ModifNiveau(NiveauRepository $repository,$id, Request $request){
+
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $niveau=$repository->find($id);
         $form=$this->createForm(NiveauType::class,$niveau);
         $form->add("Enregistrer",SubmitType::class);
@@ -92,4 +105,6 @@ class NiveauController extends AbstractController
         }
         return $this->render("niveau/modifNiveau.html.twig",['f'=>$form->createView()]);
     }
+    return $this->redirectToRoute('Classe');
+}
 }
