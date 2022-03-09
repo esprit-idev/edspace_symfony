@@ -10,6 +10,7 @@
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('backOffice/plugins/fontawesome-free/css/all.min.css') }}">
+    <script src="https://kit.fontawesome.com/ffcbf2bd8b.js" crossorigin="anonymous"></script>
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
@@ -30,7 +31,7 @@
     <link rel="stylesheet" href="{{ asset('backOffice/style.css?version=2') }}">
     {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
-    {% endblock %}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+    {% endblock %}
 </head>
 <body class="sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -83,6 +84,11 @@
                     <i class="fas fa-expand-arrows-alt"></i>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="{{ path('app_logout') }}" role="button">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </a>
+            </li>
         </ul>
     </nav>
     <!-- /.navbar -->
@@ -108,11 +114,13 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="{{ asset('backOffice/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
-                         alt="User Image">
+                   {# <img src="{{ asset('backOffice/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
+                         alt="User Image">#}
+                    {# <img src="{{ asset('uploads/'~ app.user.image) }}" class="img-circle elevation-3" #}
+                                                {# alt="User Image"> #}
                 </div>
                 <div class="info">
-                    {# <a href="{{path('show')}}" class="d-block">{{ app.user.username}} {{ app.user.prenom }}</a> #}
+                    <a href="#" class="d-block">{{ app.user.username}} {{ app.user.prenom }}</a>
                 </div>
             </div>
             <!-- Sidebar Menu -->
@@ -155,7 +163,7 @@
                         <li class="nav-header">GESTION</li>
                         {% block etudiant_side %}
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{path('affiche')}}" class="nav-link">
                                 <i class="fas fa-users mr-2"></i>
                                 <p>
                                     Etudiants
@@ -164,6 +172,14 @@
                         </li>
                         {% endblock %}
                         {% block niveau_side %}
+                        <li class="nav-item">
+                            <a href="{{path('afficheA')}}" class="nav-link">
+                                <i class="fas fa-users mr-2"></i>
+                                <p>
+                                    Admins
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-graduation-cap"></i>

@@ -29,7 +29,7 @@
         </br>
     <div class="row d-flex justify-content-center">
         {% if documents is empty %}
-        <p>Vous n'avez ajouté aucun document</p>
+            <p>Aucun document n'a été trouvé</p>
         {% else %}
         {% for d in documents %}
             <div class="p-4">
@@ -84,4 +84,5 @@
 </br>
     </div>
     {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+    {% include "conversation.html.twig" %}
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Niveau;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,6 +25,9 @@ class NiveauType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Niveau::class,
+            'constraints' => [
+                new UniqueEntity(['fields' => ['id'], 'entityClass' => 'App\Entity\Niveau', 'message' => 'Ce niveau existe déjà'])
+            ],
         ]);
     }
 }

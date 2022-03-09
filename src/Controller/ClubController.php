@@ -34,29 +34,29 @@ class ClubController extends AbstractController
         $hasAccessResponsable = $this->isGranted('ROLE_RESPONSABLEC');
 
         /* messaging */
-    if($hasAccessStudent){
-    $em=$this->getDoctrine()->getManager();
-    $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
-    $em1=$this->getDoctrine()->getRepository(User::class);
-    $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-    $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+        if($hasAccessStudent){
+            $em=$this->getDoctrine()->getManager();
+            $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
 
-    $message=$this
-        ->getDoctrine()
-        ->getManager()
-        ->getRepository(Message::class)
-        ->findBy(array(),array('postDate' => 'ASC'));
-    $mymsg=[];
-    $othersmsg=[];
-    foreach($message as $i){
-        if($i->getUser()->getId()==$user1->getId()){
-            $mymsg[]=$i;
+            $message=$this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository(Message::class)
+                ->findBy(array(),array('postDate' => 'ASC'));
+            $mymsg=[];
+            $othersmsg=[];
+            foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
         }
-        else{
-            $othersmsg[]=$i;
-        }
-    }
-}
 
 
         $categories=$categorieClubRepository->findAll();
@@ -67,7 +67,7 @@ class ClubController extends AbstractController
             $club=$rep->findBy(array('clubCategorie'=>$ids));
         }
         else{ $club = $rep->findAll();
-    }
+        }
         if ($hasAccessAgent) {
             return $this->render('club/displayClub(admin).html.twig', [
                 'clubs' => $club,'categories'=>$categories
@@ -160,53 +160,53 @@ class ClubController extends AbstractController
     {
         $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
         if ($hasAccessAgent) {
-        $club = new Club();
-        $form = $this->createForm(ClubType::class, $club);
-        $form->add('clubResponsable',EntityType::class, [
-            'label' => 'Email du responsable ',
-            'attr' => [
-                'placeholder' => "ex@ex.com",
-                'class' => 'name'
-            ],
-            'class' => User::class,
-            'placeholder' => 'Choisissez unrespo',
-            'query_builder' => function(UserRepository $repository) {
+            $club = new Club();
+            $form = $this->createForm(ClubType::class, $club);
+            $form->add('clubResponsable',EntityType::class, [
+                'label' => 'Email du responsable ',
+                'attr' => [
+                    'placeholder' => "ex@ex.com",
+                    'class' => 'name'
+                ],
+                'class' => User::class,
+                'placeholder' => 'Choisissez unrespo',
+                'query_builder' => function(UserRepository $repository) {
 
-                $qb = $repository->createQueryBuilder('u');
+                    $qb = $repository->createQueryBuilder('u');
 
-                return $qb
+                    return $qb
 
-                    ->where('u.roles NOT LIKE :roles')
-                    ->setParameter('roles','%"'."ROLE_ADMIN".'"%')
-                    ->andwhere('u.club is NULL')
-                    ->orderBy('u.email','ASC')
-                    ;
+                        ->where('u.roles NOT LIKE :roles')
+                        ->setParameter('roles','%"'."ROLE_ADMIN".'"%')
+                        ->andwhere('u.club is NULL')
+                        ->orderBy('u.email','ASC')
+                        ;
 
-                // find all users where 'role' is NOT '['ROLE_RESPONSABLE']'
-            },
-            'choice_label' => 'email',
-
-
-        ]);
-        $form->add('Ajouter', SubmitType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $respoClubid=$form->get('clubResponsable')->getData();
-            $userRepository->find($respoClubid)->setRoles(["ROLE_STUDENT","ROLE_RESPONSABLEC"]); //add not set
-            $user=$userRepository->find($respoClubid);
-            $user->setClub($club);
-            $club->setClubPic("defaultProfilePicture.png");
-            $em->persist($club);
-            $em->flush();
+                    // find all users where 'role' is NOT '['ROLE_RESPONSABLE']'
+                },
+                'choice_label' => 'email',
 
 
-            return $this->redirectToRoute('displayClub');
+            ]);
+            $form->add('Ajouter', SubmitType::class);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $respoClubid=$form->get('clubResponsable')->getData();
+                $userRepository->find($respoClubid)->setRoles(["ROLE_STUDENT","ROLE_RESPONSABLEC"]); //add not set
+                $user=$userRepository->find($respoClubid);
+                $user->setClub($club);
+                $club->setClubPic("defaultProfilePicture.png");
+                $em->persist($club);
+                $em->flush();
+
+
+                return $this->redirectToRoute('displayClub');
+            }
+            return $this->render('club/addClub.html.twig', [
+                'formClub' => $form->createView()
+            ]);
         }
-        return $this->render('club/addClub.html.twig', [
-            'formClub' => $form->createView()
-        ]);
-    }
         else return $this->render('/403.html.twig');
     }
 }

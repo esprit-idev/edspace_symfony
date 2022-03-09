@@ -38,11 +38,12 @@ class EmploiController extends AbstractController
         $message='';
         $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
         //messages
-        $test=$this->getUser()->getId();
+        
             $em=$this->getDoctrine()->getManager();
             $mymsg=[];
             $othersmsg=[];
         if($hasAccessStudent){
+            $test=$this->getUser()->getId();
             $user1=$em->getRepository(User::class)->find($test);
             $em1=$this->getDoctrine()->getRepository(User::class);
             $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
@@ -87,11 +88,20 @@ class EmploiController extends AbstractController
      */
     public function OneEmploi($id, EmploiRepository $repo): Response
     {
-        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
         $emploi = $repo->find($id);
          //messages
-         $test=$this->getUser()->getId();
-             $em=$this->getDoctrine()->getManager();
+         $user1='';
+         $em1='';
+         $memebers='';
+         $classe='';
+         $message='';
+         $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+         //messages
+            $em=$this->getDoctrine()->getManager();
+            $mymsg=[];
+            $othersmsg=[];
+         if($hasAccessStudent){
+            $test=$this->getUser()->getId();
              $user1=$em->getRepository(User::class)->find($test);
              $em1=$this->getDoctrine()->getRepository(User::class);
              $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
@@ -101,28 +111,26 @@ class EmploiController extends AbstractController
              ->getManager()
              ->getRepository(Message::class)
              ->findBy(array(),array('postDate' => 'ASC'));
-             $mymsg=[];
-             $othersmsg=[];
-        if($hasAccessStudent){
-            //messages 
-            foreach($message as $i){
-                if($i->getUser()->getId()==$user1->getId()){
-                    $mymsg[]=$i;
-                }
-                else{
-                    $othersmsg[]=$i;
-                }
-            }
-            $templateName = 'emploi/front/unEmploi_FO.html.twig';
-        }else{
-            $templateName = 'emploi/back/unEmploi.html.twig';
-        }
+             //messages 
+             foreach($message as $i){
+                 if($i->getUser()->getId()==$user1->getId()){
+                     $mymsg[]=$i;
+                 }
+                 else{
+                     $othersmsg[]=$i;
+                 }
+             }
+             $templateName = 'emploi/front/unEmploi_FO.html.twig';
+         }else{
+             $templateName = 'emploi/back/unEmploi.html.twig';
+         }
         return $this->render($templateName, [
             'emploi' => $emploi,
             'emploi_title' => $emploi->getTitle(),
             'emploi_date' =>$emploi->getDate(),
             'emploi_content' => $emploi->getContent(),
             'emploi_category' => $emploi->getCategoryName(),
+            'emploi_image' => $emploi->getImage()->getName(),
             'user' => $user1,
             'classe'=> $classe,
             'message'=> $message,
@@ -166,7 +174,6 @@ class EmploiController extends AbstractController
             'form_title' => 'Ajouter une proposition d\' emploi',
             'form_add' => $form->createView(),
             'emplois' => $emplois,
-
         ]);
     }
 

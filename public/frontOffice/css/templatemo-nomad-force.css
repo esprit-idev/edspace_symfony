@@ -19,7 +19,7 @@ https://templatemo.com/tm-567-nomad-force
   --title-color:                  #565758;
   --p-color:                      #717275;
 
-  --body-font-family:           'Noto Sans JP', sans-serif;
+  --body-font-family:           font-family: "Poppins", sans-serif;
 
   --h1-font-size:               72px;
   --h2-font-size:               42px;
@@ -92,12 +92,6 @@ h6 {
   font-size: var(--h6-font-size);
 }
 
-p {
-  color: var(--p-color);
-  font-size: var(--p-font-size);
-  font-weight: var(--font-weight-light);
-  letter-spacing: 0.5px;
-}
 .fate {
   -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent);
 }
@@ -213,9 +207,9 @@ p {
 .social-share-icons {
   color:#54B48C
 }
-a {
+/* a {
   color :#142810;
-}
+} */
 .comments li{
   list-style-type: none;
   margin-bottom: 4px;

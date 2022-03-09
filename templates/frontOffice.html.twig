@@ -13,7 +13,7 @@
     <meta name="author" content="" />
 
     {% block title %}
-    <title>Joson</title>
+    <title>EdSpace</title>
     {% endblock %}
     {% block css %}
     <!-- bootstrap core css -->
@@ -71,6 +71,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('allemploi') }}">Offres d'emploi</a>
                             </li>
+
                             {% endblock %}
                             {% block centrepartage_item %}
                                 <li class="nav-item">
@@ -97,16 +98,26 @@
                                     </ul>
                                 </li>
                             {% endblock %}
-                            {% block profile_item %}
+                        {% block Student %}
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Mon profile</a>
+                                <a class="nav-link" href="{{path('affiche')}}">Liste des etudiants</a>
                             </li>
+                        {% endblock %}
+                            {% block profile_item %}
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{path('show')}}">Mon profile</a>
+                                </li>
+
+
+                                <a style="color: white" href="{{path('app_logout')}}" class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                                    <i  class="fa-solid fa-arrow-right-from-bracket"></i>
+                                </a>
+
                             {% endblock %}
                         {% endblock %}
                     </ul>
-                    <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                        <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                    </form>
+
                 </div>
             </nav>
         </div>
