@@ -32,8 +32,7 @@ class UserRepository extends ServiceEntityRepository
             ->andwhere('u.club is NULL')
             ->orwhere('u.club = :id')
             ->setParameter('id',$id)
-            ->orderBy('u.email','ASC')
-            ;
+            ->orderBy('u.email','ASC');
     }
 
     public function findByRole($role) {
