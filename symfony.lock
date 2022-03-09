@@ -94,10 +94,6 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
-
-    "jms/metadata": {
-        "version": "2.6.1"
-        },
     "friendsofsymfony/ckeditor-bundle": {
         "version": "2.4",
         "recipe": {
@@ -109,6 +105,12 @@
         "files": [
             "./config/packages/fos_ckeditor.yaml"
         ]
+    },
+    "gregwar/captcha": {
+        "version": "v1.1.9"
+    },
+    "gregwar/captcha-bundle": {
+        "version": "v2.1.0"
     },
     "happyr/linkedin-api-client": {
         "version": "1.0",
@@ -125,6 +127,9 @@
     "imagine/imagine": {
         "version": "1.2.4"
     },
+    "jms/metadata": {
+        "version": "2.6.1"
+    },
     "knplabs/knp-components": {
         "version": "v3.4.0"
     },
@@ -137,9 +142,6 @@
     "lexik/form-filter-bundle": {
         "version": "v5.0.10"
     },
-    "mercuryseries/flashy-bundle": {
-        "version": "v3.0.0"
-        },
     "liip/imagine-bundle": {
         "version": "2.7",
         "recipe": {
@@ -158,6 +160,9 @@
     },
     "martin-georgiev/social-post-bundle": {
         "version": "v3.1.0"
+    },
+    "mercuryseries/flashy-bundle": {
+        "version": "v3.0.0"
     },
     "monolog/monolog": {
         "version": "1.26.1"

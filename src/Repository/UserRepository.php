@@ -54,5 +54,12 @@ class UserRepository extends ServiceEntityRepository
         ;
     }*/
 
+    function SearchByName($username){
+        return $this->createQueryBuilder('e')
+            ->where('e.username like :username')
+            ->setParameter('username','%'.$username.'%')
+            ->getQuery()
+            ->getResult();
+    }
 
 }

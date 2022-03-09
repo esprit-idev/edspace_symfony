@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use App\Form\ResetPassType;
+use App\Form\RobotType;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 
 class SecurityController extends AbstractController
 {
@@ -45,7 +47,7 @@ public function registration(Request $request , ObjectManager $manager, UserPass
 // return $this->render('security/login.html.twig');
 
 // }
-public function login(AuthenticationUtils $authenticationUtils,Session $session): Response
+public function login(Request $request ,AuthenticationUtils $authenticationUtils,Session $session): Response
 {
     // get the login error if there is one
     $error = $authenticationUtils->getLastAuthenticationError();
@@ -57,7 +59,8 @@ public function login(AuthenticationUtils $authenticationUtils,Session $session)
         $session->remove('message');
         $return['message'] = $message;
     }
-    return $this->render('security/login2.html.twig', $return);
+
+    return $this->render('security/login2.html.twig' ,$return);
 }
 /**
  * @Route ("/Activation/{token}",name="activation")
@@ -120,8 +123,11 @@ public function forgotPass(Request $request , UserRepository $repository , \Swif
         $message=(new \Swift_Message('mot de passe oublié'))
             ->setFrom('edspace2.plateforme@gmail.com')
             ->setTo($user->getEmail())
-            ->setBody("<p>Bonjour,</p><p>Une demande de reinitialisation de mot de passe a été effectuée pour le site EdSpace . Veuillez cliquer sur le lien suivant : " . $url .'</p>','test/html'
-            );
+           // ->setBody("<p>Bonjour,</p><p>Une demande de reinitialisation de mot de passe a été effectuée pour le site EdSpace . Veuillez cliquer sur le lien suivant : " . $url .'</p>','test/html'
+            ->setBody(
+                $this->render(
+                    'security/email.html.twig',['url'=>$url]), 'text/html'
+    );
         // on envoie l'email
         $mailer->send($message);
         //on cree le message flash

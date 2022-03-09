@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -27,11 +28,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="merci de saisir le nom")
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="merci de saisir le prenom ")
      */
     private $prenom;
 
@@ -47,6 +50,8 @@ class User implements UserInterface
     protected $club;
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="merci de saisir le mot de passe ")
+     * @Assert\Length(min="8",minMessage="votre mot de passe doit faire minimum 8 caractéres")
      */
     private $password;
 
@@ -90,6 +95,12 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $reset_token;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\File(mimeTypes={"image/png", "image/jpeg"})
+     */
+    private $image;
 
     public function __construct()
     {
@@ -331,6 +342,25 @@ class User implements UserInterface
     public function setResetToken(?string $reset_token): self
     {
         $this->reset_token = $reset_token;
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set thumbnail.
+     *
+     * @param string $image
+     *
+     * @return Post
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
 
         return $this;
     }

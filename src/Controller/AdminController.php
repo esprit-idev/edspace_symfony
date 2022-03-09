@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Knp\Component\Pager\PaginatorInterfaces ;
 
 class AdminController extends AbstractController
 {
@@ -28,17 +29,26 @@ class AdminController extends AbstractController
      * @return \Symfony\component\httpFoundation\Response
      * @Route("/AfficheA",name="afficheA")
      */
-    public function Affiche(UserRepository $repository){
+    public function Affiche(UserRepository $repository , Request $request){
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $rep=$this->getDoctrine()->getRepository(User::class);
-         $admin=$repository->findAll();
-       // $admin=$repository->findByRole('ROLE_ADMIN');
+         //$admin=$repository->findAll();
+       $admin=$repository->findByRole('ROLE_ADMIN');
+        //$admin=$this->get('knp_paginator')->paginate(
+        // Doctrine Query, not results
+            //$alladmin,
+            // Define the page parameter
+           // $request->query->getInt('page', 1),
+            // Items per page
+           // 3
+      //  );
         return $this->render ('Admin/Affiche.html.twig',['admin'=>$admin]);
     }
     /**
      * @Route("/suppA/{id}", name="deleteA")
      */
     public function Delete($id, UserRepository $repository)
-    { //$this->denyAccessUnlessGranted('ROLE_ADMIN');
+    { $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $admin=$repository->find($id);
         $em=$this->getDoctrine()->getManager();
         $em->remove($admin);
@@ -51,7 +61,7 @@ class AdminController extends AbstractController
      * @Route ("/admin/add", name="ajoutA")
      */
     public function add(Request $request, UserPasswordEncoderInterface $encoder){
-       // $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $admin=new User();
         $form=$this->createForm(AdminType::class,$admin);
         $form->add('Ajouter',SubmitType::class);
@@ -59,6 +69,7 @@ class AdminController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $hash=$encoder->encodePassword($admin ,$admin->getPassword());
             $admin->setPassword($hash);
+            $admin->setRoles(["ROLE_ADMIN"]);
             $em=$this->getDoctrine()->getManager();
             $em->persist($admin);
             $em->flush();
@@ -72,7 +83,7 @@ class AdminController extends AbstractController
      * @Route("admin/update/{id}",name="updateA")
      */
     public function Update(UserRepository $repository , $id,Request $request, UserPasswordEncoderInterface $encoder){
-       // $this->denyAccessUnlessGranted('ROLE_ADMIN');
+       //$this->denyAccessUnlessGranted('ROLE_ADMIN');
         $admin=$repository->find($id);
         $form=$this->createForm(AdminType::class,$admin);
         $form->add('Update', SubmitType::class);

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Thread;
 use App\Repository\ThreadRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -61,6 +62,19 @@ class SearchController extends AbstractController
             return $this->render('thread/404.html.twig');
         }
         
+
+    }
+    public function handleUser(Request $request, UserRepository $rep){
+        $query = $request->request->get('form')['query'];
+        if ($query ){
+            $User = $rep->findByUserName($query);
+            return $this->render('thread/searchedThreads.html.twig',[
+                'posts' => $User
+            ]);
+        }
+        if($query == "0"){
+            return $this->render('thread/404.html.twig');
+        }
 
     }
 }
