@@ -35,4 +35,10 @@ class ClubRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function CountClubs(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(n) FROM APP\ENTITY\Club n');
+        return $qb->getSingleScalarResult();
+    }
 }

@@ -137,7 +137,8 @@ $result = mysqli_query($conn, $sql);
 
 if(mysqli_num_rows($result)>0){
 while ($row=mysqli_fetch_assoc($result)){
-    print_r(' <td></td>
+    print_r(' <tr class="a-item">
+    <td></td>
     <td class="id">'.$row['id'].'</td>
     <td class="niveau">'.$row['niveau_id'].'</td>
     <td class="classe">'.$row['classe'].'</td>
@@ -147,7 +148,8 @@ while ($row=mysqli_fetch_assoc($result)){
         <i class="fas fa-user-plus"></i> </a></td>
     <td class="t-item" id="'.$row['id'].'"><a href="../suppclaase/'.$row['id'].'">
           <i  class="fas fa-trash-alt"></i> </a></td>
-</tr >');
+          </tr>
+');
 
 }
 }
@@ -220,8 +222,10 @@ return new Response('success');
         $et=[];
         if(count($etudiants)>0){
         foreach($etudiants as $i){
-            if(is_null($i->getClasse())){
+            if(is_null($i->getClasse()) ){
+                if($i->getRoles()=="ROLE_STUDENT"){
                 $et[]=$i;
+                }
             }
             else{
             if($i->getClasse()->getId() != $id){

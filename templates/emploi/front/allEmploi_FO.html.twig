@@ -10,6 +10,7 @@
     <!-- responsive style -->
     <link href="{{ asset('/frontOffice/css/templatemo-nomad-force.css') }}" rel="stylesheet">
     <link href="{{ asset('/frontOffice/css/responsive.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" media="all"> 
 {% endblock css %}
 
 {% block offres_item %}
@@ -22,11 +23,6 @@
 
     <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="container">
@@ -35,7 +31,7 @@
                                 <div class="detail-box">
                                     <div>
                                         <h1>
-                                            Les Offres D'Emplois
+                                            Les Offres D'Emploi
                                         </h1>
                                         <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
                                     </div>
@@ -51,41 +47,44 @@
 {% endblock %}
 
 {% block custom %}
+{% if is_granted('ROLE_STUDENT') %}
+{% include "conversation.html.twig" %}
+{% endif %}
     <section class="section-padding" id="portfolio">
         <div class="container">
             <div class="col-12">
-                <h2 class="mb-5 text-center" data-aos="fade-up">Offres d'emploi</h2>
+                <h2 class="mb-5 text-center" data-aos="fade-up">Les Offres D'Emploi</h2>
             </div>
-             <div class="col-12 d-flex justify-content-center mb-4">
-                         <form method="POST" action="{{ path('searchByEmploi') }}" class="form-row">
-                            <div class="pr-2">
-                            <select name="categoryKey" id="categoryKey" class="form-select form-control">
-                                <option disabled selected> -- Sélectionnez une catégorie -- </option>
+             <div class="col-12 d-flex justify-content-center mb-5">
+                <form method="POST" action="{{ path('searchByEmploi') }}" class="form-row">
+                    <div class="pr-2">
+                        <select name="categoryKey" id="categoryKey" class="form-select form-control">
+                            <option disabled selected> Sélectionnez une catégorie</option>
                                 {% for c in categories %}
-                                    <option>{{ c.categoryName }}</option>
+                                <option>{{ c.categoryName }}</option>
                                 {% endfor %}
-                            </select>
-                            </div>
-                            <div><button value="recherche" class="btn btn-secondary">Rechercher</button></div>
-                        </form>
-                        </div>
-            <div class="row d-flex justify-content-center"> 
+                        </select>
+                    </div>
+                    <div><button value="recherche" class="btn pl-4 pr-4"  style="background-color:#133e3f; color: #ffffff;">Rechercher</button></div>
+                </form>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 g-4  d-flex justify-content-center"> 
                     {% for emploi in emplois %}   
-                <div class="col-lg-4 col-8">      
-                    <div class="portfolio-thumb mb-5 shadow p-3 bg-white rounded" data-aos="fade-up">
+                <div class="col-lg-4 col-8 mb-4">      
+                    <div class="card h-100" data-aos="fade-up">
                         <a href="{{ path('oneEmploi', {'id': emploi.id, 'emploiTitle' : emploi.title}) }}" class="image-popup">
-                        <img src="/frontOffice/images/edspace.png" class="img-fluid portfolio-image" alt="">
+                        <img src="{{ asset('images/') ~ emploi.image.name}}" class="card-img-top " alt="">
                         </a>
-                    <div class="portfolio-info">                     
-                        <h4 class="portfolio-title mb-0">{{emploi.title}}</h4>
-                        <p style="white-space: nowrap;
-                                 overflow: hidden;
-                                 text-overflow: ellipsis">{{emploi.content}}</p>
-                        <p class="btn btn-secondary btn-sm">{{emploi.date.format('d/m/y')}}</p>
-                        <p class="btn btn-secondary btn-sm">{{emploi.categoryName}}</p>
+                        <div class="card-body">                     
+                            <h4 class="card-title" style="font-size:24px;text-transform:capitalize">{{emploi.title}}</h4>
+                            <p class="fate"  >{{emploi.content}}</p>
+                        </div>
+                        <div class='card-footer text-center' style="background-color:#fff">
+                        <p class="btn btn-warning pl-4 pr-4 btn-sm">{{emploi.date.format('d/m/y')}}</p>
+                        <p class="btn btn-warning pl-4 pr-4 btn-sm">{{emploi.categoryName}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
                     {% endfor %}  
         </div>
     </section>
@@ -112,10 +111,10 @@
 {% block contact %}
 {% endblock %}
 {% block js %}
+        <script src="{{ asset('/frontOffice/js/aos.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/bootstrap.bundle.min.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/jquery.sticky.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/jquery.min.js') }}"></script>
-        <script src=" {{ asset('frontOffice/js/aos.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/jquery.magnific-popup.min.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/magnific-popup-options.js') }}"></script>
         <script src=" {{ asset('frontOffice/js/scrollspy.min.js') }}"></script>

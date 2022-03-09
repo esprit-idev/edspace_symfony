@@ -27,7 +27,12 @@ class CategorieEmploiController extends AbstractController
      */
     public function allCategories(CategorieEmploiRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $categories = $repo->findAll();
+        }else{
+            return $this->render('/403.html.twig');
+        }
         return $this->render('categorie_emploi/allCategories.html.twig', [
             'controller_name' => 'CategorieEmploiController',
             'categories' => $categories,
@@ -41,15 +46,20 @@ class CategorieEmploiController extends AbstractController
      */
     public function AddCategory(Request $request, CategorieEmploiRepository $repo): Response
     {
-        $categories = $repo->findAll();
-        $category = new CategorieEmploi();
-        $form = $this->createForm(CategorieEmploiFormType::class,$category);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($category);
-            $entityManager->flush();
-            return $this->redirectToRoute('allCategoriesEmploi');
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
+            $categories = $repo->findAll();
+            $category = new CategorieEmploi();
+            $form = $this->createForm(CategorieEmploiFormType::class,$category);
+            $form->handleRequest($request);
+            if($form->isSubmitted() && $form->isValid()){
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($category);
+                $entityManager->flush();
+                return $this->redirectToRoute('allCategoriesEmploi');
+            }
+        }else{
+            return $this->render('/403.html.twig');
         }
         return $this->render('categorie_emploi/addCategory.html.twig', [
             'form_title' => 'Ajouter une categorie de Emploi',
@@ -66,13 +76,18 @@ class CategorieEmploiController extends AbstractController
      */
     public function UpdateCategory(Request $request, $id, CategorieEmploiRepository $repo): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $category = $repo->find($id);
-        $form = $this->createForm(CategorieEmploiFormType::class, $category);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $entityManager->flush();
-            return $this->redirectToRoute('allCategoriesEmploi');
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
+            $entityManager = $this->getDoctrine()->getManager();
+            $category = $repo->find($id);
+            $form = $this->createForm(CategorieEmploiFormType::class, $category);
+            $form->handleRequest($request);
+            if($form->isSubmitted() && $form->isValid()){
+                $entityManager->flush();
+                return $this->redirectToRoute('allCategoriesEmploi');
+            }
+        }else{
+            return $this->render('/403.html.twig');
         }
         return $this->render('categorie_emploi/updateCategory.html.twig', [
             'form_title' => 'Modifier une categorie',
@@ -84,29 +99,39 @@ class CategorieEmploiController extends AbstractController
 
     /**
      * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route("/deleteCategoryEmploi/{id}", name="deleteCategoryEmploi")
      */
     public function DeleteCategory($id, CategorieEmploiRepository $repo): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $entityManager = $this->getDoctrine()->getManager();
         $category = $repo->find($id);
         $entityManager->remove($category);
         $entityManager->flush();
 
         return $this->redirectToRoute('allCategoriesEmploi');
-
+        }else{
+            return $this->render('/403.html.twig');
+        }
     }
     /**
      * @Route("/allcategoriesemploi/search", name="SearchCatNameEmploi")
      */
     public function SearchCat(CategorieEmploiRepository $repo, Request $request): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessStudent){
         $categories = $repo->findAll();
         if($request->isMethod('POST')){
             $categoryName = $request->get('catTitle');
             if($categoryName !== ''){
                 $categories = $repo->SearchByName($categoryName);
             }
+        }
+        }else{
+            return new Response("Not authorized", 403);
         }
         return $this->render('categorie_emploi/allCategories.html.twig',
             array('categories' => $categories,));

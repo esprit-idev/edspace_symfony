@@ -47,7 +47,7 @@ class MatiereController extends AbstractController
             }
             return $this->redirectToRoute('ajoutMatiere');
         } else{
-            return new Response(null, 403);
+            return $this->render('/403.html.twig');
         }
     }
 
@@ -73,8 +73,7 @@ class MatiereController extends AbstractController
         }
         return $this->render("matiere/ajoutMatiere.html.twig",["f"=>$form->createView(),'matieres'=>$matieres]);
         } else{
-            return new Response(null, 403);
-        }
+            return $this->render('/403.html.twig');        }
     }
 
     /**
@@ -95,7 +94,7 @@ class MatiereController extends AbstractController
         }
         return $this->render("matiere/modifMatiere.html.twig",["f"=>$form->createView()]);
     } else{
-            return new Response(null, 403);
+            return $this->render('/403.html.twig');
         }
     }
 

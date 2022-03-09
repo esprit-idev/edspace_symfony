@@ -1,7 +1,7 @@
-{% extends 'frontOffice.html.twig' %}
+{# {% extends 'frontOffice.html.twig' %} #}
 
 {% block custom %}
-
+{% include 'style2.html.twig' %}
  
 <div class="chat" id="body"> 
   
@@ -16,11 +16,12 @@
         {% endfor %}
   </div>
 
- {# <div class="theme">
-  <span class="dot"></span>
-<span class="dot"></span>
-<span class="dot"></span>
-  </div> #}
+ <div class="theme">
+  <span class="dot tblue" id="blue"></span>
+<span class="dot tpink" id="pink"></span>
+<span class="dot tgreen" id="green"></span>
+<span class="dot torange" id="orange"></span>
+  </div>
 
   <div class="option">
   <input type="text" id="sinput"></input>
@@ -61,7 +62,7 @@
 
       <form id="sample_form">
       <a><i id="searchm" class="fa fa-chevron-left"></i></a>
-        <input type="text" class="form_data" name="content" id="chat-input" placeholder="Envoyer un message..."/>
+        <input type="text" autocomplete="off" autofill="off" class="form_data" name="content" id="chat-input" placeholder="Envoyer un message..."/>
         <input type="hidden" class="form_data" name="idu" id="chat-input-user"  value="{{user.id}}" />
         <input type="hidden" class="form_data" name="idc" id="chat-input-classe" value="{{user.classe.id}}" />
 
@@ -166,4 +167,10 @@ x.forEach(element => {
 
 </script>
 
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{{ asset('frontOffice/js/jquery-3.4.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('frontOffice/js/bootstrap.js') }}"></script>
+<script type="text/javascript" src="{{ asset('frontOffice/js/app.js?version=3') }}"></script>
 {% endblock %}

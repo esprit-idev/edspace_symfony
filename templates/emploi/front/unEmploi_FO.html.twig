@@ -20,11 +20,6 @@
 
     <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="container">
@@ -48,11 +43,12 @@
 {% endblock %}
 
 {% block custom %}
+{% include "conversation.html.twig" %}
     <section class="news-detail section-padding">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-8 col-10 mx-auto">
-                            <h2 class="mb-3 animated fadeIn" data-aos="fade-up">{{emploi_title}}</h2>
+                            <h2 class="mb-3 animated" data-aos="fade-up">{{emploi_title}}</h2>
                             <p class="mb-3 opacity-50 font-weight-bold">{{emploi_category}}</hp>
                             <p class="me-4" data-aos="fade-up">{{emploi_content}}</p>
                             <div class="clearfix my-4 mt-lg-0 mt-5">

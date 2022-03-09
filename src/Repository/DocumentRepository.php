@@ -141,4 +141,10 @@ class DocumentRepository extends ServiceEntityRepository
         }
         return $documents;
     }
+    public function CountDocuments(){
+        $em = $this->getEntityManager();
+        $qb= $em
+        ->createQuery('SELECT count(n) FROM APP\ENTITY\Document n');
+        return $qb->getSingleScalarResult();
+    }
 }

@@ -70,7 +70,7 @@ class PublicationNewsRepository extends ServiceEntityRepository
     {
         return $this
             ->createQueryBuilder('e')
-            ->addOrderBy('e.date', 'ASC')
+            ->OrderBy('e.date', 'ASC')
             ->andWhere('e.date > :now')
             ->setParameter('now', new \DateTime())
             ->getQuery()
@@ -83,17 +83,7 @@ class PublicationNewsRepository extends ServiceEntityRepository
         ->createQuery('SELECT count(p) FROM APP\ENTITY\PublicationNews p');
         return $qb->getSingleScalarResult();
     }
-    
-    // public function ListPublicationByCategory($id){
-    //     return $this
-    //     ->createQueryBuilder('p')
-    //     ->join('p.categoryName', 'c')
-    //     ->addSelect('c')
-    //     ->where('c.id = :id')
-    //     ->setParameter('id', $id)
-    //     ->getQuery()
-    //     ->getResult();
-    // }
+
     public function ListPublicationByCategory($id){
         $em = $this->getEntityManager();
         return $em
@@ -116,21 +106,28 @@ class PublicationNewsRepository extends ServiceEntityRepository
         ->getOneOrNullResult()
     ;
 }
-public function CountNewsByCategory($categoryName){
-    return $this->createQueryBuilder('p')
-    ->join('p.categoryName', 'c')
-    ->addSelect('count(c)')
-    ->where('c.categoryName =:categoryName')
-    ->setParameter('categoryName',$categoryName)
-    ->getQuery()
-    ->getResult();
+public function findProductsOfCategory($id)
+{
+    $em = $this->getEntityManager();
+    $query=$em
+    ->createQuery("SELECT p FROM APP\ENTITY\PublicationNews p JOIN p.categoryName c where c.id=:id")
+    ->setParameter('id',$id);
+    return $query->getResult();
 }
-public function CountComments($id){
+public function findAllLikesByPublication($id){
     return $this->createQueryBuilder('p')
-    ->addSelect('count(p.comments)')
-    ->where('p.id =:id')
-    ->setParameter('id',$id)
-    ->getQuery()
-    ->getOneOrNullResult();
+            ->select('p.likes')
+            ->where('p.id =:id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getSingleScalarResult();
 }
+public function limitPublications(){
+    return $this->createQueryBuilder('p')
+            ->select('p')
+            ->setMaxResults(4)
+            ->getQuery()
+            ->getResult();
+}
+
 }
