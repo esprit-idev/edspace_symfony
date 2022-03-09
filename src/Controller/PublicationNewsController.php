@@ -24,37 +24,44 @@ class PublicationNewsController extends AbstractController
      */
     public function allPubs(PublicationNewsRepository $repo, CategorieNewsRepository $catRepo, Request $request): Response
     {
-        $categories = $catRepo->findAll();
-        $publications = $repo->findAll();
-        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
-        $test=$this->getUser()->getId();
-            $em=$this->getDoctrine()->getManager();
-            $user1=$em->getRepository(User::class)->find($test);
-            $em1=$this->getDoctrine()->getRepository(User::class);
-            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
-            $message=$this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository(Message::class)
-            ->findBy(array(),array('postDate' => 'ASC'));
-            $mymsg=[];
-            $othersmsg=[];
-        if($hasAccessStudent){
-             //messages 
-            foreach($message as $i){
-                if($i->getUser()->getId()==$user1->getId()){
-                    $mymsg[]=$i;
+            $categories = $catRepo->findAll();
+            $publications = $repo->findAll();
+            $user1='';
+            $em1='';
+            $memebers='';
+            $classe='';
+            $message='';
+            $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+            $hasAccessResponsable = $this->isGranted('ROLE_RESPONSABLE');
+            //messages
+                $em=$this->getDoctrine()->getManager();
+                $mymsg=[];
+                $othersmsg=[];
+            if($hasAccessStudent || $hasAccessResponsable ){
+                $test=$this->getUser()->getId();
+                $user1=$em->getRepository(User::class)->find($test);
+                $em1=$this->getDoctrine()->getRepository(User::class);
+                $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+                $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+                $message=$this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository(Message::class)
+                ->findBy(array(),array('postDate' => 'ASC'));
+                //messages 
+                foreach($message as $i){
+                    if($i->getUser()->getId()==$user1->getId()){
+                        $mymsg[]=$i;
+                    }
+                    else{
+                        $othersmsg[]=$i;
+                    }
                 }
-                else{
-                    $othersmsg[]=$i;
-                }
-            }
             //endmessages
-            $templateName = 'publication_news/back/allPublication.html.twig';
+            $templateName = 'publication_news/front/allPublication_FO.html.twig';
         }
         else{
-            $templateName = 'publication_news/front/allPublication_FO.html.twig';
+            $templateName = 'publication_news/back/allPublication.html.twig';
         }
         return $this->render($templateName, [
             'controller_name' => 'PublicationNewsController',
@@ -76,8 +83,12 @@ class PublicationNewsController extends AbstractController
      */
     public function OnePublication($id, PublicationNewsRepository $repo): Response
     {
-        
-        $em = $this->getDoctrine()->getManager();
+            $user1='';
+            $em1='';
+            $memebers='';
+            $classe='';
+            $message='';
+            $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
         // to check if we did refresh the browser page
         $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
         $publication = $repo->find($id);
@@ -86,42 +97,43 @@ class PublicationNewsController extends AbstractController
         $views = $publication->getVues();
         $comments = $publication->getComments();
         $comment = count(array($comments));
-        //messages
-        $test=$this->getUser()->getId();
-            $em=$this->getDoctrine()->getManager();
-            $user1=$em->getRepository(User::class)->find($test);
-            $em1=$this->getDoctrine()->getRepository(User::class);
-            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
-            $message=$this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository(Message::class)
-            ->findBy(array(),array('postDate' => 'ASC'));
-            $mymsg=[];
-            $othersmsg=[];
-            if($pageWasRefreshed){
-                $views = $publication->increment();
-                $em->flush();
-            }else{
-                $views = $publication->getVues();
-                $em->flush();
-            }
-        $hasAccessStudent = $this->isGranted('ROLE_ADMIN');
+            //messages
+       
+        $em=$this->getDoctrine()->getManager();
+        $mymsg=[];
+        $othersmsg=[];
         if($hasAccessStudent){
-             //messages 
-             foreach($message as $i){
-                if($i->getUser()->getId()==$user1->getId()){
-                    $mymsg[]=$i;
+            $test=$this->getUser()->getId();
+                $user1=$em->getRepository(User::class)->find($test);
+                $em1=$this->getDoctrine()->getRepository(User::class);
+                $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+                $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+                $message=$this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository(Message::class)
+                ->findBy(array(),array('postDate' => 'ASC'));
+                //messages 
+                foreach($message as $i){
+                    if($i->getUser()->getId()==$user1->getId()){
+                        $mymsg[]=$i;
+                    }
+                    else{
+                        $othersmsg[]=$i;
+                    }
                 }
-                else{
-                    $othersmsg[]=$i;
-                }
-            }
-            $templateName = 'publication_news/back/onePublication.html.twig';
+                if($pageWasRefreshed){
+                    $views = $publication->increment();
+                    $em->flush();
+                }else{
+                    $views = $publication->getVues();
+                    $em->flush();
+                } 
+            //endmessages
+            $templateName = 'publication_news/front/onePublication_FO.html.twig';
         }
         else{
-            $templateName = 'publication_news/front/onePublication_FO.html.twig';
+            $templateName = 'publication_news/back/onePublication.html.twig';
         }
         return $this->render($templateName, [
             'publications' => $publication,
@@ -254,43 +266,55 @@ class PublicationNewsController extends AbstractController
     /**
      * @Route("/allpublications/searchByCat", name="searchByCat")
      */
-    public function searchPubByCategoryName(Request $request, PublicationNewsRepository $repo, CategorieNewsRepository $catRepo){
-
-        $test=$this->getUser()->getId();
-        $em=$this->getDoctrine()->getManager();
-        $user1=$em->getRepository(User::class)->find($test);
-        $em1=$this->getDoctrine()->getRepository(User::class);
-        $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-        $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
-      
-        $message=$this
-        ->getDoctrine()
-        ->getManager()
-        ->getRepository(Message::class)
-        ->findBy(array(),array('postDate' => 'ASC'));
-        $mymsg=[];
-        $othersmsg=[];
-        foreach($message as $i){
-            if($i->getUser()->getId()==$user1->getId()){
-                $mymsg[]=$i;
-            }
-            else{
-                $othersmsg[]=$i;
-            }
-        }
-
-
-        $templateName = 'publication_news/front/allPublication_FO.html.twig';
+    public function searchPubByCategoryName(Request $request, PublicationNewsRepository $repo, CategorieNewsRepository $catRepo):Response
+    {
         $publications = $repo->findAll();
-        // $publication= $repo->find($id);
         $categories = $catRepo->findAll();
+        $user1='';
+            $em1='';
+            $memebers='';
+            $classe='';
+            $message='';
+            $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+            //messages
+                $em=$this->getDoctrine()->getManager();
+                $mymsg=[];
+                $othersmsg=[];
+            if($hasAccessStudent){
+                $test=$this->getUser()->getId();
+                $user1=$em->getRepository(User::class)->find($test);
+                $em1=$this->getDoctrine()->getRepository(User::class);
+                $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+                $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+                $message=$this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository(Message::class)
+                ->findBy(array(),array('postDate' => 'ASC'));
+                //messages 
+                foreach($message as $i){
+                    if($i->getUser()->getId()==$user1->getId()){
+                        $mymsg[]=$i;
+                    }
+                    else{
+                        $othersmsg[]=$i;
+                    }
+                }
+            //endmessages
+            $templateName = 'publication_news/front/allPublication_FO.html.twig';
+        }
+        else{
+            $templateName = 'publication_news/back/allPublication.html.twig';
+        }
+       
         if($request->isMethod('POST')){
             $category = $request->get('categoryKey');
             $date = $request->get('dateKey');
             $publications = $repo->findNewsByCategory($category); 
-            // $publications = $repo->SortByDateASC();  
         }
-        return $this->render($templateName, array('publications' => $publications,'memebers'=> $memebers,
+        return $this->render($templateName, array(
+        'publications' => $publications,
+        'memebers'=> $memebers,
         'user' => $user1,
         'classe'=> $classe,
         'message'=> $message,
@@ -305,9 +329,26 @@ class PublicationNewsController extends AbstractController
     public function PostComment($id, PublicationNewsRepository $repo, Request $request): Response
     {
         $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+            $user1='';
+            $em1='';
+            $memebers='';
+            $classe='';
+            $message='';
+            $em=$this->getDoctrine()->getManager();
+            $mymsg=[];
+            $othersmsg=[];
         if($hasAccessStudent){
+            $test=$this->getUser()->getId();
+            $user1=$em->getRepository(User::class)->find($test);
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+            $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
             $templateName = 'publication_news/front/onePublication_FO.html.twig';
-            $em = $this->getDoctrine()->getManager();
             $publications = $repo->findAll();
             $publication = $repo->find($id);
             $likes = $publication->getLikes();
@@ -337,7 +378,12 @@ class PublicationNewsController extends AbstractController
             'id' => $id,
             'comments' => $array,
             'views' =>$views,
-            'num' => $comment
+            'num' => $comment,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'memebers'=> $memebers,
         ));
     }
     /**
@@ -349,8 +395,26 @@ class PublicationNewsController extends AbstractController
         //check if page is being refreshed
         $pageWasRefreshed = isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] === 'max-age=0';
         $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
-        if($hasAccessStudent){
-            $em = $this->getDoctrine()->getManager();
+        $hasAccessResponsable = $this->isGranted('ROLE_RESPONSABLE');
+            $user1='';
+            $em1='';
+            $memebers='';
+            $classe='';
+            $message='';
+            $em=$this->getDoctrine()->getManager();
+            $mymsg=[];
+            $othersmsg=[];
+        if($hasAccessStudent || $hasAccessResponsable){
+            $test=$this->getUser()->getId();
+            $user1=$em->getRepository(User::class)->find($test);
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+            $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
             $publication = $repo->find($id);
             $nextPublication = $repo->getPreviousUser($publication->getTitle());
             $likes = $publication->getLikes();
@@ -378,7 +442,13 @@ class PublicationNewsController extends AbstractController
             'id' => $id,
             'comments' =>$publication->getComments(),
             'views' =>$views,
-            'num' => $comment
+            'num' => $comment,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'memebers'=> $memebers,
+
         ]);
     }
 }
