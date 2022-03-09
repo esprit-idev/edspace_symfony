@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Form\EditProfilType;
 use App\Form\ItemType;
 use App\Entity\User ;
+use App\Entity\Classe ;
+use App\Entity\Message ;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,9 +29,36 @@ class ProfilController extends AbstractController
      */
     public function show()
     {
+        $test=$this->getUser()->getId();
+        $em=$this->getDoctrine()->getManager();
+        $user1=$em->getRepository(User::class)->find($test);
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+        $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
 
-        return $this->render('profil/index.html.twig');
-    }
+        $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+        $mymsg=[];
+        $othersmsg=[];
+        foreach($message as $i){
+            if($i->getUser()->getId()==$user1->getId()){
+                $mymsg[]=$i;
+            }
+            else{
+                $othersmsg[]=$i;
+            }}
+
+        return $this->render('profil/index.html.twig',['memebers'=> $memebers,
+        'user' => $user1,
+        'classe'=> $classe,
+        'message'=> $message,
+        'mymsg' => $mymsg,
+        'others' =>$othersmsg]);
+
+}
 
     /**
      * @Route ("/profil/edit",name="ProfilEdit")
@@ -45,8 +75,35 @@ class ProfilController extends AbstractController
             $this->addFlash('message','Profil mis a jour');
             return $this->redirectToRoute('show');
         }
+        $test=$this->getUser()->getId();
+        $em=$this->getDoctrine()->getManager();
+        $user1=$em->getRepository(User::class)->find($test);
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+        $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+
+        $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+        $mymsg=[];
+        $othersmsg=[];
+        foreach($message as $i){
+            if($i->getUser()->getId()==$user1->getId()){
+                $mymsg[]=$i;
+            }
+            else{
+                $othersmsg[]=$i;
+            }}
+
         return $this->render('profil/edit.html.twig',[
-            'form'=>$form->createView()
+            'form'=>$form->createView(),'memebers'=> $memebers,
+                'user' => $user1,
+                'classe'=> $classe,
+                'message'=> $message,
+                'mymsg' => $mymsg,
+                'others' =>$othersmsg
         ]);
     }
     /**
@@ -79,9 +136,37 @@ class ProfilController extends AbstractController
             return $this->redirectToRoute('show');
         }
 
+        $test=$this->getUser()->getId();
+        $em=$this->getDoctrine()->getManager();
+        $user1=$em->getRepository(User::class)->find($test);
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+        $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+
+        $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+        $mymsg=[];
+        $othersmsg=[];
+        foreach($message as $i){
+            if($i->getUser()->getId()==$user1->getId()){
+                $mymsg[]=$i;
+            }
+            else{
+                $othersmsg[]=$i;
+            }}
+
+
         return $this->render('profil/editPhoto.html.twig', [
             
-            'form' => $form->createView(),
+            'form' => $form->createView(),'memebers'=> $memebers,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'others' =>$othersmsg
         ]);
     }
 

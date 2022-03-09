@@ -33,6 +33,10 @@ class MatiereType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Matiere::class,
+
+    'constraints' => [
+        new UniqueEntity(['fields' => ['id'], 'entityClass' => 'App\Entity\Matiere', 'message' => 'Cette matière existe déjà'])
+    ],
         ]);
     }
 }

@@ -244,7 +244,7 @@ return new Response('success');
         if(count($etudiants)>0){
         foreach($etudiants as $i){
             if(is_null($i->getClasse()) ){
-                if($i->getRoles()=="ROLE_STUDENT"){
+                if($i->getRoles()[0]=="ROLE_STUDENT"){
                 $et[]=$i;
                 }
             }

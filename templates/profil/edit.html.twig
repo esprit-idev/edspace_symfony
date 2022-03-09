@@ -38,11 +38,7 @@
 
     <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
+
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="container">
@@ -51,9 +47,8 @@
                                 <div class="detail-box">
                                     <div>
                                         <h1>
-                                            Les Offres D'Emplois
+                                            Edit Profil
                                         </h1>
-                                        <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
                                     </div>
                                 </div>
                             </div>
@@ -66,6 +61,7 @@
     </section>
 {% endblock %}
 {% block custom %}
+    {% include "conversation.html.twig" %}
     <div class="container">
         <div class="main-body">
             <div class="row">

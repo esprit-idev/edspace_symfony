@@ -74,7 +74,12 @@ class StudentController extends Controller
                 $othersmsg[]=$i;
             }
         }
-            return $this->render ('student/afficheFront.html.twig',['etudiant'=>$etudiant]);
+            return $this->render ('student/afficheFront.html.twig',['etudiant'=>$etudiant, 'memebers'=> $memebers,
+        'user' => $user1,
+        'classe'=> $classe,
+        'message'=> $message,
+        'mymsg' => $mymsg,
+        'others' =>$othersmsg]);
         }}
 
 

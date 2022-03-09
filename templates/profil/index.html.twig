@@ -1,5 +1,7 @@
 {% extends "frontOffice.html.twig" %}
-{% block title %}<titre>Mon Profil</titre>{% endblock title %}
+ {% block title %}
+     <title>Mon Profil</title>
+ {% endblock %}
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
     <!-- fonts style -->
@@ -16,22 +18,19 @@
     <li class="nav-item active">
         <a class="nav-link" href="{{path('show')}}">Mon profil</a>
     </li>
-    <li class="nav-item">
-        <a href={{ path('app_logout')}} class="nav-link">
-            <p>logout</p>
+
+        <a style="color: white" href="{{path('app_logout')}}" class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+            <i  class="fa-solid fa-arrow-right-from-bracket"></i>
         </a>
-    </li>
+        </a>
+
 {% endblock %}
 
 {% block slider %}
 
     <section class=" slider_section position-relative">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
+
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="container">
@@ -40,9 +39,9 @@
                                 <div class="detail-box">
                                     <div>
                                         <h1>
-                                            Les Offres D'Emplois
+                                           Mon Profil
                                         </h1>
-                                        <br>Cet espace est dédié au partage des ressources qui peuvent être utiles pour les étudiants des différents niveaux d'études de l'université.</br> Il offre la possibilté de partage et de téléchargement.</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -55,6 +54,7 @@
     </section>
 {% endblock %}
 {% block custom %}
+    {% include "conversation.html.twig" %}
 <div class="container">
     <div class="main-body">
         <div class="row">
@@ -88,12 +88,14 @@
                                 <p class="text-muted font-size-sm"><b>{{ app.user.username }} {{ app.user.prenom }}</b></p>
                             </div>
                         </div>
+                        <div class="row mb-5">
                         <div class="col-sm-5">
                             <h5 class="text-muted font-size-sm">Email</h5>
                         </div>
                         <div class="row mb-3">
 
                             <p class="text-muted font-size-sm">{{ app.user.email }}</p>
+                        </div>
                         </div>
 
                         <div class="row">
