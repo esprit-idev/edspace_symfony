@@ -17,6 +17,7 @@ use App\Entity\User;
 use App\Entity\Message;
 use App\Entity\Classe;
 use DateTime;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class PublicationNewsController extends AbstractController
 {
 
@@ -452,4 +453,91 @@ class PublicationNewsController extends AbstractController
 
         ]);
     }
+
+    //Json methods
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route("/allpubsJSON", name="allPubsJSON")
+     */
+    public function allPubsJSON(PublicationNewsRepository $repository, NormalizerInterface $normalizer): Response
+    {
+        $publications = $repository->findAll();
+        $jsonContent = $normalizer->normalize($publications,'json',['groups'=>['publications', 'categories','pubimage']]);
+        return new Response(json_encode($jsonContent),200);
+    }
+
+     /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/onepubjson/{id}",name="onepubsJSON")
+     */
+    public function displayOnePubJSON($id,PublicationNewsRepository $repository, NormalizerInterface $normalizer): Response
+    {
+        $publications = $repository->find($id);
+        $jsonContent = $normalizer->normalize($publications,'json',['groups'=>['publications', 'categories','pubimage']]);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addpubsJSON/new",name="addpubs")
+     */
+    public function addPubJSON(NormalizerInterface $normalizer, Request $request):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $publication = new PublicationNews();
+        $publication->setTitle($request->get('title'));
+        $publication->setOwner($request->get('owner'));
+        $publication->setDate(new DateTime());
+        // $publication->setImage($request->get('image'));
+        $publication->setContent($request->get('content'));
+        // $publication->setCategoryName($request->get('categoryName'));
+
+        $em->persist($publication);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($publication,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+     /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/updatepubsJSON/{id}",name="updatepubs")
+     */
+    public function updatePubJSON(PublicationNewsRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $publication = $repository->find($id);
+        $publication->setTitle($request->get('title'));
+        $publication->setOwner($request->get('owner'));
+        $publication->setDate(new DateTime());
+        $publication->setContent($request->get('content'));
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($publication,'json',['groups'=>'post:read']);
+        return new Response("modified successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/deletepubsJSON/{id}",name="deletepubs")
+     */
+    public function deletePubJSON(PublicationNewsRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $publication = $repository->find($id);
+        $em->remove($publication);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($publication,'json',['groups'=>'post:read']);
+        return new Response("deleted successfully".json_encode($jsonContent));
+    }
+
 }

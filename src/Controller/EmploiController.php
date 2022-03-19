@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Message;
 use App\Entity\Classe;
 use App\Entity\User;
+use DateTime;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class EmploiController extends AbstractController
 {
@@ -298,5 +300,89 @@ class EmploiController extends AbstractController
         'mymsg' => $mymsg,
         'memebers'=> $memebers,)
     );
+    }
+
+    //Json methods
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route("/allemploisJSON", name="allEmploisJSON")
+     */
+    public function allEmploiJSON(EmploiRepository $repository, NormalizerInterface $normalizer): Response
+    {
+        $emplois = $repository->findAll();
+        $jsonContent = $normalizer->normalize($emplois,'json',['groups'=>['emplois','categoriesEmploi','emploiimg']]);
+        return new Response(json_encode($jsonContent),200);
+    }
+
+     /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/oneemploijson/{id}",name="oneEmploiJSON")
+     */
+    public function displayOneEmploiJSON($id,EmploiRepository $repository, NormalizerInterface $normalizer): Response
+    {
+        $emploi = $repository->find($id);
+        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addemploiJSON/new",name="addEmploiJSON")
+     */
+    public function addEmploiJSON(NormalizerInterface $normalizer, Request $request):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $emploi = new Emploi();
+        $emploi->setTitle($request->get('title'));
+        $emploi->setContent($request->get('content'));
+        $emploi->setDate(new DateTime());
+        $emploi->setImage($request->get('image'));
+        $emploi->setCategoryName($request->get('categoryName'));
+
+        $em->persist($emploi);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+     /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/updateemploiJSON/{id}",name="updateEmploiJSON")
+     */
+    public function updateEmploiJSON(EmploiRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $emploi = $repository->find($id);
+        $emploi->setTitle($request->get('title'));
+        $emploi->setContent($request->get('content'));
+        $emploi->setDate(new DateTime());
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>['emplois','categoriesEmploi']]);
+        return new Response("modified successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/deleteemploiJSON/{id}",name="deleteEmploiJSON")
+     */
+    public function deleteEmploiJSON(EmploiRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $emploi = $repository->find($id);
+        $em->remove($emploi);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>'post:read']);
+        return new Response("deleted successfully".json_encode($jsonContent));
     }
 }

@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class CategorieNewsController extends AbstractController
 {
@@ -138,4 +139,20 @@ class CategorieNewsController extends AbstractController
             array('categories' => $categories,)
         );
     }
+
+    //Json methods
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route("/allcategoriesnewsJSON", name="allCategoriesNewsJSON")
+     */
+    public function allPubsJSON(CategorieNewsRepository $repository, NormalizerInterface $normalizer): Response
+    {
+        $categories = $repository->findAll();
+        $jsonContent = $normalizer->normalize($categories,'json',['groups'=>['categories','pubs']]);
+        return new Response(json_encode($jsonContent));
+    }
+
 }

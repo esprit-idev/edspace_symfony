@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class CategorieEmploiController extends AbstractController
 {
@@ -135,5 +136,19 @@ class CategorieEmploiController extends AbstractController
         }
         return $this->render('categorie_emploi/allCategories.html.twig',
             array('categories' => $categories,));
+    }
+        //Json methods
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route("/allcategoriesEmploiJSON", name="allCategoriesEmploiJSON")
+     */
+    public function allcategoriesJSON(CategorieEmploiRepository $repository, NormalizerInterface $normalizer): Response
+    {
+        $categories = $repository->findAll();
+        $jsonContent = $normalizer->normalize($categories,'json',['groups'=>['categoriesEmploi','offre']]);
+        return new Response(json_encode($jsonContent));
     }
 }

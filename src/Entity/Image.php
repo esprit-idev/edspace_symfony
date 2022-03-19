@@ -6,7 +6,7 @@ use App\Repository\ImageRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
  */
@@ -16,12 +16,14 @@ class Image
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("images")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank(message="ajouter une image")
+     * @Groups({"pubimage","emploiimg"})
      */
     private $name;
 
@@ -33,6 +35,7 @@ class Image
      *         "image/jpg", "image/gif", "image/jpeg", "image/png"
      *     }
      * )
+     * @Groups("images")
      */
     private $file;
 
