@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class NiveauController extends AbstractController
 {
@@ -107,4 +108,17 @@ class NiveauController extends AbstractController
     }
     return $this->redirectToRoute('Classe');
 }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/allNiveaux",name="allNiveaux")
+     */
+    function AllNiveauxJSON(NormalizerInterface $normalizer, NiveauRepository $repository): Response
+    {
+        $niveaux=$repository->findAll();
+        $jsonContent=$normalizer->normalize($niveaux,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
 }

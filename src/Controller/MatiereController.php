@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\DocumentRepository;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 
 class MatiereController extends AbstractController
@@ -96,6 +97,19 @@ class MatiereController extends AbstractController
     } else{
             return $this->render('/403.html.twig');
         }
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/allMatieres",name="allMatieres")
+     */
+    function AllMatieresJSON(NormalizerInterface $normalizer, MatiereRepository $repository): Response
+    {
+        $matieres=$repository->findAll();
+        $jsonContent=$normalizer->normalize($matieres,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
     }
 
 }

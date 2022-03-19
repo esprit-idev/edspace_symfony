@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=MatiereRepository::class)
@@ -22,6 +23,7 @@ class Matiere
      *     pattern="/^\s*[a-zA-Zéèçê0-9]+\s*$/",
      *     message="Veuillez saisir un nom valide (ex:CCCA3)"
      * )
+     * @Groups("post:read")
      */
     private $id;
 
@@ -34,6 +36,7 @@ class Matiere
      * @ORM\ManyToOne(targetEntity=Niveau::class, inversedBy="matieres")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="Le choix du niveau est requis")
+     * @Groups("post:read")
      */
     private $niveau;
 
