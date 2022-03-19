@@ -3,7 +3,7 @@ web project using symfony
 
 ## Description
 
-EdSpace is a platform for university students to communicate, check the latest news, download/upload files, ask questions on the forum and even join club activities. 
+EdSpace is a platform for both university students and the university. Students are allowed in this safe space to communicate, check the latest news, download/upload files, ask questions on the forum and even join club activities. 
 All in one place.
 
 ## Table of Contents 
