@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Matiere;
 use App\Form\MatiereType;
 use App\Repository\MatiereRepository;
+use App\Repository\NiveauRepository;
 use MercurySeries\FlashyBundle\FlashyNotifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -112,4 +113,56 @@ class MatiereController extends AbstractController
         return new Response(json_encode($jsonContent));
     }
 
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addMatiere/new",name="addMatiere")
+     */
+    public function addMatiereJSON(NormalizerInterface $normalizer, Request $request,NiveauRepository $niveauRepository,MatiereRepository $matiereRepository):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $matiere = new Matiere();
+        $matiere->setId($request->get('matiereId'));
+        $niveau=$niveauRepository->find($request->get('niveauId'));
+        $matiere->setNiveau($niveau);
+        $em->persist($matiere);
+        $em->flush();
+        $jsonContent = $normalizer->normalize($matiere,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/deleteMatiere/{id}",name="deleteMatiere")
+     */
+    function DeleteMatiereJSON(NormalizerInterface $normalizer,$id): Response
+    {
+        $em=$this->getDoctrine()->getManager();
+        $matiere=$em->getRepository(Matiere::class)->find($id);
+        $em->remove($matiere);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($matiere,'json',['groups'=>'post:read']);
+        return new Response("Matiere deleted successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/updateMatiere/{id}",name="updateMatiere")
+     */
+    public function updateMatiereJSON(NiveauRepository $niveauRepository,MatiereRepository $matiereRepository, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $matiere = $matiereRepository->find($id);
+        $matiere->setId($request->get('matiereId'));
+        $niveau=$niveauRepository->find($request->get('niveauId'));
+        $matiere->setNiveau($niveau);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($matiere,'json',['groups'=>'post:read']);
+        return new Response("Matiere updated successfully".json_encode($jsonContent));
+    }
 }

@@ -1036,6 +1036,21 @@ class DocumentController extends AbstractController
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/ignoreSignalDoc/{id}",name="ignoreSignalDoc")
+     */
+    function IgnoreSignalDocJSON(NormalizerInterface $normalizer,$id,DocumentRepository $repository): Response
+    {
+        $document=$repository->find($id);
+        $repository->DecrementCountSignal($document);
+        $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
+        return new Response("Document reported successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/shareDoc/{id}",name="shareDoc")
      */
     function ShareDocJSON(NormalizerInterface $normalizer,$id,DocumentRepository $repository,\Swift_Mailer $mailer,Request $request): Response
@@ -1075,7 +1090,5 @@ class DocumentController extends AbstractController
         $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
         return new Response("Document sent successfully".json_encode($jsonContent));
     }
-    /*
 
-    */
 }
