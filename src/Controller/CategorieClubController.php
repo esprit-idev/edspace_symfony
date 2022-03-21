@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class CategorieClubController extends AbstractController
 {
 
@@ -92,5 +92,15 @@ class CategorieClubController extends AbstractController
         ]);
         }
         else return new Response(null, 403);
+    }
+		
+	  /**
+     * @Route("/AllClubCategories", name="AllClubCategories")
+     */
+    public function AllClubCategories(NormalizerInterface $normalizer, CategorieClubRepository $rep): Response
+    {
+        $categories = $rep->findAll();
+        $jsonContent = $normalizer->normalize($categories, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
     }
 }
