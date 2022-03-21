@@ -83,8 +83,15 @@ class Document
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Url(message= "URL saisie invalide")
+     * @Groups("post:read")
      */
     private $url;
+
+    /**
+     * @ORM\Column(type="string", length=300000, nullable=true)
+     * @Groups("post:read")
+     */
+    private $base64;
 
 
     public function __construct()
@@ -231,6 +238,18 @@ class Document
     public function setUrl(?string $url): self
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getBase64(): ?string
+    {
+        return $this->base64;
+    }
+
+    public function setBase64(?string $base64): self
+    {
+        $this->base64 = $base64;
 
         return $this;
     }

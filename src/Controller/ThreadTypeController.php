@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\ThreadType;
+use App\Entity\User;
+use App\Entity\Message;
+use App\Entity\Classe;
 use App\Form\ThreadTypeType;
 use App\Repository\ThreadTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -102,9 +105,36 @@ class ThreadTypeController extends AbstractController
     public function search(ThreadTypeRepository $threadTypeRepository,$id){
         $threadType= $threadTypeRepository->find($id);
         $threads = $threadTypeRepository->findThreads($id);
+        $em=$this->getDoctrine()->getManager();
+        $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+        $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+
+        $message=$this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository(Message::class)
+            ->findBy(array(),array('postDate' => 'ASC'));
+        $mymsg=[];
+        $othersmsg=[];
+        foreach($message as $i){
+            if($i->getUser()->getId()==$user1->getId()){
+                $mymsg[]=$i;
+            }
+            else{
+                $othersmsg[]=$i;
+            }
+        }
         return $this->render('thread_type/showThreads.html.twig', [
             'threadType' => $threadType,
             'threads' => $threads,
+            'memebers'=> $memebers,
+            'user' => $user1,
+            'classe'=> $classe,
+            'message'=> $message,
+            'mymsg' => $mymsg,
+            'others' =>$othersmsg,
         ]);
     }
     

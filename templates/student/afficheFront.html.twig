@@ -56,6 +56,9 @@
         </tr{% endfor %}>
         </tbody>
     </table>
+    <div class="navigation">
+        {{ knp_pagination_render(etudiant) }}
+    </div>
 {% endblock %}
 
 {% block special %}

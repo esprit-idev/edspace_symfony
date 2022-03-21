@@ -4,6 +4,7 @@ namespace App\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PublicationNewsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PublicationNewsRepository::class)
@@ -14,23 +15,27 @@ class PublicationNews
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("publications")
      */
     private $id;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups("publications")
      */
     private $date;
 
     /**
      * @ORM\Column(type="string", length=55)
      * @Assert\NotBlank(message="le titre est requi")
+     * @Groups("publications")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=55, nullable=true)
      * @Assert\NotBlank(message="le titre est requi")
+     * @Groups("publications")
      */
     private $owner;
 
@@ -38,32 +43,38 @@ class PublicationNews
      * @ORM\ManyToOne(targetEntity=CategorieNews::class, inversedBy="publicationNews")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @Assert\NotBlank(message="le titre est requi")
+     * @Groups("publications")
      */
     private $categoryName;
 
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
      * @Assert\NotBlank()
+     * @Groups("pubimage")
      */
     private $image;
 
     /**
      * @ORM\Column(type="integer", nullable=true, options={"default" : 0})
+     * @Groups("publications")
      */
     private $likes;
 
     /**
      * @ORM\Column(type="string", length=6500, nullable=true)
+     * @Groups("publications")
      */
     private $comments;
 
     /**
      * @ORM\Column(type="integer", nullable=true, options={"default" : 0})
+     * @Groups("publications")
      */
     private $vues;
 
     /**
      * @ORM\Column(type="string", length=6500, nullable=true)
+     * @Groups("publications")
      */
     private $content;
 

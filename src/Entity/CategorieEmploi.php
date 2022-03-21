@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CategorieEmploiRepository::class)
@@ -23,11 +24,13 @@ class CategorieEmploi
     /**
      * @ORM\Column(type="string", length=55, nullable=true)
      * @Assert\NotBlank(message="ajouter le nom de categorie")
+     * @Groups("categoriesEmploi")
      */
     private $categoryName;
 
     /**
      * @ORM\OneToMany(targetEntity=Emploi::class, mappedBy="categoryName")
+     * @Groups("offre")
      */
     private $emplois;
 
