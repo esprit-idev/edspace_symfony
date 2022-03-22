@@ -235,4 +235,97 @@ class ClubController extends AbstractController
         $jsonContent = $normalizer->normalize($club, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
+	
+	/**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addClubJson/new",name="addClubJson")
+     */
+    public function addClubJson(NormalizerInterface $normalizer, Request $request,CategorieClubRepository $repcat,ClubRepository $repository,UserRepository $repuser):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $club = new Club();
+        $club->setClubNom($request->get('clubNom'));
+        $club->setClubPic($request->get('clubPic'));
+        $club->setClubDescription($request->get('clubDesc'));
+		$user=$repuser->findOneBy(array('email'=>$request->get('clubResponsable')));
+
+        $club->setClubResponsable($user);
+		$categorie=$repcat->findOneBy(array('categorieNom'=>$request->get('clubCategorie')));
+        $club->setClubCategorie($categorie);
+		  $repuser->find($user->getId())->setRoles(["ROLE_STUDENT", "ROLE_RESPONSABLEC"]); //add not set
+		                $user->setClub($club);
+
+        $em->persist($club);
+        $em->flush();
+        $jsonContent = $normalizer->normalize($club,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+	
+	
+	    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/deleteClubJson/{id}",name="deleteClubJson")
+     */
+    function deleteClubJson(NormalizerInterface $normalizer,$id,UserRepository $userRepository): Response
+    {
+        $em=$this->getDoctrine()->getManager();
+        $club=$em->getRepository(Club::class)->find($id);
+		            $respo = $club->getClubResponsable();
+					$user = $userRepository->find($respo->getId());
+            $user->setClub(null);
+            $user->setRoles(["ROLE_STUDENT"]);
+
+        $em->remove($club);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($club,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+		
+		
+    }
+	
+	    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/updateClubJson/{id}",name="updateClubJson")
+     */
+    public function updateClubJson(UserRepository $userRepository,CategorieClubRepository $repcat, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+      
+	  $em = $this->getDoctrine()->getManager();
+        $club=$em->getRepository(Club::class)->find($id);
+		$d = $userRepository->findOneBy(array('club' => $club));
+                $d->setClub(null);
+                $d->setRoles(["ROLE_STUDENT"]);
+						$user=$userRepository->findOneBy(array('email'=>$request->get('clubResponsable')));
+                $user->setClub($club);
+		$club->setClubNom($request->get('clubNom'));
+        $club->setClubDescription($request->get('clubDesc'));
+                $userRepository->find($user->getId())->setRoles(["ROLE_STUDENT", "ROLE_RESPONSABLEC"]); //add not set
+
+        $club->setClubResponsable($user);
+		$categorie=$repcat->findOneBy(array('categorieNom'=>$request->get('clubCategorie')));
+        $club->setClubCategorie($categorie);				
+                
+                $em->flush();
+
+        $jsonContent = $normalizer->normalize($club,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+		
+    }
+	
+	 /**
+     * @Route("/getClubPic/{clubId}", name="getClubPic")
+     */
+    public function getClubPic($clubId,NormalizerInterface $normalizer, ClubRepository $rep): Response
+    {
+        $club = $rep->find($clubId);
+		$img=$club->getClubPic();
+        $jsonContent = $normalizer->normalize($img, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
 }
