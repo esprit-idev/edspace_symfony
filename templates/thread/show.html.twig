@@ -138,9 +138,11 @@
                                     {{thread.user.prenom}} {{thread.user.username}} <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="green" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
                                         <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
                                     </svg></a>
+                                    <a href ="{{ path('thread_scan', {'question': thread.question}) }}" class="btn text-semibold media-heading box-inline"> Scan </a>
                                 {% else %}
 
                                     {{thread.user.prenom}} {{thread.user.username}}
+                                    <a href ="{{ path('thread_scan', {'question': thread.question}) }}" class="btn text-semibold media-heading box-inline"> Scan </a>
 
                                 {% endif %}
                                 <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> {{thread.postDate ? thread.postDate|date('H:i:s y-m-d') : ''}}</p>
@@ -167,8 +169,10 @@
                                     <div class="media-block">
                                         <a class="media-left" href="#"><img class="img-circle img-sm" alt="Profile Picture" src="https://bootdey.com/img/Content/avatar/avatar2.png"></a>
                                         <div class="media-body">
+                                        
                                             <div class="mar-btm">
                                                 <a href="#" class="btn text-semibold media-heading box-inline">{{thread.user.prenom}} {{thread.user.username}}</a>
+                                                
                                                 <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> - {{thread.replyDate ? thread.replyDate|date('y-m-d H:i:s ') : ''}}</p>
                                             </div>
                                             <p>{{thread.reply}}</p>

@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
-
+use App\Form\SearchType;
 use App\Entity\User;
 use App\Entity\Message;
 use App\Entity\Classe;
 use App\Entity\Thread;
 use App\Form\ReponseType;
 use App\Form\ThreadType;
+use App\Services\QrCodeService;
 use App\Repository\ThreadRepository;
 use App\Repository\ThreadTypeRepository;
 use App\Repository\UserRepository;
@@ -175,11 +176,51 @@ class ThreadController extends AbstractController
                     'reponses' => $reponses
                 ]);
             }
-            else {
-                return $this->render("/403.html.twig");
-
-            }
         }
+            else {
+                if($thread->getDisplay()==1){
+                    $form = $this->createForm(ReponseType::class);
+            $reponses = $threadRepository->getReponses($thread->getId());
+            if($this->getUser()!= null){
+                $em=$this->getDoctrine()->getManager();
+                $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
+                $em1=$this->getDoctrine()->getRepository(User::class);
+                $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+                $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+
+                $message=$this
+                    ->getDoctrine()
+                    ->getManager()
+                    ->getRepository(Message::class)
+                    ->findBy(array(),array('postDate' => 'ASC'));
+                $mymsg=[];
+                $othersmsg=[];
+                foreach($message as $i){
+                    if($i->getUser()->getId()==$user1->getId()){
+                        $mymsg[]=$i;
+                    }
+                    else{
+                        $othersmsg[]=$i;
+                    }
+                }
+                return $this->render('thread/show.html.twig', [
+                    'thread' => $thread,
+                    'form' => $form->createView(),
+                    'memebers'=> $memebers,
+                    'user' => $user1,
+                    'classe'=> $classe,
+                    'message'=> $message,
+                    'mymsg' => $mymsg,
+                    'others' =>$othersmsg,
+                    'reponses' => $reponses
+                ]);
+
+                }
+            }
+            else
+                return $this->render("/403.html.twig");
+            }
+        
     }
 
     /**
@@ -406,4 +447,22 @@ class ThreadController extends AbstractController
             'threadss' => $threadss,
         ]);
     }
+
+        /**
+     * @Route("/scan/{question}",name="thread_scan")
+     */
+    public function scanQR(Request $request, QrCodeService $qrcodeService,$question): Response
+    {
+        
+        $qrCode = null;
+        $form = $this->createForm(SearchType::class, null);
+        $form->handleRequest($request);
+            $qrCode = $qrcodeService->qrcode($question);
+        return $this->render('thread/qr.html.twig', [
+            'qrCode' => $qrCode,
+            
+        ]);
+    }
+    
+
 }
