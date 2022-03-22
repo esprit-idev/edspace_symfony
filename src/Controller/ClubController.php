@@ -315,6 +315,7 @@ class ClubController extends AbstractController
         $jsonContent = $normalizer->normalize($club,'json',['groups'=>'post:read']);
         return new Response(json_encode($jsonContent));
 		
+		
     }
 	
 	 /**
