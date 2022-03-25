@@ -48,9 +48,8 @@ class Emploi
      */
     private $categoryName;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
-     * @Assert\NotBlank(message="Ajouter une Image")
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("emploiimg")
      */
     private $image;
@@ -107,16 +106,17 @@ class Emploi
 
         return $this;
     }
-    public function __toString() {
-        return $this->name;
+    public function __toString()
+    {
+        return (string) $this->getCategoryName();
     }
 
-    public function getImage(): ?Image
+    public function getImage()
     {
         return $this->image;
     }
 
-    public function setImage(?Image $image): self
+    public function setImage($image)
     {
         $this->image = $image;
 

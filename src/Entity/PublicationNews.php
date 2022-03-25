@@ -48,8 +48,7 @@ class PublicationNews
     private $categoryName;
 
     /**
-     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
-     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("pubimage")
      */
     private $image;
@@ -136,12 +135,12 @@ class PublicationNews
         return (string) $this->getCategoryName();
     }
 
-    public function getImage(): ?Image
+    public function getImage()
     {
         return $this->image;
     }
 
-    public function setImage(?Image $image): self
+    public function setImage($image)
     {
         $this->image = $image;
 
