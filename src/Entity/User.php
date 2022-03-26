@@ -26,6 +26,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups("post:read")
+
      */
     private $id;
 
@@ -72,6 +73,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json",nullable=true)
+
      */
     private $roles =[];
 
@@ -291,6 +293,8 @@ class User implements UserInterface
             $this->documentsFavoris[] = $documentsFavori;
             $documentsFavori->setUser($this);
         }
+        return $this;
+
     }
     public function __toString(){
         return $this->getEmail();

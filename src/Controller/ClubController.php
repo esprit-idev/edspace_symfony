@@ -213,120 +213,165 @@ class ClubController extends AbstractController
         $jsonContent = $normalizer->normalize($clubs, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
+
     /**
      * @Route("/editClubJson/{clubId}", name="editClubJson")
      */
-    public function editClubJson(Request $request,$clubId,NormalizerInterface $normalizer, ClubRepository $rep): Response
+    public function editClubJson(Request $request, $clubId, NormalizerInterface $normalizer, ClubRepository $rep): Response
     {
-        $em=$this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $club = $rep->find($clubId);
         $club->setClubDescription($request->get('clubDesc'));
         $em->flush();
         $jsonContent = $normalizer->normalize($club, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
-	
-	 /**
+
+    /**
      * @Route("/oneClub/{clubId}", name="oneClub")
      */
-    public function oneClub($clubId,NormalizerInterface $normalizer, ClubRepository $rep): Response
+    public function oneClub($clubId, NormalizerInterface $normalizer, ClubRepository $rep): Response
     {
         $club = $rep->find($clubId);
         $jsonContent = $normalizer->normalize($club, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
-	
-	/**
+
+    /**
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/addClubJson/new",name="addClubJson")
      */
-    public function addClubJson(NormalizerInterface $normalizer, Request $request,CategorieClubRepository $repcat,ClubRepository $repository,UserRepository $repuser):Response
+    public function addClubJson(NormalizerInterface $normalizer, Request $request, CategorieClubRepository $repcat, ClubRepository $repository, UserRepository $repuser): Response
     {
         $em = $this->getDoctrine()->getManager();
         $club = new Club();
         $club->setClubNom($request->get('clubNom'));
         $club->setClubPic($request->get('clubPic'));
         $club->setClubDescription($request->get('clubDesc'));
-		$user=$repuser->findOneBy(array('email'=>$request->get('clubResponsable')));
+        $user = $repuser->findOneBy(array('email' => $request->get('clubResponsable')));
 
         $club->setClubResponsable($user);
-		$categorie=$repcat->findOneBy(array('categorieNom'=>$request->get('clubCategorie')));
+        $categorie = $repcat->findOneBy(array('categorieNom' => $request->get('clubCategorie')));
         $club->setClubCategorie($categorie);
-		  $repuser->find($user->getId())->setRoles(["ROLE_STUDENT", "ROLE_RESPONSABLEC"]); //add not set
-		                $user->setClub($club);
+        $repuser->find($user->getId())->setRoles(["ROLE_STUDENT", "ROLE_RESPONSABLEC"]); //add not set
+        $user->setClub($club);
 
         $em->persist($club);
         $em->flush();
-        $jsonContent = $normalizer->normalize($club,'json',['groups'=>'post:read']);
+        $jsonContent = $normalizer->normalize($club, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
-	
-	
-	    /**
+
+
+    /**
      * @param NormalizerInterface $normalizer
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/deleteClubJson/{id}",name="deleteClubJson")
      */
-    function deleteClubJson(NormalizerInterface $normalizer,$id,UserRepository $userRepository): Response
+    function deleteClubJson(NormalizerInterface $normalizer, $id, UserRepository $userRepository): Response
     {
-        $em=$this->getDoctrine()->getManager();
-        $club=$em->getRepository(Club::class)->find($id);
-		            $respo = $club->getClubResponsable();
-					$user = $userRepository->find($respo->getId());
-            $user->setClub(null);
-            $user->setRoles(["ROLE_STUDENT"]);
+        $em = $this->getDoctrine()->getManager();
+        $club = $em->getRepository(Club::class)->find($id);
+        $respo = $club->getClubResponsable();
+        $user = $userRepository->find($respo->getId());
+        $user->setClub(null);
+        $user->setRoles(["ROLE_STUDENT"]);
 
         $em->remove($club);
         $em->flush();
-        $jsonContent=$normalizer->normalize($club,'json',['groups'=>'post:read']);
+        $jsonContent = $normalizer->normalize($club, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
-		
-		
+
+
     }
-	
-	    /**
+
+    /**
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/updateClubJson/{id}",name="updateClubJson")
      */
-    public function updateClubJson(UserRepository $userRepository,CategorieClubRepository $repcat, NormalizerInterface $normalizer, Request $request,$id):Response
+    public function updateClubJson(UserRepository $userRepository, CategorieClubRepository $repcat, NormalizerInterface $normalizer, Request $request, $id): Response
     {
-      
-	  $em = $this->getDoctrine()->getManager();
-        $club=$em->getRepository(Club::class)->find($id);
-		$d = $userRepository->findOneBy(array('club' => $club));
-                $d->setClub(null);
-                $d->setRoles(["ROLE_STUDENT"]);
-						$user=$userRepository->findOneBy(array('email'=>$request->get('clubResponsable')));
-                $user->setClub($club);
-		$club->setClubNom($request->get('clubNom'));
+
+        $em = $this->getDoctrine()->getManager();
+        $club = $em->getRepository(Club::class)->find($id);
+        $d = $userRepository->findOneBy(array('club' => $club));
+        $d->setClub(null);
+        $d->setRoles(["ROLE_STUDENT"]);
+        $user = $userRepository->findOneBy(array('email' => $request->get('clubResponsable')));
+        $user->setClub($club);
+        $club->setClubNom($request->get('clubNom'));
         $club->setClubDescription($request->get('clubDesc'));
-                $userRepository->find($user->getId())->setRoles(["ROLE_STUDENT", "ROLE_RESPONSABLEC"]); //add not set
+        $userRepository->find($user->getId())->setRoles(["ROLE_STUDENT", "ROLE_RESPONSABLEC"]); //add not set
 
         $club->setClubResponsable($user);
-		$categorie=$repcat->findOneBy(array('categorieNom'=>$request->get('clubCategorie')));
-        $club->setClubCategorie($categorie);				
-                
-                $em->flush();
+        $categorie = $repcat->findOneBy(array('categorieNom' => $request->get('clubCategorie')));
+        $club->setClubCategorie($categorie);
 
-        $jsonContent = $normalizer->normalize($club,'json',['groups'=>'post:read']);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($club, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
-		
-		
+
+
     }
-	
-	 /**
+
+    /**
      * @Route("/getClubPic/{clubId}", name="getClubPic")
      */
-    public function getClubPic($clubId,NormalizerInterface $normalizer, ClubRepository $rep): Response
+    public function getClubPic($clubId, NormalizerInterface $normalizer, ClubRepository $rep): Response
     {
         $club = $rep->find($clubId);
-		$img=$club->getClubPic();
+        $img = $club->getClubPic();
         $jsonContent = $normalizer->normalize($img, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
+
+    /**
+     * @Route("/UsersAddClub", name="UsersAddClub")
+     */
+    public function UsersAddClub(NormalizerInterface $normalizer, UserRepository $userRepository, ClubRepository $rep): Response
+    {
+        $qb = $userRepository->createQueryBuilder('u');
+
+        $users = $qb
+            ->where('u.roles NOT LIKE :roles')
+            ->setParameter('roles', '%"' . "ROLE_ADMIN" . '"%')
+            ->andwhere('u.club is NULL')
+            ->orderBy('u.email', 'ASC')
+            ->getQuery()
+        ->getResult();
+
+        // find all users where 'role' is NOT '['ROLE_RESPONSABLE']'
+        $jsonContent = $normalizer->normalize($users, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @Route("/UsersUpdateClub/{id}", name="UsersUpdateClub")
+     */
+      public function UsersUpdateClub(NormalizerInterface $normalizer,UserRepository $userRepository, $id): Response
+      {
+        /*  $users = $userRepository->findEmails($id)->getQuery()
+              ->getResult();;*/
+          $qb = $userRepository->createQueryBuilder('u');
+
+          $users = $qb
+              ->where('u.roles NOT LIKE :roles')
+              ->setParameter('roles', '%"' . "ROLE_ADMIN" . '"%')
+              ->andwhere('u.club is NULL')
+              ->orwhere('u.club = :id')
+              ->setParameter('id',$id)
+            //  ->orderBy('u.email', 'ASC')
+              ->getQuery()
+              ->getResult();
+
+          $jsonContent = $normalizer->normalize($users, 'json', ['groups' => 'post:read']);
+          return new Response(json_encode($jsonContent));
+      }
+
 
 }
