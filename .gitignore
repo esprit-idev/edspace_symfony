@@ -32,4 +32,5 @@
 /public/build/
 npm-debug.log
 yarn-error.log
+/public/images
 ###< symfony/webpack-encore-bundle ###

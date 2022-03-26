@@ -11,6 +11,7 @@ parameters:
     ClubPictures_directory: '%kernel.project_dir%/public/ClubPictures'
     PubPictures_directory: '%kernel.project_dir%/public/PubPictures'
     PubFiles_directory: '%kernel.project_dir%/public/PubFiles'
+    NewsImages_directory: '%kernel.project_dir%/public/images'
 
 services:
 
