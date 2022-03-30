@@ -169,7 +169,7 @@ public function resetPassword($token ,Request $request,UserPasswordEncoderInterf
 }
 
     /**
-     * @Route("/loginJson" , name="app_login")
+     * @Route("/loginJson" , name="login")
      */
     public function loginJson(Request $request , NormalizerInterface $normalizer){
 $email = $request->query->get("email");
@@ -199,7 +199,7 @@ else {
     }
 
 /**
- * @Route("/getPasswordByEmail", name="app_password")
+ * @Route("/getPasswordByEmail", name="password")
  */
 
 public function getPasswordByEmail(Request $request , NormalizerInterface $normalizer){
