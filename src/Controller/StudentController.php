@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Knp\Component\Pager\PaginatorInterfaces ;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class StudentController extends Controller
 {
@@ -48,39 +49,9 @@ class StudentController extends Controller
             // Items per page
             4
         );
-        if ($hasAccessAgent){
+       
             return $this->render ('student/afficheBack.html.twig',['etudiant'=>$etudiant]);
         }
-        elseif ($hasAccessStudent) {
-            $test=$this->getUser()->getId();
-        $em=$this->getDoctrine()->getManager();
-        $user1=$em->getRepository(User::class)->find($test);
-        $em1=$this->getDoctrine()->getRepository(User::class);
-        $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-        $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
-
-        $message=$this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository(Message::class)
-            ->findBy(array(),array('postDate' => 'ASC'));
-        $mymsg=[];
-        $othersmsg=[];
-        foreach($message as $i){
-            if($i->getUser()->getId()==$user1->getId()){
-                $mymsg[]=$i;
-            }
-            else{
-                $othersmsg[]=$i;
-            }
-        }
-            return $this->render ('student/afficheFront.html.twig',['etudiant'=>$etudiant, 'memebers'=> $memebers,
-        'user' => $user1,
-        'classe'=> $classe,
-        'message'=> $message,
-        'mymsg' => $mymsg,
-        'others' =>$othersmsg]);
-        }}
 
 
     /**
@@ -124,12 +95,13 @@ class StudentController extends Controller
 
             return $this->redirectToRoute('affiche');
         }
-        if ($hasAccessAgent){
+       // if ($hasAccessAgent){
         return $this->render('student/add.html.twig',[
             'form'=>$form->createView()
-        ]);}
-        elseif ($hasAccessStudent) {
-            return $this->render('/403.html.twig');}
+        ]);
+       // }
+       // elseif ($hasAccessStudent) {
+          //  return $this->render('/403.html.twig');}
     }
     /**
      * @Route("/update/{id}",name="update")
@@ -156,6 +128,79 @@ class StudentController extends Controller
         elseif ($hasAccessStudent) {
             return $this->render('/403.html.twig');}
     }
-    
+
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addStudentJSON",name="addStudentJSON")
+     */
+    public function addStudentJSON(NormalizerInterface $normalizer, Request $request):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $student = new User();
+        $student->setUsername($request->get('username'));
+        $student->setPrenom($request->get('prenom'));
+        $student->setEmail($request->get('email'));
+        $student->setPassword($request->get('password'));
+        $student->setIsBanned($request->get('isBanned'));
+        $student->setRoles(["ROLE_STUDENT"]);
+       // $student->setImage($request->get('image'));
+
+        $em->persist($student);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($student,'json',['groups'=>'post:read']);
+        return new Response("added successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @param UserRepository $repository
+     * @return \Symfony\component\httpFoundation\Response
+     * @Route("/afficheStudent",name="afficheStudent")
+     */
+    public function AfficheJson(UserRepository $repository  , Request $request , NormalizerInterface $normalizer){
+
+        $rep=$this->getDoctrine()->getRepository(User::class);
+        $etudiant=$repository->findByRole('ROLE_STUDENT');
+       $jsonContent=$normalizer->normalize($etudiant, 'json', ['groups'=>'post:read']);
+       return new Response(json_encode($jsonContent));
+        }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/updateStudentJSON/{id}",name="updateStudentJSON")
+     */
+    public function updateStudentJSON(UserRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $student = $repository->find($id);
+        $student->setUsername($request->get('username'));
+        $student->setPrenom($request->get('prenom'));
+        $student->setEmail($request->get('email'));
+        $student->setPassword($request->get('password'));
+        $student->setIsBanned($request->get('isBanned'));
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($student,'json',['groups'=>'post:read']);
+        return new Response("modified successfully".json_encode($jsonContent));
+    }
+
+
+    /**
+     * @param UserRepository $repository
+     * @return \Symfony\component\httpFoundation\Response
+     * @Route("/deleteStudent/{id}",name="deleteStudent")
+     */
+    function deleteStudentJson(NormalizerInterface $normalizer,$id): Response
+    {
+        $em=$this->getDoctrine()->getManager();
+        $user=$em->getRepository(User::class)->find($id);
+        $em->remove($user);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($user,'json',['groups'=>'post:read']);
+        return new Response("Student deleted successfully".json_encode($jsonContent));
+    }
 
 }

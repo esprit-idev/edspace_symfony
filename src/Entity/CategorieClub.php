@@ -20,13 +20,15 @@ class CategorieClub
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+	 * @Groups("post:read")
+
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champ 'Catégorie' ne peut pas etre vide.")
-    @Groups("post:read")
+     * @Groups("post:read")
      */
     private $categorieNom;
 

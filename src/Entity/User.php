@@ -5,12 +5,11 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Serializer\Annotation\Groups;
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -32,17 +31,20 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="merci de saisir le nom")
+     * @Groups("post:read")
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="merci de saisir le prenom ")
+     * @Groups("post:read")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
+
      * @Groups("post:read")
      */
     private $email;
@@ -50,64 +52,77 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity="Club")
      * @ORM\JoinColumn(nullable=true)
+     * @Groups("post:read")
      */
     protected $club;
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="merci de saisir le mot de passe ")
      * @Assert\Length(min="8",minMessage="votre mot de passe doit faire minimum 8 caractéres")
+     * @Groups("post:read")
      */
     private $password;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups("post:read")
      *
      */
     private $isBanned;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups("post:read")
      */
     private $banDuration;
 
     /**
      * @ORM\Column(type="json",nullable=true)
+
+     * @Groups("post:read")
      */
     private $roles =[];
 
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @Groups("post:read")
      */
     private $classe;
 
     /**
      * @ORM\OneToMany(targetEntity=Thread::class, mappedBy="user", orphanRemoval=true)
+     * @Groups("post:read")
      */
     private $threads;
 
     /**
      * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="user", orphanRemoval=true)
+     * @Groups("post:read")
      */
     private $documentsFavoris;
     /**
      * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="user", orphanRemoval=true)
+     * @Groups("post:read")
      */
     private $reponses;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="user")
+     * @Groups("post:read")
      */
     private $message;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("post:read")
      */
     private $reset_token;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\File(mimeTypes={"image/png", "image/jpeg"})
+     * @Groups("post:read")
      */
     private $image;
 
@@ -291,6 +306,8 @@ class User implements UserInterface
             $this->documentsFavoris[] = $documentsFavori;
             $documentsFavori->setUser($this);
         }
+        return $this;
+
     }
     public function __toString(){
         return $this->getEmail();

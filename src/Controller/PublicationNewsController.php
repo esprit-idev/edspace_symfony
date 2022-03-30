@@ -4,9 +4,7 @@ namespace App\Controller;
 
 use App\Entity\PublicationNews;
 use App\Form\PublicationNewsFormType;
-use App\Repository\CategorieEmploiRepository;
 use App\Repository\CategorieNewsRepository;
-use App\Repository\EmploiRepository;
 use App\Repository\PublicationNewsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -141,7 +139,7 @@ class PublicationNewsController extends AbstractController
             'publications' => $publication,
             'publication_title' => $publication->getTitle(),
             'publication_content' => $publication->getContent(),
-            'publication_image' => $publication->getImage()->getName(),
+            'publication_image' => $publication->getImage(),
             'likes' => $likes,
             'id' => $id,
             'comments' =>$comments,
@@ -167,14 +165,18 @@ class PublicationNewsController extends AbstractController
         $form = $this->createForm(PublicationNewsFormType::class,$publication);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $path = $this->getParameter('kernel.project_dir').'/public/images';
-            $image = $publication->getImage();
-            /** @var UploadedFile $file */
-            $file = $image->getFile();
-            if(!empty($file)){
-                $imageName = md5(uniqid()).'.'.$file->guessExtension();
-                $file->move($path, $imageName);
-                $image->setName($imageName);
+            $path = $this->getParameter('NewsImages_directory');
+
+            $image = $form->get('image')->getData();
+            //$file = $image->getFile();
+            if($image !=null){
+                $imageName = md5(uniqid()).'.'.$image->guessExtension();
+                try{
+                    $image->move($path, $imageName);
+                } catch(FileException $ex){
+                    return $this->render('/403.html.twig');
+                }
+                $publication->setImage($imageName);
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($publication);
@@ -206,17 +208,16 @@ class PublicationNewsController extends AbstractController
         $form = $this->createForm(PublicationNewsFormType::class,$publication);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $path = $this->getParameter('kernel.project_dir').'/public/images';
-            $image = $publication->getImage();
-            $file = $image->getFile();
-            if($file != null){
-                $imageName = md5(uniqid()).'.'.$file->guessExtension();
+            $path = $this->getParameter('NewsImages_directory');
+            $image = $form->get('image')->getData();
+            if($image != null){
+                $imageName = md5(uniqid()).'.'.$image->guessExtension();
                 try{
-                    $file->move($path, $imageName);
+                    $image->move($path, $imageName);
                 }catch(FileException $e){
                     return $e;
                 }
-                $image->setName($imageName);
+                $publication->setImage($imageName);
             } 
             
             $entityManager->flush();
@@ -487,16 +488,18 @@ class PublicationNewsController extends AbstractController
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/addpubsJSON/new",name="addpubs")
      */
-    public function addPubJSON(NormalizerInterface $normalizer, Request $request):Response
+    public function addPubJSON(NormalizerInterface $normalizer, Request $request, CategorieNewsRepository $repCat):Response
     {
         $em = $this->getDoctrine()->getManager();
         $publication = new PublicationNews();
         $publication->setTitle($request->get('title'));
         $publication->setOwner($request->get('owner'));
         $publication->setDate(new DateTime());
-        // $publication->setImage($request->get('image'));
+        $category=$repCat->findOneBy(array('categoryName'=>$request->get('categoryName')));
+        $publication->setCategoryName($category);
+        $publication->setImage($request->get('image'));
         $publication->setContent($request->get('content'));
-        // $publication->setCategoryName($request->get('categoryName'));
+        
 
         $em->persist($publication);
         $em->flush();
@@ -510,7 +513,7 @@ class PublicationNewsController extends AbstractController
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/updatepubsJSON/{id}",name="updatepubs")
      */
-    public function updatePubJSON(PublicationNewsRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    public function updatePubJSON(PublicationNewsRepository $repository, NormalizerInterface $normalizer,CategorieNewsRepository $repCat, Request $request,$id):Response
     {
         $em = $this->getDoctrine()->getManager();
         $publication = $repository->find($id);
@@ -518,6 +521,9 @@ class PublicationNewsController extends AbstractController
         $publication->setOwner($request->get('owner'));
         $publication->setDate(new DateTime());
         $publication->setContent($request->get('content'));
+        $category=$repCat->findOneBy(array('categoryName'=>$request->get('categoryName')));
+        $publication->setCategoryName($category);
+        $publication->setImage($request->get("image"));
         $em->flush();
 
         $jsonContent = $normalizer->normalize($publication,'json',['groups'=>'post:read']);

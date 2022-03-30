@@ -9,6 +9,7 @@ use App\Form\RobotType;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -18,6 +19,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Gregwar\CaptchaBundle\Type\CaptchaType;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use function PHPUnit\Framework\equalTo;
+
 
 class SecurityController extends AbstractController
 {
@@ -40,28 +45,29 @@ public function registration(Request $request , ObjectManager $manager, UserPass
         'form'=>$form->createView()
     ]);
 }
-/**
- * @Route("/login", name="app_login")
- */
+    /**
+     * @Route("/login", name="app_login")
+     */
 // public function login(){
 // return $this->render('security/login.html.twig');
 
 // }
-public function login(Request $request ,AuthenticationUtils $authenticationUtils,Session $session): Response
-{
-    // get the login error if there is one
-    $error = $authenticationUtils->getLastAuthenticationError();
-    // last username entered by the user
-    $lastUsername = $authenticationUtils->getLastUsername();
-    $return = ['last_Username' => $lastUsername, 'error' => $error];
-    if ($session->has('message')) {
-        $message = $session->get('message');
-        $session->remove('message');
-        $return['message'] = $message;
+    public function login(Request $request ,AuthenticationUtils $authenticationUtils,Session $session): Response
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+        $return = ['last_Username' => $lastUsername, 'error' => $error];
+        if ($session->has('message')) {
+            $message = $session->get('message');
+            $session->remove('message');
+            $return['message'] = $message;
+        }
+
+        return $this->render('security/login2.html.twig' ,$return);
     }
 
-    return $this->render('security/login2.html.twig' ,$return);
-}
 /**
  * @Route ("/Activation/{token}",name="activation")
  */
@@ -161,4 +167,54 @@ public function resetPassword($token ,Request $request,UserPasswordEncoderInterf
     }
 
 }
+
+    /**
+     * @Route("/loginJson" , name="app_login")
+     */
+    public function loginJson(Request $request , NormalizerInterface $normalizer){
+$email = $request->query->get("email");
+$password =$request->query->get("password");
+$em=$this->getDoctrine()->getManager();
+$user=$em->getRepository(User::class)->findOneBy(['email'=>$email]) ;
+  if($user){
+      if(password_verify($password,$user->getPassword())){
+         // if($user->getRoles()==["ROLE_ADMIN"]){
+
+         // $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'students']);
+          //return new Response("Admin".json_encode($jsonContent));
+      //}
+          //else{
+              $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'post:read']);
+              return new Response(json_encode($jsonContent));
+         // }
+
+      }
+      else {
+          return new Response("password not found");
+      }
+  }
+else {
+    return new Response("user not found");
+}
+    }
+
+/**
+ * @Route("/getPasswordByEmail", name="app_password")
+ */
+
+public function getPasswordByEmail(Request $request , NormalizerInterface $normalizer){
+    $email=$request->get('email');
+    $user=$this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(['email'=>$email]);
+    if($user){
+        $password=$user->getPassword();
+        //$serializer = new Serialiser([new ObjectNormalizer()]);
+        //$formatted =$serializer->normalize($password);
+        //return new JsonResponse($formatted);
+        $jsonContent=$normalizer->normalize($password, 'json', ['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+
+    }
+    return new Response("user not found");
+}
+
 }

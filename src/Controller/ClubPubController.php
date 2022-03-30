@@ -467,5 +467,28 @@ class ClubPubController extends Controller
             echo json_encode($named_array);
         }
     }
+	
+	
+    /**
+     * @Route("/acceptRefusePubJSON/{idpub}/{value}", name="acceptRefusePubJSON")
+     */
+    public function acceptRefusePubJSON(NormalizerInterface $normalizer,ClubPubRepository $clubPubRepository,  $idpub, $value, Request $request)
+    {
+        $pub = $clubPubRepository->find($idpub);
+        if (strtoupper($value) == 'ACCEPT') {
+
+            $pub->setIsPosted(1);
+            $this->getDoctrine()->getManager()->flush();
+
+        } else {
+
+            $pub->setIsPosted(-1);
+            $this->getDoctrine()->getManager()->flush();
+
+        }
+
+$jsonContent = $normalizer->normalize($pub, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
 }
 
