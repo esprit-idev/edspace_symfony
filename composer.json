@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
         "dompdf/dompdf": "^1.2",
+        "endroid/qr-code-bundle": "^4.0",
         "friendsofsymfony/ckeditor-bundle": "^2.4",
         "gregwar/captcha-bundle": "2.1",
         "knplabs/knp-paginator-bundle": "^5.8",
@@ -67,7 +68,8 @@
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
-            "symfony/flex": true
+            "symfony/flex": true,
+            "endroid/installer": true
         },
         "preferred-install": {
             "*": "dist"

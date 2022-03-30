@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 
 class ClubPubController extends Controller
@@ -36,7 +37,7 @@ class ClubPubController extends Controller
     /**
      * @Route("/displayPubClub/{id}", name="displayPubClub")
      */
-    public function displayPubClub(PaginatorInterface $paginator,$id, Request $request, ClubPubRepository $repPub, ClubRepository $repClub): Response
+    public function displayPubClub(PaginatorInterface $paginator, $id, Request $request, ClubPubRepository $repPub, ClubRepository $repClub): Response
     {
 
         $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
@@ -49,26 +50,25 @@ class ClubPubController extends Controller
 
         /* messaging */
 
-        if($hasAccessResponsable || $hasAccessStudent){
-            $em=$this->getDoctrine()->getManager();
-            $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
-            $em1=$this->getDoctrine()->getRepository(User::class);
-            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+        if ($hasAccessResponsable || $hasAccessStudent) {
+            $em = $this->getDoctrine()->getManager();
+            $user1 = $em->getRepository(User::class)->find($this->getUser()->getId());
+            $em1 = $this->getDoctrine()->getRepository(User::class);
+            $memebers = $em1->findBy(['classe' => $user1->getClasse()->getId()]);
+            $classe = $em->getRepository(Classe::class)->find($user1->getClasse()->getId());
 
-            $message=$this
+            $message = $this
                 ->getDoctrine()
                 ->getManager()
                 ->getRepository(Message::class)
-                ->findBy(array(),array('postDate' => 'ASC'));
-            $mymsg=[];
-            $othersmsg=[];
-            foreach($message as $i){
-                if($i->getUser()->getId()==$user1->getId()){
-                    $mymsg[]=$i;
-                }
-                else{
-                    $othersmsg[]=$i;
+                ->findBy(array(), array('postDate' => 'ASC'));
+            $mymsg = [];
+            $othersmsg = [];
+            foreach ($message as $i) {
+                if ($i->getUser()->getId() == $user1->getId()) {
+                    $mymsg[] = $i;
+                } else {
+                    $othersmsg[] = $i;
                 }
             }
         }
@@ -120,7 +120,7 @@ class ClubPubController extends Controller
 
         /*paginatorr*/
 
-        $pubdisplay=$paginator->paginate($allPub,$request->query->getInt('page',1),2);
+        $pubdisplay = $paginator->paginate($allPub, $request->query->getInt('page', 1), 2);
 
         /*add pub */
 
@@ -162,7 +162,7 @@ class ClubPubController extends Controller
         }
 
         /* redirection*/
-        if ($hasAccessResponsable && $this->getUser()->getClub()==$club) {
+        if ($hasAccessResponsable && $this->getUser()->getClub() == $club) {
             return $this->render('club_pub/displayPubClub(responsable).html.twig', [
                 'pubs' => $pubdisplay,
                 'formPub' => $form->createView(),
@@ -173,15 +173,14 @@ class ClubPubController extends Controller
                 'formPic' => $formPic->createView(),
                 'pub_hanging' => $pub_hanging,
                 'pub_refused' => $pub_refused,
-                'memebers'=> $memebers,
+                'memebers' => $memebers,
                 'user' => $user1,
-                'classe'=> $classe,
-                'message'=> $message,
+                'classe' => $classe,
+                'message' => $message,
                 'mymsg' => $mymsg,
-                'others' =>$othersmsg
+                'others' => $othersmsg
             ]);
-        }
-        elseif ($hasAccessStudent) {
+        } elseif ($hasAccessStudent) {
             return $this->render('club_pub/displayPubClub(etudiant).html.twig', [
                 'pubs' => $pubdisplay,
                 'formPub' => $form->createView(),
@@ -189,20 +188,18 @@ class ClubPubController extends Controller
                 'idclub' => $id,
                 'descClub' => $desc,
                 'clubPic' => $clubPic,
-                'memebers'=> $memebers,
+                'memebers' => $memebers,
                 'user' => $user1,
-                'classe'=> $classe,
-                'message'=> $message,
+                'classe' => $classe,
+                'message' => $message,
                 'mymsg' => $mymsg,
-                'others' =>$othersmsg
+                'others' => $othersmsg
             ]);
-        }
-        elseif ($hasAccessAgent) {
-        return $this->render('club_pub/displayPubClub(admin).html.twig', [
-            'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic, 'pub_hanging' => $pub_hanging, 'pub_refused' => $pub_refused
-        ]);}
-
-        else return $this->render('/403.html.twig');
+        } elseif ($hasAccessAgent) {
+            return $this->render('club_pub/displayPubClub(admin).html.twig', [
+                'pubs' => $pubdisplay, 'formPub' => $form->createView(), 'nom' => $club, 'idclub' => $id, 'descClub' => $desc, 'clubPic' => $clubPic, 'pub_hanging' => $pub_hanging, 'pub_refused' => $pub_refused
+            ]);
+        } else return $this->render('/403.html.twig');
 
     }
 
@@ -228,46 +225,45 @@ class ClubPubController extends Controller
     {
 
         $hasAccessResponsable = $this->isGranted('ROLE_RESPONSABLEC');
-        if($hasAccessResponsable){
-        $pub = $rep->find($idpub);
-        $formPubEdit = $this->createForm(ClubPubType::class, $pub);
-        $formPubEdit->add('Valider', SubmitType::class);
-        $formPubEdit->handleRequest($request);
-        if ($formPubEdit->isSubmitted() && $formPubEdit->isValid()) {
-            $img = $formPubEdit->get('ClubImg')->getData();
-            if ($img != null) {
-                $fileName = md5(uniqid()) . '.' . $img->guessExtension();
-                try {
-                    $img->move($this->getParameter('PubPictures_directory'),
-                        $fileName
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+        if ($hasAccessResponsable) {
+            $pub = $rep->find($idpub);
+            $formPubEdit = $this->createForm(ClubPubType::class, $pub);
+            $formPubEdit->add('Valider', SubmitType::class);
+            $formPubEdit->handleRequest($request);
+            if ($formPubEdit->isSubmitted() && $formPubEdit->isValid()) {
+                $img = $formPubEdit->get('ClubImg')->getData();
+                if ($img != null) {
+                    $fileName = md5(uniqid()) . '.' . $img->guessExtension();
+                    try {
+                        $img->move($this->getParameter('PubPictures_directory'),
+                            $fileName
+                        );
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+                    $pub->setClubImg($fileName);
                 }
-                $pub->setClubImg($fileName);
-            }
-            $fileUploaded = $formPubEdit->get('pubFile')->getData();
-            if ($fileUploaded != null) {
-                $nameFileUploaded = md5(uniqid()) . '.' . $fileUploaded->guessExtension();
-                $fileUploaded->move($this->getParameter('PubFiles_directory'), $nameFileUploaded);
-                $pub->setPubFileName($fileUploaded->getClientOriginalName());
-                $pub->setPubFile(file_get_contents($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
-                $pub->setTypeFichier(mime_content_type($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
-            }
-            $pub->setIsPosted(0);
+                $fileUploaded = $formPubEdit->get('pubFile')->getData();
+                if ($fileUploaded != null) {
+                    $nameFileUploaded = md5(uniqid()) . '.' . $fileUploaded->guessExtension();
+                    $fileUploaded->move($this->getParameter('PubFiles_directory'), $nameFileUploaded);
+                    $pub->setPubFileName($fileUploaded->getClientOriginalName());
+                    $pub->setPubFile(file_get_contents($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
+                    $pub->setTypeFichier(mime_content_type($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
+                }
+                $pub->setIsPosted(0);
 
-            $em = $this->getDoctrine()->getManager();
-            // $pub->setPubDate(new \DateTime());
-            $em->flush();
-            return $this->redirectToRoute('displayPubClub', ['id' => $idclub]);
+                $em = $this->getDoctrine()->getManager();
+                // $pub->setPubDate(new \DateTime());
+                $em->flush();
+                return $this->redirectToRoute('displayPubClub', ['id' => $idclub]);
 
-        }
-        $currentImg = $pub->getClubImg();
-        return $this->render('club_pub/updatePubClub(respo).html.twig', [
-            'formPubEdit' => $formPubEdit->createView(), 'currentImg' => $currentImg
-        ]);
-        }
-        else return $this->render('/403.html.twig');
+            }
+            $currentImg = $pub->getClubImg();
+            return $this->render('club_pub/updatePubClub(respo).html.twig', [
+                'formPubEdit' => $formPubEdit->createView(), 'currentImg' => $currentImg
+            ]);
+        } else return $this->render('/403.html.twig');
 
     }
 
@@ -327,18 +323,172 @@ class ClubPubController extends Controller
     }
 
 
-
     /**
      * @Route("/displayPub/{idpub}/{idclub}", name="displayPub")
      */
-    public function displayPub($idpub,$idclub,ClubPubRepository $clubPubRepository,UserRepository $Repository,ClubRepository $ClubRepository)
+    public function displayPub($idpub, $idclub, ClubPubRepository $clubPubRepository, UserRepository $Repository, ClubRepository $ClubRepository)
     {
-        $pub=$clubPubRepository->find($idpub);
-        $clubPic=$ClubRepository->find($idclub)->getClubPic();
+        $pub = $clubPubRepository->find($idpub);
+        $clubPic = $ClubRepository->find($idclub)->getClubPic();
 
-        return $this->render('club_pub/displayOnePub(etudiant).html.twig', [ 'c'=>$pub,'clubPic'=>$clubPic,'idclub'=>$idclub
+        return $this->render('club_pub/displayOnePub(etudiant).html.twig', ['c' => $pub, 'clubPic' => $clubPic, 'idclub' => $idclub
         ]);
     }
 
 
+    /**
+     * @Route("/allClubPubs/{clubId}", name="allPubs")
+     */
+    public function allPubs(NormalizerInterface $normalizer, ClubPubRepository $rep, $clubId): Response
+    {
+        $pubs = $rep->find_all_approved_pub_ordredByDate($clubId);
+        $jsonContent = $normalizer->normalize($pubs, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @Route("/addClubPubJson/{clubId}", name="addClubPubJson")
+     */
+    public function addClubPubsJson(Request $request, NormalizerInterface $normalizer, ClubRepository $rep, $clubId): Response
+    {
+        $club = $rep->find($clubId);
+        $em = $this->getDoctrine()->getManager();
+        $pub = new ClubPub();
+        $pub->setPubDescription($request->get('pubDesc'));
+        $pub->setClubImg($request->get('pubImg'));
+        $pub->setPubDate(new \DateTime());
+        $pub->setClub($club);
+        $pub->setIsPosted(0);
+        $em->persist($pub);
+        $em->flush();
+        $jsonContent = $normalizer->normalize($pub, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @Route("/deleteClubPubsJson/{pubId}", name="addClubPubsJson")
+     */
+    public function deleteStudentJSON(Request $request, NormalizerInterface $normalizer, $pubId): Response
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $pub = $em->getRepository(ClubPub::class)->find($pubId);
+        $em->remove($pub);
+        $em->flush();
+        $jsonContent = $normalizer->normalize($pub, 'json', ['groups' => 'post:read']);
+        return new Response("Student deleted successfully" . json_encode($jsonContent));
+    }
+
+    /**
+     * @Route("/editPubClubJson/{pubId}", name="editPubClubJson")
+     */
+    public function editPubClubJson($pubId, Request $request, NormalizerInterface $normalizer, ClubPubRepository $rep): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $pub = $rep->find($pubId);
+        $pub->setPubDescription($request->get('pubDesc'));
+        $pub->setPubDate(new \DateTime());
+        $pub->setIsPosted(0);
+        $em->flush();
+        $jsonContent = $normalizer->normalize($pub, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+
+    /**
+     * @Route("/uploadPubPic", name="uploadPubPic")
+     */
+    public function uploadPubPic(ClubPubRepository $rep)
+    {
+        $allowedExts = array("jpeg", "jpg", "png");
+        $temp = explode(".", $_FILES["file"]["name"]);
+        $extension = end($temp);
+
+        if ((($_FILES["file"]["type"] == "image/jpeg") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/png")) && ($_FILES["file"]["size"] < 5000000) && in_array($extension, $allowedExts)) {
+            if ($_FILES["file"]["error"] > 0) {
+                $named_array = array("Response" => array(array("Status" => "error")));
+                echo json_encode($named_array);
+            } else {
+                move_uploaded_file($_FILES["file"]["tmp_name"], "PubPictures/" . $_FILES["file"]["name"]);
+                $named_array = array("Response" => array(array("Status" => "ok")));
+                echo json_encode($named_array);
+            }
+        } else {
+            $named_array = array("Response" => array(array("Status" => "invalid")));
+            echo json_encode($named_array);
+        }
+    }
+	
+	/**
+     * @Route("/EnAttenteClubPubs/{clubId}", name="EnAttenteClubPubs")
+     */
+    public function EnAttenteClubPubs(NormalizerInterface $normalizer, ClubPubRepository $rep, $clubId): Response
+    {
+        $pubs = $rep->find_all_hanging_pub_ordredByDate($clubId);
+        $jsonContent = $normalizer->normalize($pubs, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+	/**
+     * @Route("/RefusedClubPubs/{clubId}", name="RefusedClubPubs")
+     */
+    public function RefusedClubPubs(NormalizerInterface $normalizer, ClubPubRepository $rep, $clubId): Response
+    {
+        $pubs = $rep->find_all_refused_pub_ordredByDate($clubId);
+        $jsonContent = $normalizer->normalize($pubs, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+	
+	 /**
+     * @Route("/uploadClubPic/{clubId}", name="uploadClubPic")
+     */
+    public function uploadClubPic(ClubRepository $rep,$clubId)
+    {
+        $allowedExts = array("jpeg", "jpg", "png");
+        $temp = explode(".", $_FILES["file"]["name"]);
+        $extension = end($temp);
+
+        if ((($_FILES["file"]["type"] == "image/jpeg") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/png")) && ($_FILES["file"]["size"] < 5000000) && in_array($extension, $allowedExts)) {
+            if ($_FILES["file"]["error"] > 0) {
+                $named_array = array("Response" => array(array("Status" => "error")));
+                echo json_encode($named_array);
+            } else {
+                move_uploaded_file($_FILES["file"]["tmp_name"], "ClubPictures/" . $_FILES["file"]["name"]);
+                $named_array = array("Response" => array(array("Status" => "ok")));
+				
+				$club=$rep->find($clubId);
+				$club->setClubPic($_FILES["file"]["name"]);
+				$em = $this->getDoctrine()->getManager();
+        
+        $em->flush();
+                echo json_encode($named_array);
+            }
+        } else {
+            $named_array = array("Response" => array(array("Status" => "invalid")));
+            echo json_encode($named_array);
+        }
+    }
+	
+	
+    /**
+     * @Route("/acceptRefusePubJSON/{idpub}/{value}", name="acceptRefusePubJSON")
+     */
+    public function acceptRefusePubJSON(NormalizerInterface $normalizer,ClubPubRepository $clubPubRepository,  $idpub, $value, Request $request)
+    {
+        $pub = $clubPubRepository->find($idpub);
+        if (strtoupper($value) == 'ACCEPT') {
+
+            $pub->setIsPosted(1);
+            $this->getDoctrine()->getManager()->flush();
+
+        } else {
+
+            $pub->setIsPosted(-1);
+            $this->getDoctrine()->getManager()->flush();
+
+        }
+
+$jsonContent = $normalizer->normalize($pub, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
 }
+

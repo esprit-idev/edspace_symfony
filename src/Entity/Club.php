@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\ClubRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,11 +20,13 @@ class Club
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("post:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("post:read")
      * @Assert\NotBlank(message="Le champ 'Nom du club' ne peut pas etre vide.")
      */
     private $clubNom;
@@ -31,6 +35,7 @@ class Club
 
     /**
      * @ORM\Column(type="string", length=1000, nullable=true)
+     * @Groups("post:read")
      * @Assert\NotBlank(message="Le champ 'Description' ne peut pas etre vide.")
      */
     private $clubDescription;
@@ -38,6 +43,7 @@ class Club
     /**
      * @ORM\ManyToOne(targetEntity=CategorieClub::class,inversedBy="clubs")
      * @ORM\JoinColumn(nullable=true)
+     * @Groups("post:read")
      * @Assert\NotBlank(message="Le champ 'Catégorie' ne peut pas etre vide.")
      */
     private $clubCategorie;
@@ -51,12 +57,14 @@ class Club
      * @ORM\OneToOne(targetEntity=User::class,inversedBy="club")
      * @ORM\JoinColumn(nullable=false,onDelete="CASCADE")
      * @Assert\NotBlank(message="Le champ 'Email du responsable' ne peut pas etre vide.")
+     * @Groups("post:read")
      */
     private $clubResponsable;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Ajoutez une image s'il vous plaît.")
+        * @Groups("post:read")
      */
     private $ClubPic;
 

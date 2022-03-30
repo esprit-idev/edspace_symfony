@@ -15,8 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class NiveauController extends AbstractController
 {
@@ -204,7 +204,6 @@ class NiveauController extends AbstractController
 
         $niveau=new Niveau();
        $niveau->setId($request->get('newid'));
-       $em->merge($niveau);
        $em->flush();
             return $this->json('Done');
     
@@ -216,4 +215,16 @@ class NiveauController extends AbstractController
 
 
 
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/allNiveaux",name="allNiveaux")
+     */
+    function AllNiveauxJSON(NormalizerInterface $normalizer, NiveauRepository $repository): Response
+    {
+        $niveaux=$repository->findAll();
+        $jsonContent=$normalizer->normalize($niveaux,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
 }

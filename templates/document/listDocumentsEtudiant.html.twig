@@ -63,7 +63,7 @@
                         <small>{{ d.dateinsert }}</small>
                         {% set exist = false %}
                         {% for f in favoris %}
-                            {% if f.document==d %}
+                            {% if f.document==d and app.user.id==f.user.id %}
                                 {% set exist = true %}
                             {% endif %}
                         {% endfor %}

@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Reponse;
+use App\Entity\User;
+use App\Entity\Message;
+use App\Entity\Classe;
 use App\Form\ReponseType;
 use App\Repository\ReponseRepository;
 use App\Repository\ThreadRepository;
@@ -38,7 +41,7 @@ class ReponseController extends AbstractController
         $form = $this->createForm(ReponseType::class, $reponse);
         $form->handleRequest($request);
         $thread_id = $request->get('id');
-        $user =$userRepository->find($session->get('id'));
+        $user =$userRepository->find($this->getUser()->getId());
         
         $thread = $threadRepository->find($thread_id);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,6 +59,7 @@ class ReponseController extends AbstractController
             'id' => $thread_id,
             'reponse' => $reponse,
             'form' => $form->createView(),
+
         ]);
     }
 
