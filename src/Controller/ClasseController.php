@@ -15,6 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use mysqli;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ClasseController extends AbstractController
 {
@@ -59,7 +63,7 @@ class ClasseController extends AbstractController
        /**
      * @Route("/listc", name="listc")
      */
-    public function listeClasse(): Response
+    public function addett(): Response
     {
 
         
@@ -314,6 +318,205 @@ return new Response('success');
     return $this->render('/403.html.twig');   
 
 }
+
+
+
+    /**
+     * @return Response
+     * @Route ("/classejson",name="classejson")
+     */
+    function JsonClasse(Request $request,ClasseRepository $repository,NormalizerInterface $normalizer){
+       
+        $datafinal = [];
+        $data = $this->getDoctrine()->getRepository(Classe::class)->findAll();
+        foreach ($data as $x) {
+            $datafinal[]    = [
+                'id' => $x->getId(),
+                'niveau_id' => $x->getNiveau()->getId(),
+                'classe' => $x->getClasse()
+            ];
+        }
+        
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($datafinal);
+
+        return new JsonResponse($formatted);
+}
+
+
+ /**
+     * @return Response
+     * @Route ("/suppclasse",name="suppclasse")
+     * @param Request $request
+     */
+    function Suppc(Request $request, ClasseRepository $repository){
+
+        $em2=$this->getDoctrine()->getManager();
+        $classe=$em2->getRepository(Classe::class)->find($request->query->get("id"));
+        $em=$this->getDoctrine()->getManager();
+        $user=$em->getRepository(User::class)->findBy(['classe'=> $request->query->get("id")]);
+        foreach($user as $i){
+        $i->setClasse(NULL);
+        $em->flush($i);
+        }
+        
+        $em2->remove($classe);
+        $em2->flush();
+
+        return $this->json('Done');
+
+    }
+
+
+
+
+
+    /**
+     * @return Response
+     * @Route ("/addclasse",name="addclasse")
+     * @param Request $request
+     */
+    function addc(Request $request, ClasseRepository $repository){
+
+        $em1=$this->getDoctrine()->getRepository(Niveau::class);
+
+        $em2=$this->getDoctrine()->getManager();
+        $classe=new Classe();
+        $classe->setClasse($request->get('classe'))
+        ->setNiveau($em1->findOneBy(['id'=>$request->get('niveau')]));
+        $em2->persist($classe);
+        $em2->flush();
+
+        return $this->json('Done');
+
+    }
+
+
+        /**
+     * @return Response
+     * @Route ("/updateclasse",name="updateclasse")
+     * @param Request $request
+     */
+    function updatec(Request $request, ClasseRepository $repository){
+        $em=$this->getDoctrine()->getManager();
+  $em1=$this->getDoctrine()->getRepository(Niveau::class);
+  $em2=$this->getDoctrine()->getRepository(Classe::class);
+  $classe=$em2->find($request->get('id'));
+  $classe->setClasse($request->get('classe'));
+  $classe->setNiveau($em1->findOneBy(['id'=>$request->get('niveau')]));
+  $em->persist($classe);
+  $em->flush();
+  return $this->json('Done');
+
+    }
+
+     /**
+     * @return Response
+     * @Route ("/listeclasse",name="listeclasse")
+     * @param Request $request
+     */
+    function listec(Request $request, ClasseRepository $repository){
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $data=$em1->findBy(['classe'=> $request->get('id')]);
+
+
+        $datafinal = [];
+        
+        foreach ($data as $x) {
+            $datafinal[]    = [
+                'id' => $x->getId(),
+                'username' => $x->getUsername(),
+                'prenom' => $x->getPrenom(),
+                'email'=>$x->getEmail(),
+            ];
+        }
+        
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($datafinal);
+
+        return new JsonResponse($formatted);
+
+  return $this->json('Done');
+
+    }
+
+
+
+
+    /**
+     * @return Response
+     * @Route ("/addtoclasse",name="addtoclasse")
+     * @param Request $request
+     */
+    function addsjson(Request $request, ClasseRepository $repository){
+
+
+        $em1=$this->getDoctrine()->getRepository(User::class);
+        $etudiants=$em1->findAll();
+        $test=0;
+        foreach($etudiants as $i){
+            if($i->GetEmail()==$request->get('email')){
+                $test=1;
+                
+            }
+        }
+        if($test==1){
+            
+       $em2=$this->getDoctrine()->getRepository(Classe::class);
+        $em=$this->getDoctrine()->getManager();
+        $user=$em->getRepository(User::class)->findOneBy(['email' => $request->get('email')]);
+        $user->setClasse($em2->findOneBy(['id'=> $request->get('id')]));
+            $em->flush($user);
+
+            $datafinal[]    = [
+                'done' => "true",
+            ];
+
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $formatted = $serializer->normalize($datafinal);
+            return new JsonResponse($formatted);
+            
+        }
+        $datafinal[]    = [
+            'done' => "false",
+        ];
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($datafinal);
+        return new JsonResponse($formatted);
+
+    }
+
+
+
+
+     /**
+     * @return Response
+     * @Route ("/etudiantsuppclasse",name="adsclasse")
+     * @param Request $request
+     */
+    function suppetjson(Request $request, ClasseRepository $repository){
+
+
+        
+            
+       $em2=$this->getDoctrine()->getRepository(Classe::class);
+        $em=$this->getDoctrine()->getManager();
+        $user=$em->getRepository(User::class)->findOneBy(['email' => $request->get('email')]);
+        $user->setClasse(NULL);
+            $em->flush($user);
+            
+
+            
+            return $this->json('Done');
+            
+
+    }
+
+
+
+
+
 
 
 

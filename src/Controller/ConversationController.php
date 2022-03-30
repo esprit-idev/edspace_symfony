@@ -8,13 +8,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use App\Entity\Message;
+use App\Repository\MessageRepository;
 use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mercure\Discovery;
-
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 class ConversationController extends AbstractController
 {
@@ -71,7 +75,7 @@ class ConversationController extends AbstractController
     public function start3(): Response
     {
         $em=$this->getDoctrine()->getManager();
-        $user1=$em->getRepository(User::class)->find(4);
+        $user1=$em->getRepository(User::class)->find(1);
         $em1=$this->getDoctrine()->getRepository(User::class);
         $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
         $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
@@ -112,10 +116,10 @@ class ConversationController extends AbstractController
         /**
      * @Route("/conversation2", name="conversation2")
      */
-    public function start2(): Response
+    public function start2(NormalizerInterface $normalizer,Request $request): Response
     {
         $em=$this->getDoctrine()->getManager();
-        $user1=$em->getRepository(User::class)->find(2);
+        $user1=$em->getRepository(User::class)->find($request->query->get("uid"));
         $em1=$this->getDoctrine()->getRepository(User::class);
         $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
         $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
@@ -135,18 +139,78 @@ class ConversationController extends AbstractController
                 $othersmsg[]=$i;
             }
         }
-        
 
-        return $this->render('conversation/conversation.html.twig', [
-            'memebers'=> $memebers,
-            'user' => $user1,
-            'classe'=> $classe,
-            'message'=> $message,
-            'mymsg' => $mymsg,
-            'others' =>$othersmsg
-        ]);
+       
+        $jsonContent=$normalizer->normalize($message,'json',['groups'=>'message']);
+        return new Response(json_encode($jsonContent));
+   
     }
 
+
+
+
+
+
+
+/**
+     * @return Response
+     * @Route ("/m",name="m")
+     * @param Request $request
+     */
+    public function viewmobile(Request $request,NormalizerInterface $normalizer)
+    {
+        $cid=$request->query->get("cid");
+        $datafinal = [];
+        $data = $this->getDoctrine()->getRepository(Message::class)->findBy(
+            ['classe' => $cid],
+            ['postDate' => 'ASC']
+        );
+        foreach ($data as $x) {
+            $datafinal[]    = [
+                'id' => $x->getId(),
+                'content' => $x->getContent(),
+                'classe' => $x->getClasse()->getId(),
+                'user' => $x->getUser()->getId(),
+                'date' => $x->getPostdate()->format('Y-m-d'),
+            ];
+        }
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($datafinal);
+
+        return new JsonResponse($formatted);
+    }
+
+
+
+
+
+           /**
+     * @Route("/addconversation", name="addconversation")
+     */
+    public function addconversation(Request $request,NormalizerInterface $normalizer)
+    {
+        $message= new Message();
+        $date=new \DateTime('now');
+        $content=$request->query->get("content");
+        $uid=$request->query->get("uid");
+        dump($date);
+        dump($uid);
+        dump($content);
+        //$cid=$request->query->get("cid");
+        $em=$this->getDoctrine()->getManager();
+        $user=$em->getRepository(User::class)->find($uid);
+        $em2=$this->getDoctrine()->getManager();
+        $classe=$em2->getRepository(Classe::class)->find($user->getClasse()->getId());
+        $message->setContent($content);
+        $message->setUser($user);
+        $message->setClasse($classe);
+        $message->setPostDate($date);   
+        $em->persist($message);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($message,'json',['groups'=>'message']);
+        return new Response(json_encode($jsonContent));
+   
+    }
 
 
 
