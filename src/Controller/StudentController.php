@@ -193,7 +193,7 @@ class StudentController extends Controller
 
         $rep=$this->getDoctrine()->getRepository(User::class);
         $etudiant=$repository->findByRole('ROLE_STUDENT');
-       $jsonContent=$normalizer->normalize($etudiant, 'json', ['groups'=>'students']);
+       $jsonContent=$normalizer->normalize($etudiant, 'json', ['groups'=>'post:read']);
        return new Response(json_encode($jsonContent));
         }
 

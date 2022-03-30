@@ -184,7 +184,7 @@ $user=$em->getRepository(User::class)->findOneBy(['email'=>$email]) ;
           //return new Response("Admin".json_encode($jsonContent));
       //}
           //else{
-              $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'students']);
+              $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'post:read']);
               return new Response(json_encode($jsonContent));
          // }
 
@@ -210,7 +210,7 @@ public function getPasswordByEmail(Request $request , NormalizerInterface $norma
         //$serializer = new Serialiser([new ObjectNormalizer()]);
         //$formatted =$serializer->normalize($password);
         //return new JsonResponse($formatted);
-        $jsonContent=$normalizer->normalize($password, 'json', ['groups'=>'students']);
+        $jsonContent=$normalizer->normalize($password, 'json', ['groups'=>'post:read']);
         return new Response(json_encode($jsonContent));
 
     }

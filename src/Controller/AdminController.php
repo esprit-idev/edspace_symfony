@@ -124,7 +124,7 @@ class AdminController extends AbstractController
 
         $rep=$this->getDoctrine()->getRepository(User::class);
         $admin=$repository->findByRole('ROLE_ADMIN');
-        $jsonContent=$normalizer->normalize($admin, 'json', ['groups'=>'students']);
+        $jsonContent=$normalizer->normalize($admin, 'json', ['groups'=>'post:read']);
         return new Response(json_encode($jsonContent));
     }
 
