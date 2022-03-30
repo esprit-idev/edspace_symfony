@@ -53,7 +53,6 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity="Club")
      * @ORM\JoinColumn(nullable=true)
-    
      */
     protected $club;
     /**
@@ -99,7 +98,6 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="user", orphanRemoval=true)
-    
      */
     private $documentsFavoris;
     /**
