@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Niveau;
 use App\Entity\Classe;
 use App\Entity\User;
@@ -9,9 +10,12 @@ use App\Form\NiveauType;
 use App\Repository\NiveauRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class NiveauController extends AbstractController
@@ -108,6 +112,108 @@ class NiveauController extends AbstractController
     }
     return $this->redirectToRoute('Classe');
 }
+
+
+
+
+
+    /**
+     * @return Response
+     * @Route ("/niveaujson",name="niveaujson")
+     */
+    function JsonNiveau(Request $request,NiveauRepository $repository,NormalizerInterface $normalizer){
+       
+        $datafinal = [];
+        $data = $this->getDoctrine()->getRepository(Niveau::class)->findAll();
+        foreach ($data as $x) {
+            $datafinal[]    = [
+                'id' => $x->getId()
+            ];
+        }
+        
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize($datafinal);
+
+        return new JsonResponse($formatted);
+}
+
+
+
+
+    /**
+     * @return Response
+     * @Route ("/suppn",name="suppn")
+     * @param Request $request
+     */
+    function SuppN(Request $request, NiveauRepository $repository){
+
+     
+        $em2=$this->getDoctrine()->getManager();
+        $classes=$em2->getRepository(Classe::class)->findBy(['niveau'=> $request->query->get("id")]);
+        foreach($classes as $i){
+            $em3=$this->getDoctrine()->getManager();
+        $users=$em3->getRepository(User::class)->findBy(['classe'=> $i->getId()]);
+        foreach($users as $user){
+            $user->setClasse(NULL);
+            $em3->flush($user);
+            }
+
+
+        }
+        
+
+        $niveau=$repository->find($request->query->get("id"));
+        $em=$this->getDoctrine()->getManager();
+        $em->remove($niveau);
+        $em->flush();
+        return $this->json('Done');
+       
+    }
+
+
+
+        /**
+     * @return Response
+     * @Route ("/addniveau",name="addniveau")
+     * @param Request $request
+     */
+    function addN(Request $request, NiveauRepository $repository){
+
+     
+        $niveau= new Niveau();
+       
+      
+            $niveau->setId($request->query->get("id"));
+            $em=$this->getDoctrine()->getManager();
+            $em->persist($niveau);
+            $em->flush();
+            return $this->json('Done');
+    
+       
+    }
+
+    
+        /**
+     * @return Response
+     * @Route ("/updateniveau",name="updateniveau")
+     * @param Request $request
+     */
+    function updateN(Request $request, NiveauRepository $repository){
+        $em=$this->getDoctrine()->getManager();
+        $em1=$this->getDoctrine()->getRepository(Niveau::class);
+
+        $niveau=new Niveau();
+       $niveau->setId($request->get('newid'));
+       $em->flush();
+            return $this->json('Done');
+    
+       
+    }
+
+
+
+
+
 
     /**
      * @param NormalizerInterface $normalizer

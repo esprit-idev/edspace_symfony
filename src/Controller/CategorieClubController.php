@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class CategorieClubController extends AbstractController
 {
 
@@ -92,5 +92,64 @@ class CategorieClubController extends AbstractController
         ]);
         }
         else return new Response(null, 403);
+    }
+		
+	  /**
+     * @Route("/AllClubCategories", name="AllClubCategories")
+     */
+    public function AllClubCategories(NormalizerInterface $normalizer, CategorieClubRepository $rep): Response
+    {
+        $categories = $rep->findAll();
+        $jsonContent = $normalizer->normalize($categories, 'json', ['groups' => 'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+	
+	 /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addClubCategorie/new",name="addClubCategorie")
+     */
+    public function addClubCategorie(NormalizerInterface $normalizer, Request $request,CategorieClubRepository $rep):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $categ = new CategorieClub();
+        $categ->setCategorieNom($request->get('categorieNom'));
+        $em->persist($categ);
+        $em->flush();
+        $jsonContent = $normalizer->normalize($categ,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+	
+	    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/deleteClubCategorie/{id}",name="deleteClubCategorie")
+     */
+    function deleteClubCategorie(NormalizerInterface $normalizer,$id): Response
+    {
+        $em=$this->getDoctrine()->getManager();
+        $categ=$em->getRepository(CategorieClub::class)->find($id);
+        $em->remove($categ);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($categ,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+	
+	    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/updateClubCategorie/{id}",name="updateClubCategorie")
+     */
+    public function updateClubCategorie(CategorieClubRepository $rep, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $categ = $rep->find($id);
+        $categ->setCategorieNom($request->get('categorieNom'));
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($categ,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
     }
 }

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Knp\Component\Pager\PaginatorInterfaces ;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AdminController extends AbstractController
 {
@@ -43,10 +44,9 @@ class AdminController extends AbstractController
             // Items per page
            // 3
       //  );
-        if ($hasAccessAgent){
-        return $this->render ('Admin/Affiche.html.twig',['admin'=>$admin]);}
-        elseif ($hasAccessStudent) {
-            return $this->render('/403.html.twig');}
+      
+        return $this->render ('Admin/Affiche.html.twig',['admin'=>$admin]);
+   
     }
     /**
      * @Route("/suppA/{id}", name="deleteA")
@@ -113,4 +113,78 @@ class AdminController extends AbstractController
             'form'=>$form->createView()
         ]);
     }
+
+    /**
+     * @param UserRepository $repository
+     * @return \Symfony\component\httpFoundation\Response
+     * @Route("/afficheAdmin",name="afficheAdmin")
+     */
+    public function AfficheAdminJson(UserRepository $repository  , Request $request , NormalizerInterface $normalizer){
+
+        $rep=$this->getDoctrine()->getRepository(User::class);
+        $admin=$repository->findByRole('ROLE_ADMIN');
+        $jsonContent=$normalizer->normalize($admin, 'json', ['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addAdminJSON",name="addAdminJSON")
+     */
+    public function addAdminJSON(NormalizerInterface $normalizer, Request $request):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $admin = new User();
+        $admin->setUsername($request->get('username'));
+        $admin->setPrenom($request->get('prenom'));
+        $admin->setEmail($request->get('email'));
+        $admin->setPassword($request->get('password'));
+       // $admin->setIsBanned($request->get('isBanned'));
+        $admin->setRoles(["ROLE_ADMIN"]);
+
+        $em->persist($admin);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($admin,'json',['groups'=>'post:read']);
+        return new Response("added successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/updateAdminJSON{id}",name="updateAdminJSON")
+     */
+    public function updateAdminJSON(UserRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $admin = $repository->find($id);
+        $admin->setUsername($request->get('username'));
+        $admin->setPrenom($request->get('prenom'));
+        $admin->setEmail($request->get('email'));
+        $admin->setPassword($request->get('password'));
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($admin,'json',['groups'=>'post:read']);
+        return new Response("modified successfully".json_encode($jsonContent));
+    }
+
+
+
+    /**
+     * @param UserRepository $repository
+     * @return \Symfony\component\httpFoundation\Response
+     * @Route("/deleteAdminJson/{id}",name="deleteStudent")
+     */
+    function deleteAdminJson(NormalizerInterface $normalizer,$id): Response
+    {
+        $em=$this->getDoctrine()->getManager();
+        $user=$em->getRepository(User::class)->find($id);
+        $em->remove($user);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($user,'json',['groups'=>'post:read']);
+        return new Response("Admin deleted successfully".json_encode($jsonContent));
+    }
+
 }

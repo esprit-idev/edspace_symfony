@@ -132,7 +132,7 @@ class EmploiController extends AbstractController
             'emploi_date' =>$emploi->getDate(),
             'emploi_content' => $emploi->getContent(),
             'emploi_category' => $emploi->getCategoryName(),
-            'emploi_image' => $emploi->getImage()->getName(),
+            'emploi_image' => $emploi->getImage(),
             'user' => $user1,
             'classe'=> $classe,
             'message'=> $message,
@@ -155,14 +155,13 @@ class EmploiController extends AbstractController
         $form = $this->createForm(EmploiFormType::class,$emploi);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $path = $this->getParameter('kernel.project_dir').'/public/images';
-            $image = $emploi->getImage();
-            /** @var UploadedFile $file */
-            $file = $image->getFile();
-            if(!empty($file)){
-                $imageName = md5(uniqid()).'.'.$file->guessExtension();
-                $file->move($path, $imageName);
-                $image->setName($imageName);
+            $path = $this->getParameter('NewsImages_directory');
+            $image = $form->get('image')->getData();
+
+            if($image !=null){
+                $imageName = md5(uniqid()).'.'.$image->guessExtension();
+                $image->move($path, $imageName);
+                $emploi->setImage($imageName);
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($emploi);
@@ -193,18 +192,14 @@ class EmploiController extends AbstractController
         $form = $this->createForm(EmploiFormType::class, $emploi);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $path = $this->getParameter('kernel.project_dir').'/public/images';
+            $path = $this->getParameter('NewsImages_directory');
             $image = $emploi->getImage();
-            $file = $image->getFile();
-            if($file != null){
-                $imageName = md5(uniqid()).'.'.$file->guessExtension();
-                try{
-                    $file->move($path, $imageName);
-                }catch(FileException $e){
-                    return $e;
-                }
-                $image->setName($imageName);
-            } 
+            $image = $form->get('image')->getData();
+            if($image !=null){
+                $imageName = md5(uniqid()).'.'.$image->guessExtension();
+                $image->move($path, $imageName);
+                $emploi->setImage($imageName);
+            }
             $entityManager->flush();
             return $this->redirectToRoute('allemploi');
         }
@@ -335,21 +330,23 @@ class EmploiController extends AbstractController
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/addemploiJSON/new",name="addEmploiJSON")
      */
-    public function addEmploiJSON(NormalizerInterface $normalizer, Request $request):Response
+    public function addEmploiJSON(NormalizerInterface $normalizer, Request $request, CategorieEmploiRepository $catRepo):Response
     {
         $em = $this->getDoctrine()->getManager();
         $emploi = new Emploi();
         $emploi->setTitle($request->get('title'));
-        $emploi->setContent($request->get('content'));
+        $emploi->setContent($request->get('content'))->rep;
         $emploi->setDate(new DateTime());
+        $category=$catRepo->findOneBy(array('categoryName'=>$request->get('categoryName')));
+        $emploi->setCategoryName($category);
         $emploi->setImage($request->get('image'));
-        $emploi->setCategoryName($request->get('categoryName'));
+
 
         $em->persist($emploi);
         $em->flush();
 
         $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>'post:read']);
-        return new Response(json_encode($jsonContent));
+        return new Response(json_encode($jsonContent, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT|JSON_UNESCAPED_LINE_TERMINATORS));
     }
 
      /**
@@ -357,13 +354,16 @@ class EmploiController extends AbstractController
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/updateemploiJSON/{id}",name="updateEmploiJSON")
      */
-    public function updateEmploiJSON(EmploiRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    public function updateEmploiJSON(EmploiRepository $repository, NormalizerInterface $normalizer,CategorieEmploiRepository $catRepo, Request $request,$id):Response
     {
         $em = $this->getDoctrine()->getManager();
         $emploi = $repository->find($id);
         $emploi->setTitle($request->get('title'));
         $emploi->setContent($request->get('content'));
         $emploi->setDate(new DateTime());
+        $category=$catRepo->findOneBy(array('categoryName'=>$request->get('categoryName')));
+        $emploi->setCategoryName($category);
+        $emploi->setImage($request->get("image"));
         $em->flush();
 
         $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>['emplois','categoriesEmploi']]);

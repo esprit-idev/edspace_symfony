@@ -6,7 +6,10 @@ use App\Repository\ClubPubRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 use function PHPUnit\Framework\isEmpty;
+
 
 
 /**
@@ -18,29 +21,35 @@ class ClubPub
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("post:read")
+
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime",nullable=true)
+     * @Groups("post:read")
+
      */
     private $pubDate;
 
     /**
      * @ORM\Column(type="string", length=1000, nullable=false)
      * @Assert\NotBlank(message="Le champ 'Description' ne peut pas etre vide.")
+     * @Groups("post:read")
+
      */
     private $pubDescription;
 
     /**
      * @ORM\Column(type="blob",nullable=true)
-
      */
     private $pubFile;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     */
+     * @Groups("post:read")
+	 */
     private $pubFileName;
     /**
      * @ORM\Column(type="string", length=255,nullable=true)
@@ -51,16 +60,21 @@ class ClubPub
     /**
      * @ORM\ManyToOne(targetEntity=Club::class, inversedBy="clubPubs")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("post:read")
+
      */
     private $club;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("post:read")
      */
     private $ClubImg;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("post:read")
+
      */
     private $isPosted;
 
