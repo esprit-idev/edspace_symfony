@@ -1018,6 +1018,26 @@ class DocumentController extends AbstractController
 
     /**
      * @param NormalizerInterface $normalizer
+     * @param UserRepository $userRepository
+     * @param Request $request
+     * @param DocumentRepository $documentRepository
+     * @Route ("/addPin/new",name="addPin")
+     */
+    function PinDocJSON(NormalizerInterface $normalizer,UserRepository $userRepository,Request $request,DocumentRepository $documentRepository){
+        $user=$userRepository->find($request->get('userId'));
+        $document=$documentRepository->find($request->get('docId'));
+        $docFavoris=new DocumentFavoris();
+        $docFavoris->setDocument($document);
+        $docFavoris->setUser($user);
+        $em=$this->getDoctrine()->getManager();
+        $em->persist($docFavoris);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($docFavoris,'json',['groups'=>'post:read']);
+        return new Response("Document pinned successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface

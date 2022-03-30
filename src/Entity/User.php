@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
@@ -52,7 +53,6 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity="Club")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups("post:read")
      */
     protected $club;
     /**
@@ -98,7 +98,6 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="user", orphanRemoval=true)
-     * @Groups("post:read")
      */
     private $documentsFavoris;
     /**
