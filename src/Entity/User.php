@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -23,87 +24,103 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("students")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="merci de saisir le nom")
+     * @Groups("students")
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="merci de saisir le prenom ")
+     * @Groups("students")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("students")
      */
     private $email;
 
     /**
      * @ORM\OneToOne(targetEntity="Club")
      * @ORM\JoinColumn(nullable=true)
+     * @Groups("students")
      */
     protected $club;
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="merci de saisir le mot de passe ")
      * @Assert\Length(min="8",minMessage="votre mot de passe doit faire minimum 8 caractéres")
+     * @Groups("students")
      */
     private $password;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups("students")
      *
      */
     private $isBanned;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups("students")
      */
     private $banDuration;
 
     /**
      * @ORM\Column(type="json",nullable=true)
+     * @Groups("students")
      */
     private $roles =[];
 
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @Groups("students")
      */
     private $classe;
 
     /**
      * @ORM\OneToMany(targetEntity=Thread::class, mappedBy="user", orphanRemoval=true)
+     * @Groups("students")
      */
     private $threads;
 
     /**
      * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="user", orphanRemoval=true)
+     * @Groups("students")
      */
     private $documentsFavoris;
     /**
      * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="user", orphanRemoval=true)
+     * @Groups("students")
      */
     private $reponses;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="user")
+     * @Groups("students")
      */
     private $message;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("students")
      */
     private $reset_token;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\File(mimeTypes={"image/png", "image/jpeg"})
+     * @Groups("students")
      */
     private $image;
 

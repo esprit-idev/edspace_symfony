@@ -9,6 +9,7 @@ use App\Entity\Classe ;
 use App\Entity\Message ;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -182,4 +183,36 @@ class ProfilController extends AbstractController
         return md5(uniqid());
     }
 
+    /**
+     * @Route("/editProfileJson" , name="app_gestion_profile")
+     */
+public function editUser(Request $request , UserPasswordEncoderInterface $encoder){
+    $id=$request->get("id");
+    $username =$request->query->get("username");
+    $password=$request->query->get("password");
+    $em=$this->getDoctrine()->getManager();
+    $user=$em->getRepository(User::class)->find($id);
+    if($request->files->get("photo")!=null){
+    $file = $request->files->get("image");
+    $fileName=$file->getClientOriginalName();
+    $file->move($fileName);
+    $user->setImage($fileName);
+    }
+    $user->setUsername($username);
+    $user->setPassword(
+        $encoder->encodePassword(
+               $user,
+            $password
+        )
+    );
+       //$user->setIsVerified(true);
+    try {
+        $em=$this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        return new JsonResponse("success", 200); //200 yaani http result ta3 server ok
+    }catch(\Exception $ex){
+        return new Response("failed".$ex->getMessage());
+    }
+}
 }
