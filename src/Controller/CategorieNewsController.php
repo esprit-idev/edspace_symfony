@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class CategorieNewsController extends AbstractController
 {
@@ -137,5 +138,80 @@ class CategorieNewsController extends AbstractController
         return $this->render('categorie_news/back/allCategories.html.twig', 
             array('categories' => $categories,)
         );
+    }
+
+    //Json methods
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route("/allcategoriesnewsJSON", name="allCategoriesNewsJSON")
+     */
+    public function allPubsJSON(CategorieNewsRepository $repository, NormalizerInterface $normalizer): Response
+    {
+        $categories = $repository->findAll();
+        $jsonContent = $normalizer->normalize($categories,'json',['groups'=>['categories','pubs']]);
+        return new Response(json_encode($jsonContent));
+    }
+     /**
+     * @param NormalizerInterface $normalizer
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/oneemploijson/{id}",name="onecatNewsJSON")
+     */
+    public function displayOneEmploiJSON($id,CategorieNewsRepository $repository, NormalizerInterface $normalizer): Response
+    {
+        $emploi = $repository->find($id);
+        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>'categories']);
+        return new Response(json_encode($jsonContent));
+    }
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addcategorynewsJSON/new",name="addcatNewsJSON")
+     */
+    public function addEmploiJSON(NormalizerInterface $normalizer, Request $request):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $category = new CategorieNews();
+        $category->setCategoryName($request->get('categoryName'));
+        $em->persist($category);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($category,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/updatecatNewsJSON/{id}",name="updatecatNewsJSON")
+     */
+    public function updateEmploiJSON(CategorieNewsRepository $repository, NormalizerInterface $normalizer,Request $request,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cat = $repository->find($id);
+        $cat->setCategoryName($request->get('categoryName'));
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($cat,'json',['groups'=>'post:read']);
+        return new Response("modified successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/deletecatNewsJSON/{id}",name="deletecatNewsJSON")
+     */
+    public function deleteEmploiJSON(CategorieNewsRepository $repository, NormalizerInterface $normalizer,$id):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cat = $repository->find($id);
+        $em->remove($cat);
+        $em->flush();
+
+        $jsonContent = $normalizer->normalize($cat,'json',['groups'=>'post:read']);
+        return new Response("deleted successfully".json_encode($jsonContent));
     }
 }

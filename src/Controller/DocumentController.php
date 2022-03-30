@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Document;
 use App\Entity\DocumentFavoris;
 use App\Entity\Matiere;
+use App\Entity\Niveau;
 use App\Form\DocShareType;
 use App\Form\DocumentType;
 use App\Form\WebPdfType;
@@ -210,8 +211,9 @@ class DocumentController extends AbstractController
                 //$document->setNiveau($niveau);
                 $document->setNom($nomFic);
                 $document->setDateInsert(date("d/m/y"));
-                $document->setProprietaire($prop); //get username //to-change
+                $document->setProprietaire($prop);
                 $document->setFichier(file_get_contents($this->getParameter('document_dir') . '/' . $nomFic));
+                $document->setBase64(base64_encode(file_get_contents($this->getParameter('document_dir') . '/' . $nomFic)));
                 $document->setType(mime_content_type($this->getParameter('document_dir') . '/' . $nomFic));
                 $document->setSignalements(0);
                 $document->setUrl(null);
@@ -272,13 +274,14 @@ class DocumentController extends AbstractController
             $form->add("Ajouter", SubmitType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $nomFic = $document->getNom() . '.pdf';
+                $nomFic = $document->getNom();
                 $document->setNom($nomFic);
                 $document->setDateInsert(date("d/m/y"));
-                $document->setProprietaire($prop); //get username //to-change
-                $document->setType("application/pdf");
+                $document->setProprietaire($prop);
+                $document->setType("url");
                 $document->setSignalements(0);
                 $document->setFichier(null);
+                $document->setBase64(null);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($document);
                 $em->flush();
@@ -629,6 +632,7 @@ class DocumentController extends AbstractController
      */
     function AfficheMesFavoris(UserRepository $userRepository,DocumentFavorisRepository $documentFavorisRepository){
         $hasAccessStudent= $this->isGranted('ROLE_STUDENT');
+        $userId=$this->getUser()->getId();
         if($hasAccessStudent) {
             $em=$this->getDoctrine()->getManager();
             $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
@@ -651,7 +655,7 @@ class DocumentController extends AbstractController
                     $othersmsg[]=$i;
                 }
             }
-        $user=$userRepository->find(2); //to-change
+        $user=$userRepository->find($userId);
         $docsInFav=$documentFavorisRepository->findBy(array('user'=>$user));
         return $this->render("document/mesFavoris.html.twig", ['docsInFav' => $docsInFav,
             'memebers'=> $memebers,
@@ -752,9 +756,10 @@ class DocumentController extends AbstractController
      */
     function PinDocument(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
         $hasAccessStudent= $this->isGranted('ROLE_STUDENT');
+        $userId=$this->getUser()->getId();
         if($hasAccessStudent) {
         $document=$documentRepository->find($id);
-        $user=$userRepository->find(2); //to-change
+        $user=$userRepository->find($userId);
         $docFavoris=new DocumentFavoris();
         $docFavoris->setDocument($document);
         $docFavoris->setUser($user);
@@ -799,7 +804,7 @@ class DocumentController extends AbstractController
     function UnPinDocFromFav(FlashyNotifier $notifier,$id,DocumentRepository $documentRepository,UserRepository $userRepository,Request $request,DocumentFavorisRepository $documentFavorisRepository){
         $hasAccessStudent= $this->isGranted('ROLE_STUDENT');
         if($hasAccessStudent) {
-        $this->UnPinDoc($id,$documentRepository,$userRepository,$request,$documentFavorisRepository);
+        $this->UnPinDoc($id,$documentRepository,$userRepository,$documentFavorisRepository);
         $notifier->primary("Document supprimé des favoris!");
         return $this->redirectToRoute('mesFavoris');
         } else{
@@ -808,9 +813,10 @@ class DocumentController extends AbstractController
     }
 
     function UnPinDoc($id,DocumentRepository $documentRepository,UserRepository $userRepository,DocumentFavorisRepository $documentFavorisRepository){
-        $userid=$userRepository->find(2); //to-change
+        $userId=$this->getUser()->getId();
+        $user=$userRepository->find($userId);
         $document=$documentRepository->find($id);
-        $docInFav=$documentFavorisRepository->findOneBy(array('document'=>$document,'user'=>$userid));
+        $docInFav=$documentFavorisRepository->findOneBy(array('document'=>$document,'user'=>$user));
         $em=$this->getDoctrine()->getManager();
         $em->remove($docInFav);
         $em->flush();
@@ -933,22 +939,6 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param $id
-     * @param NormalizerInterface $normalizer
-     * @return Response
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/showDoc/{id}",name="showDoc")
-     */
-    function showDocJSON($id,NormalizerInterface $normalizer): Response
-    {
-        $em=$this->getDoctrine()->getManager();
-        $document=$em->getRepository(Document::class)->find($id);
-        $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
-        return new Response(json_encode($jsonContent));
-    }
-
-    /**
      * @param NormalizerInterface $normalizer
      * @param $id
      * @return Response
@@ -965,35 +955,140 @@ class DocumentController extends AbstractController
         return new Response("Document deleted successfully".json_encode($jsonContent));
     }
 
-    /*
     /**
-     * @Route ("/document/triDocuments/{role}",name="triDocuments")
-     */
-    /*
-    function TriDocument(DocumentRepository $documentRepository,MatiereRepository $matiereRepository,Request $request){
-        $matiere=$request->get('matiereKey');
-        $documents=$documentRepository->findBy(array('matiere' => $matiere));
-        $niveau=$request->get('niveauKey');
-        $matieres=$matiereRepository->findBy(array('niveau'=>$niveau));
-        //$documents=$documentRepository->TriByNiveauMatiere($matiere);
-        $user=$request->get('role');
-        if($user==0){
-            return $this->render("document/listDocumentsAgent.html.twig",['documents'=>$documents,'matieres'=>$matieres]);
-        } else{
-            return $this->render("document/listDocumentsEtudiant.html.twig",['documents'=>$documents,'matieres'=>$matieres]);
-        }
-    }*/
-
-    /*
-    /**
-     * @param NiveauRepository $niveauRepository
+     * @param NormalizerInterface $normalizer
      * @return Response
-     * @Route ("/document/choixNiveauAjout",name="choixNiveauAjout")
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/allPinnedDocs",name="allPinnedDocs")
      */
-    /*
-    function ChoixNiveauAjout(NiveauRepository $niveauRepository){
+    function AllPinnedDocsJSON(NormalizerInterface $normalizer, DocumentFavorisRepository $repository): Response
+    {
+        $documents=$repository->findAll();
+        $jsonContent=$normalizer->normalize($documents,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
 
-        $niveaux=$niveauRepository->findAll();
-        return $this->render("document/choixNiveauAjout.html.twig",['niveaux'=>$niveaux]);
-    } */
+    /**
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/addUrl/new",name="addUrl")
+     */
+    public function addUrlJSON(NormalizerInterface $normalizer, Request $request,NiveauRepository $niveauRepository,MatiereRepository $matiereRepository):Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $document = new Document();
+        $document->setNom($request->get('nom'));
+        $document->setDateInsert($request->get('date_insert'));
+        $document->setProprietaire($request->get('proprietaire'));
+
+        $niveau=$niveauRepository->find($request->get('niveau'));
+        $matiere=$matiereRepository->find($request->get('matiere'));
+
+        $matiere->setNiveau($niveau);
+        $document->setMatiere($matiere);
+        $document->setNiveau($niveau);
+        $document->setType("url");
+        $document->setSignalements(0);
+        $document->setUrl($request->get('url'));
+        $document->setBase64($request->get('base64'));
+        $em->persist($document);
+        $em->flush();
+        $jsonContent = $normalizer->normalize($document,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/deletePin/{docId}/{userId}",name="deletePin")
+     */
+    function UnpinDocJSON(NormalizerInterface $normalizer,$docId,$userId,UserRepository $userRepository,DocumentRepository $documentRepository,DocumentFavorisRepository $documentFavorisRepository): Response
+    {
+        $user=$userRepository->find($userId);
+        $document=$documentRepository->find($docId);
+        $docInFav=$documentFavorisRepository->findOneBy(array('document'=>$document,'user'=>$user));
+        $em=$this->getDoctrine()->getManager();
+        $em->remove($docInFav);
+        $em->flush();
+        $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
+        return new Response("Document unpinned successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/signalDoc/{id}",name="signalDoc")
+     */
+    function SignalDocJSON(NormalizerInterface $normalizer,$id,DocumentRepository $repository): Response
+    {
+        $document=$repository->find($id);
+        $repository->IncrementCountSignal($document);
+        $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
+        return new Response("Document reported successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/ignoreSignalDoc/{id}",name="ignoreSignalDoc")
+     */
+    function IgnoreSignalDocJSON(NormalizerInterface $normalizer,$id,DocumentRepository $repository): Response
+    {
+        $document=$repository->find($id);
+        $repository->DecrementCountSignal($document);
+        $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
+        return new Response("Document reported successfully".json_encode($jsonContent));
+    }
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @param $id
+     * @return Response
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @Route ("/shareDoc/{id}",name="shareDoc")
+     */
+    function ShareDocJSON(NormalizerInterface $normalizer,$id,DocumentRepository $repository,\Swift_Mailer $mailer,Request $request): Response
+    {
+        //get doc to send
+        $document=$repository->find($id);
+        //init vars
+        $userEmail=$request->get('userEmail');
+        $userName=$request->get('username');
+        $destEmail=$request->get('destEmail');
+        $body=$request->get('body');
+        $subject=$request->get('subject');
+        $docNom=$document->getNom();
+        if($document->getType()!="url"){
+            //if file
+            $message=(new \Swift_Message($subject))
+                ->setFrom($userEmail)
+                ->setTo($destEmail)
+                ->setBody($this->renderView(
+                    'document/emailBodyMobile.html.twig',
+                    ['textBody'=>$body,'cuEt'=>$userName]
+                ),'text/html'
+                )
+                ->attach(\Swift_Attachment::fromPath($this->getParameter('document_dir').'/'.$docNom)->setFilename($docNom));
+        } else{
+            //if url
+            $message=(new \Swift_Message($subject))
+                ->setFrom($userEmail)
+                ->setTo($destEmail)
+                ->setBody($this->renderView(
+                    'document/emailBodyMobile.html.twig',
+                    ['textBody'=>$body." ".$document->getUrl(),'cuEt'=>$userName]
+                ),'text/html'
+                );
+        }
+        $mailer->send($message);
+        $jsonContent=$normalizer->normalize($document,'json',['groups'=>'post:read']);
+        return new Response("Document sent successfully".json_encode($jsonContent));
+    }
+
 }

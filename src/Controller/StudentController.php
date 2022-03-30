@@ -47,7 +47,7 @@ class StudentController extends Controller
             // Define the page parameter
             $request->query->getInt('page', 1),
             // Items per page
-            3
+            4
         );
         if ($hasAccessAgent){
             return $this->render ('student/afficheBack.html.twig',['etudiant'=>$etudiant]);

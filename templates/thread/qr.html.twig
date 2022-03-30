@@ -1,0 +1,133 @@
+{% extends 'frontOffice.html.twig' %}
+
+{% block title %}
+    <title>Forum</title>
+{% endblock %}
+   {% block css %}
+
+       <!-- bootstrap core css -->
+       <link rel="stylesheet" type="text/css" href="{{ asset('frontOffice/css/bootstrap.css') }}" />
+       <!-- fonts style -->
+       <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
+       <!-- Custom styles for this template -->
+       <link href="{{ asset('frontOffice/css/style.css') }}" rel="stylesheet" />
+       <!-- responsive style -->
+       <link href="{{ asset('frontOffice/css/responsive.css') }}" rel="stylesheet" />
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/v4-shims.min.js" integrity="sha512-7qQljqOcfujtn+H4jLGbhDviLED/sMZ+gnJeExpfXKLQMzuOT0/3mGaqUgbqjAPrMsDMZ/6uVNqtXuallND7WQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   {% endblock %}
+{% block forum_item %}
+
+    <li class="nav-item active">
+        <a class="nav-link" href="/thread">Forum</a>
+    </li>
+{% endblock %}
+{% block slider %}
+    <div>
+        <h3><footer class="blockquote-footer text-right"> <cite title="Source Title">What are you seeking today ?</cite></footer></h3>
+    </div>
+    <section class=" slider_section position-relative">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Forum
+                                        </h1>
+                                        <small>
+                                            <footer class="footer text"> <cite title="Source Title">Your safe place to ask for anything you want with a vaste community</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Threads
+                                        </h1>
+                                        <small>
+                                            <footer class="footer text"> <cite title="Source Title">Ask in the thread section and wait for the response</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="detail-box">
+                                    <div>
+                                        <h1>
+                                            Comments
+                                        </h1>
+                                        <small>
+                                            <footer class="footer text"> <cite title="Source Title">If you think you can be of use to other people help solving problems</cite></footer>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+
+
+{% block custom %}
+<div class="example-wrapper">
+    <h1>Scan Your QR-Code</h1> <hr>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-6">
+            
+                <img src="{{ qrCode }}" alt="qr-code">
+            
+        </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+{% block special %}
+{% endblock %}
+{% block about %}
+{% endblock %}
+{% block course %}
+{% endblock %}
+{% block login %}
+{% endblock %}
+{% block event %}
+{% endblock %}
+{% block client %}
+{% endblock %}
+{% block contact %}
+{% endblock %}

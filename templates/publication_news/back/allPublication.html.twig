@@ -42,12 +42,12 @@
             {% for pub in publications %}
             <div class="p-4">
             <div class="card h-100" style="width: 18rem;">
-                {% if pub.image.name is defined and pub.image.name is not null %}
-                <img src="{{ asset('images/') ~ pub.image.name}}" class="card-img-top" style="width: 100%;
+                {% if pub.image is not null %}
+                <img src="{{ asset('images/') ~ pub.image}}" class="card-img-top" style="width: 100%;
                                                                                             height: 15vw;
                                                                                             object-fit: cover;">
                     {% else %}
-                     <img src="{{ asset('images/') ~ pub.image.name}}" alt="pas d image" class="card-img-top" style="width: 100%;
+                     <img src="#" alt="pas d image" class="card-img-top" style="width: 100%;
                                                                                             height: 15vw;
                                                                                             object-fit: cover;">                                                                            
                 {% endif %}

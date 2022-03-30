@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EmploiRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=EmploiRepository::class)
@@ -15,23 +16,27 @@ class Emploi
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("emplois")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="le titre est requi")
+     * @Groups("emplois")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="ajouter une discription")
+     * @Groups("emplois")
      */
     private $content;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups("emplois")
      */
     private $date;
 
@@ -39,12 +44,13 @@ class Emploi
      * @ORM\ManyToOne(targetEntity=CategorieEmploi::class, inversedBy="emplois")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @Assert\NotBlank(message="add category !")
+     * @Groups("emplois")
      */
     private $categoryName;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
-     * @Assert\NotBlank(message="Ajouter une Image")
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("emploiimg")
      */
     private $image;
 
@@ -100,16 +106,17 @@ class Emploi
 
         return $this;
     }
-    public function __toString() {
-        return $this->name;
+    public function __toString()
+    {
+        return (string) $this->getCategoryName();
     }
 
-    public function getImage(): ?Image
+    public function getImage()
     {
         return $this->image;
     }
 
-    public function setImage(?Image $image): self
+    public function setImage($image)
     {
         $this->image = $image;
 

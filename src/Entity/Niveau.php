@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=NiveauRepository::class)
@@ -28,6 +29,7 @@ class Niveau
      *     pattern="/^[0-9a-zA-Z]/",
      *     message="Veuillez saisir un niveau d'étude valide (ex:4SIM)"
      * )
+     * @Groups("post:read")
      */
     private $id;
 
