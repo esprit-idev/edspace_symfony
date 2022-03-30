@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReponseRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ReponseRepository::class)
@@ -15,22 +16,26 @@ class Reponse
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("post:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Groups("post:read")
      */
     private $reply;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("post:read")
      */
     private $replyDate;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("post:read")
      */
     private $display;
 

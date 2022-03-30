@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\ThreadType;
 use App\Entity\User;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use App\Entity\Message;
 use App\Entity\Classe;
 use App\Form\ThreadTypeType;
@@ -137,5 +138,45 @@ class ThreadTypeController extends AbstractController
             'others' =>$othersmsg,
         ]);
     }
-    
+    /**
+     * @Route("/getAll", name="getAllTT")
+     */
+    public function getAllReponses(NormalizerInterface $norm, ThreadTypeRepository $threadTypeRepository){
+        $reponses = $threadTypeRepository->findDisplay();
+        $jsonContent = $norm->normalize($reponses,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+    /**
+     * @Route("/addTopic/{question}", name="addTopic")
+     */
+    public function addTopic(EntityManagerInterface $entityManager,ThreadTypeRepository $threadTypeRepository,$question)
+    {
+        $topic = new ThreadType();
+        $topic->setContent($question);
+        $topic->setDisplay(false);
+        $entityManager->persist($topic);
+        $entityManager->flush();
+        return new Response("202");
+    }
+
+    /**
+     * @Route("/UpdateJSON/{id}/{content}", name="topic_updateJSON")
+     */
+    public function updateThread($id,$content,ThreadTypeRepository $threadTypeRepository, EntityManagerInterface $entityManager){
+        $topic = $threadTypeRepository->find($id);
+        $topic->setContent($content);
+        $entityManager->persist($topic);
+        $entityManager->flush();
+        return new Response("202");
+    }
+    /**
+     * @Route("/deleteJSON/{id}", name="topic_deleteJSON")
+     */
+    public function deleteJSON($id, ThreadTypeRepository $threadTypeRepository,EntityManagerInterface $entityManager){
+        $threadType = $threadTypeRepository->find($id);
+        $threadType->setDisplay(true);
+        $entityManager->persist($threadType);
+        $entityManager->flush();
+        return new Response("202");
+    }
 }
