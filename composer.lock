@@ -654,7 +654,15 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/doctrine/dbal/tree/3.3.4"
+=======
+<<<<<<< HEAD
+                "source": "https://github.com/doctrine/dbal/tree/3.3.4"
+=======
+                "source": "https://github.com/doctrine/dbal/tree/3.3.3"
+>>>>>>> 90e1d562a182a2fe6e94b340dcef13515048ebba
+>>>>>>> 0e1b86c8651153deee4c41b3761459c566ba9031
             },
             "funding": [
                 {
@@ -670,7 +678,15 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2022-03-20T18:37:29+00:00"
+=======
+<<<<<<< HEAD
+            "time": "2022-03-20T18:37:29+00:00"
+=======
+            "time": "2022-03-09T15:39:50+00:00"
+>>>>>>> 90e1d562a182a2fe6e94b340dcef13515048ebba
+>>>>>>> 0e1b86c8651153deee4c41b3761459c566ba9031
         },
         {
             "name": "doctrine/deprecations",
@@ -12748,5 +12764,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }

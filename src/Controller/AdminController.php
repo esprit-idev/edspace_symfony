@@ -44,10 +44,9 @@ class AdminController extends AbstractController
             // Items per page
            // 3
       //  );
-        if ($hasAccessAgent){
-        return $this->render ('Admin/Affiche.html.twig',['admin'=>$admin]);}
-        elseif ($hasAccessStudent) {
-            return $this->render('/403.html.twig');}
+      
+        return $this->render ('Admin/Affiche.html.twig',['admin'=>$admin]);
+   
     }
     /**
      * @Route("/suppA/{id}", name="deleteA")
