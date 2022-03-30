@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use App\Entity\Reponse;
 use App\Entity\User;
 use App\Entity\Message;
@@ -10,6 +11,7 @@ use App\Form\ReponseType;
 use App\Repository\ReponseRepository;
 use App\Repository\ThreadRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,5 +107,39 @@ class ReponseController extends AbstractController
         }
 
         return $this->redirectToRoute('threads_admin', [], Response::HTTP_SEE_OTHER);
+    }
+     /**
+     * @Route("/AllReponses/{id}", name="getReponses")
+     */
+    public function getAllReponses(NormalizerInterface $norm, ReponseRepository $reponseRepository,$id){
+        $reponses = $reponseRepository->findByThreadDisplay($id);
+        $jsonContent = $norm->normalize($reponses,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+    /**
+     * @Route("/addReponse/{reply}/{id}", name="addReponse")
+     */
+    public function addReponse(ThreadRepository $threadRepository,ReponseRepository $reponseRepository,$id,$reply,EntityManagerInterface $entityManager,UserRepository $userRepository){
+        $reponse = new Reponse();
+        $reponse->setReply($reply);
+        $reponse->setDisplay(0);
+        $reponse->setUser($userRepository->find(1));
+        $reponse->setReplyDate(new \DateTime());
+        $reponse->setThread($threadRepository->find($id));
+
+        $entityManager->persist($reponse);
+        $entityManager->flush();
+        return new Response("202");
+    }
+    /**
+     * @Route("/deleteReponse/{id}", name="delReponse")
+     */
+    public function deleteJSON($id,ReponseRepository $reponseRepository,EntityManagerInterface $entityManager){
+        $reponse = $reponseRepository->find($id);
+        $reponse->setDisplay(true);
+        $entityManager->persist($reponse);
+        $entityManager->flush();
+
+        return new Response("202");
     }
 }

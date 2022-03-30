@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use App\Form\SearchType;
 use App\Entity\User;
 use App\Entity\Message;
@@ -14,6 +15,7 @@ use App\Repository\ThreadRepository;
 use App\Repository\ThreadTypeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Normalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -448,7 +450,7 @@ class ThreadController extends AbstractController
         ]);
     }
 
-        /**
+    /**
      * @Route("/scan/{question}",name="thread_scan")
      */
     public function scanQR(Request $request, QrCodeService $qrcodeService,$question): Response
@@ -464,5 +466,72 @@ class ThreadController extends AbstractController
         ]);
     }
     
+    /**
+     * @Route("/AllThreads", name="AllThreads")
+     */
+    public function AllStudents( NormalizerInterface $norm, ThreadRepository $threadRepository){
+        $threads = $threadRepository->findDisplay();
+        $jsonContent = $norm->normalize($threads,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+        
+    }
+    /**
+     * @Route("/getThread/{id}", name="findThread")
+     */
+    public function getThreadJSON( NormalizerInterface $norm, ThreadRepository $threadRepository,$id){
+        $threads = $threadRepository->find($id);
+        $jsonContent = $norm->normalize($threads,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+        
+    }
 
+    /**
+     * @Route("/addThread/{question}/{id}/{string}", name="jsonthreadaddd")
+     */
+    public function Thread($id,EntityManagerInterface $entityManager,UserRepository $userRepository,ThreadTypeRepository $threadTypeRepository,$question,$string)
+    {
+        $type = $threadTypeRepository->findDisplay();
+        for($i = 0 ; $i<sizeof($type); $i++)
+        {
+            if($type[$i] == $string){
+                $threadType = $type[$i];
+            }
+        }
+            $thread = new Thread();
+            $thread->setQuestion($question);
+            $thread->setNbLikes(0);
+            $thread->setPostDate(new \DateTime());
+            $thread->setDisplay(0);
+            $thread->setVerified(0);
+            $thread->setThreadType($threadType);
+            $user = $userRepository->find($id);
+            $thread->setUser($user);
+            $entityManager->persist($thread);
+            $entityManager->flush();
+            return new Response("202");
+    }
+    /**
+     * @Route("/displayJSON/{id}", name="thread_displayJSON")
+     */
+    public function deleteJSON(ThreadRepository $threadRepository, EntityManagerInterface $entityManager,$id): Response
+    {
+
+            $thread = $threadRepository->find($id);
+            $thread->setDisplay(1);
+            $entityManager->persist($thread);
+            $entityManager->flush();
+        
+
+        return new Response("202");
+    }
+    /**
+     * @Route("/UpdateJSON/{id}/{content}", name="thread_updateJSON")
+     */
+    public function updateThread($id,$content,ThreadRepository $threadRepository, EntityManagerInterface $entityManager){
+        $thread = $threadRepository->find($id);
+        $thread->setQuestion($content);
+        $entityManager->persist($thread);
+        $entityManager->flush();
+        return new Response("202");
+    }
 }

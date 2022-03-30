@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ThreadRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,12 +17,14 @@ class Thread
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("post:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Groups("post:read")
      */
     private $question;
 
@@ -32,33 +35,39 @@ class Thread
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("post:read")
      */
     private $postDate;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("post:read")
      */
     private $display;
 
     /**
      * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="thread", orphanRemoval=true)
+     * @Groups("post:read")
      */
     private $reponses;
 
     /**
      * @ORM\ManyToOne(targetEntity=ThreadType::class, inversedBy="Thread")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("post:read")
      */
     private $threadType;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="threads")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("post:read")
      */
     private $user;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("post:read")
      */
     private $Verified;
 

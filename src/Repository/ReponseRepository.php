@@ -60,4 +60,17 @@ class ReponseRepository extends ServiceEntityRepository
         // returns an array of Product objects
         return $query->getResult();
     }
+    public function findByThreadDisplay($id){
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT t
+            FROM App\Entity\Reponse t
+            WHERE t.display = 0 and t.thread = :i
+            '
+        )->setParameter('i', $id);
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
 }
