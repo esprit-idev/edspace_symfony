@@ -199,7 +199,7 @@ else {
     }
 
 /**
- * @Route("/getPasswordByEmail", name="password")
+ * @Route("/getPasswordByEmail", name="app_password")
  */
 
 public function getPasswordByEmail(Request $request , NormalizerInterface $normalizer){
