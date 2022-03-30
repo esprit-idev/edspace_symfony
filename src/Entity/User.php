@@ -53,7 +53,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity="Club")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups("post:read")
+    
      */
     protected $club;
     /**
@@ -87,30 +87,30 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     * @Groups("post:read")
+    
      */
     private $classe;
 
     /**
      * @ORM\OneToMany(targetEntity=Thread::class, mappedBy="user", orphanRemoval=true)
-     * @Groups("post:read")
+    
      */
     private $threads;
 
     /**
      * @ORM\OneToMany(targetEntity=DocumentFavoris::class, mappedBy="user", orphanRemoval=true)
-     * @Groups("post:read")
+    
      */
     private $documentsFavoris;
     /**
      * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="user", orphanRemoval=true)
-     * @Groups("post:read")
+    
      */
     private $reponses;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="user")
-     * @Groups("post:read")
+    
      */
     private $message;
 
