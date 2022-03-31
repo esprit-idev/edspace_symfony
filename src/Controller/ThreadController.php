@@ -534,4 +534,16 @@ class ThreadController extends AbstractController
         $entityManager->flush();
         return new Response("202");
     }
+    /**
+     * @Route("/verifyJSON/{id}",name="thread_verifyJSON")
+     */
+    public function verifyJSON(ThreadRepository $threadRepository,$id){
+        $thread = $threadRepository->find($id);
+        $thread->setVerified(1);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($thread);
+        $em->flush();
+        
+        return new Response("202");
+    }
 }
