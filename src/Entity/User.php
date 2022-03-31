@@ -86,13 +86,11 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-    
      */
     private $classe;
 
     /**
      * @ORM\OneToMany(targetEntity=Thread::class, mappedBy="user", orphanRemoval=true)
-    
      */
     private $threads;
 
@@ -102,13 +100,11 @@ class User implements UserInterface
     private $documentsFavoris;
     /**
      * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="user", orphanRemoval=true)
-    
      */
     private $reponses;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="user")
-    
      */
     private $message;
 
