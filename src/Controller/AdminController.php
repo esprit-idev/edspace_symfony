@@ -86,12 +86,12 @@ class AdminController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('afficheA');
         }
-        if ($hasAccessAgent){
+        //if ($hasAccessAgent){
         return $this->render('admin/add.html.twig',[
             'form'=>$form->createView()
-        ]);}
-        elseif ($hasAccessStudent) {
-            return $this->render('/403.html.twig');}
+        ]);//}
+        /*elseif ($hasAccessStudent) {
+            return $this->render('/403.html.twig');}*/
     }
     /**
      * @Route("admin/update/{id}",name="updateA")

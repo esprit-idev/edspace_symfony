@@ -117,16 +117,17 @@ class ReponseController extends AbstractController
         return new Response(json_encode($jsonContent));
     }
     /**
-     * @Route("/addReponse/{reply}/{id}", name="addReponse")
+     * @Route("/addReponse/{reply}/{id}/{id2}", name="addReponse")
      */
-    public function addReponse(ThreadRepository $threadRepository,ReponseRepository $reponseRepository,$id,$reply,EntityManagerInterface $entityManager,UserRepository $userRepository){
+    public function addReponse($id2,ThreadRepository $threadRepository,ReponseRepository $reponseRepository,$id,$reply,EntityManagerInterface $entityManager,UserRepository $userRepository){
         $reponse = new Reponse();
         $reponse->setReply($reply);
         $reponse->setDisplay(0);
         $reponse->setUser($userRepository->find(1));
         $reponse->setReplyDate(new \DateTime());
-        $reponse->setThread($threadRepository->find($id));
-
+        $reponse->setThread($threadRepository->find($id2));
+        $user = $userRepository->find($id);
+        $reponse->setUser($user);
         $entityManager->persist($reponse);
         $entityManager->flush();
         return new Response("202");

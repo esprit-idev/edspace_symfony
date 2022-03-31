@@ -166,12 +166,12 @@ class DocumentController extends AbstractController
      */
     function AjoutDocument(Request $request,FlashyNotifier $notifier) : Response
     {
-        $userEmail=$this->getUser()->getEmail();
-        $username=$this->getUser()->getUsername();
-        $userPrenom=$this->getUser()->getPrenom();
-        $prop=$username." ".$userPrenom;
+
         $hasAccessStudent= $this->isGranted('ROLE_STUDENT');
         if($hasAccessStudent) {
+            $username=$this->getUser()->getUsername();
+            $userPrenom=$this->getUser()->getPrenom();
+            $prop=$username." ".$userPrenom;
             $em=$this->getDoctrine()->getManager();
             $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
             $em1=$this->getDoctrine()->getRepository(User::class);
@@ -248,7 +248,6 @@ class DocumentController extends AbstractController
         $em1=$this->getDoctrine()->getRepository(User::class);
         $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
         $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
-
         $message=$this
             ->getDoctrine()
             ->getManager()
