@@ -175,7 +175,7 @@ class AdminController extends AbstractController
     /**
      * @param UserRepository $repository
      * @return \Symfony\component\httpFoundation\Response
-     * @Route("/deleteAdminJson/{id}",name="deleteStudent")
+     * @Route("/deleteAdminJson/{id}",name="deleteA")
      */
     function deleteAdminJson(NormalizerInterface $normalizer,$id): Response
     {
