@@ -204,7 +204,8 @@ class DocumentController extends AbstractController
             $form->add("Ajouter", SubmitType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $fic = $document->getFichier();
+                //$fic = $document->getFichier();
+                $fic =$form->get('fichier')->getData();
                 $nomFic = $document->getNom() . '.' . $fic->guessExtension();
                 //upload to public under documents
                 $fic->move($this->getParameter('document_dir'), $nomFic);
@@ -212,8 +213,8 @@ class DocumentController extends AbstractController
                 $document->setNom($nomFic);
                 $document->setDateInsert(date("d/m/y"));
                 $document->setProprietaire($prop);
-                $document->setFichier(file_get_contents($this->getParameter('document_dir') . '/' . $nomFic));
-                $document->setBase64(base64_encode(file_get_contents($this->getParameter('document_dir') . '/' . $nomFic)));
+                //$document->setFichier(file_get_contents($this->getParameter('document_dir') . '/' . $nomFic));
+                //$document->setBase64(base64_encode(file_get_contents($this->getParameter('document_dir') . '/' . $nomFic)));
                 $document->setType(mime_content_type($this->getParameter('document_dir') . '/' . $nomFic));
                 $document->setSignalements(0);
                 $document->setUrl(null);
@@ -279,8 +280,8 @@ class DocumentController extends AbstractController
                 $document->setProprietaire($prop);
                 $document->setType("url");
                 $document->setSignalements(0);
-                $document->setFichier(null);
-                $document->setBase64(null);
+                //$document->setFichier(null);
+                //$document->setBase64(null);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($document);
                 $em->flush();
@@ -882,7 +883,7 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $data=$form->getData();
-            if($document->getFichier()){
+            if(!$document->getUrl()){
                 $message=(new \Swift_Message($data['subject']))
                     ->setFrom($userEmail)
                     ->setTo($data['to'])
@@ -928,7 +929,7 @@ class DocumentController extends AbstractController
      * @param NormalizerInterface $normalizer
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/allDocs",name="allDocs")
+     * @Route ("/allDocs")
      */
     function AllDocsJSON(NormalizerInterface $normalizer, DocumentRepository $repository): Response
     {
@@ -942,7 +943,7 @@ class DocumentController extends AbstractController
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/deleteDoc/{id}",name="deleteDoc")
+     * @Route ("/deleteDoc/{id}")
      */
     function DeleteDocJSON(NormalizerInterface $normalizer,$id): Response
     {
@@ -958,7 +959,7 @@ class DocumentController extends AbstractController
      * @param NormalizerInterface $normalizer
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/allPinnedDocs",name="allPinnedDocs")
+     * @Route ("/allPinnedDocs")
      */
     function AllPinnedDocsJSON(NormalizerInterface $normalizer, DocumentFavorisRepository $repository): Response
     {
@@ -970,7 +971,7 @@ class DocumentController extends AbstractController
     /**
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/addUrl/new",name="addUrl")
+     * @Route ("/addUrl/new")
      */
     public function addUrlJSON(NormalizerInterface $normalizer, Request $request,NiveauRepository $niveauRepository,MatiereRepository $matiereRepository):Response
     {
@@ -989,7 +990,7 @@ class DocumentController extends AbstractController
         $document->setType("url");
         $document->setSignalements(0);
         $document->setUrl($request->get('url'));
-        $document->setBase64($request->get('base64'));
+        //$document->setBase64($request->get('base64'));
         $em->persist($document);
         $em->flush();
         $jsonContent = $normalizer->normalize($document,'json',['groups'=>'post:read']);
@@ -1001,7 +1002,7 @@ class DocumentController extends AbstractController
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/deletePin/{docId}/{userId}",name="deletePin")
+     * @Route ("/deletePin/{docId}/{userId}")
      */
     function UnpinDocJSON(NormalizerInterface $normalizer,$docId,$userId,UserRepository $userRepository,DocumentRepository $documentRepository,DocumentFavorisRepository $documentFavorisRepository): Response
     {
@@ -1020,7 +1021,7 @@ class DocumentController extends AbstractController
      * @param UserRepository $userRepository
      * @param Request $request
      * @param DocumentRepository $documentRepository
-     * @Route ("/addPin/new",name="addPin")
+     * @Route ("/addPin/new")
      */
     function PinDocJSON(NormalizerInterface $normalizer,UserRepository $userRepository,Request $request,DocumentRepository $documentRepository){
         $user=$userRepository->find($request->get('userId'));
@@ -1040,7 +1041,7 @@ class DocumentController extends AbstractController
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/signalDoc/{id}",name="signalDoc")
+     * @Route ("/signalDoc/{id}")
      */
     function SignalDocJSON(NormalizerInterface $normalizer,$id,DocumentRepository $repository): Response
     {
@@ -1055,7 +1056,7 @@ class DocumentController extends AbstractController
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/ignoreSignalDoc/{id}",name="ignoreSignalDoc")
+     * @Route ("/ignoreSignalDoc/{id}")
      */
     function IgnoreSignalDocJSON(NormalizerInterface $normalizer,$id,DocumentRepository $repository): Response
     {
@@ -1070,7 +1071,7 @@ class DocumentController extends AbstractController
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/shareDoc/{id}",name="shareDoc")
+     * @Route ("/shareDoc/{id}")
      */
     function ShareDocJSON(NormalizerInterface $normalizer,$id,DocumentRepository $repository,\Swift_Mailer $mailer,Request $request): Response
     {

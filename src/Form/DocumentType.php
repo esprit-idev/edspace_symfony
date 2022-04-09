@@ -28,6 +28,7 @@ class DocumentType extends AbstractType
                     'label' => "Nom du document ",
                 ])
             ->add('fichier',FileType::class,[
+                "mapped" => false,
                 'data_class' => null,
                 'label'=> 'Choisissez votre document ',
                 'constraints'=>[new NotBlank(['message'=>"L'attachement d'un fichier est requis"]),
@@ -43,7 +44,7 @@ class DocumentType extends AbstractType
                             'application/zip',
                             'application/x-rar',
                         ],
-                        'mimeTypesMessage'=>"Fichoer invalide"])
+                        'mimeTypesMessage'=>"Fichier invalide"])
                 ],
             ])
 
