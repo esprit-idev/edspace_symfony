@@ -36,26 +36,30 @@ class ThreadController extends AbstractController
     public function index(ThreadRepository $threadRepository,UserRepository $userRepository,SessionInterface $session,ThreadTypeRepository $threadTypeRepository):Response
     {
         $threadType = $threadTypeRepository->findByDisplay(0);
-        if($this->getUser()!= null){
-            $em=$this->getDoctrine()->getManager();
-            $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
-            $em1=$this->getDoctrine()->getRepository(User::class);
-            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        
 
-            $message=$this
+        if($this->getUser()!= null){
+            if($hasAccessStudent){
+            $em = $this->getDoctrine()->getManager();
+            $user1 = $em->getRepository(User::class)->find($this->getUser()->getId());
+            $em1 = $this->getDoctrine()->getRepository(User::class);
+            $memebers = $em1->findBy(['classe' => $user1->getClasse()->getId()]);
+            $classe = $em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+
+            $message = $this
                 ->getDoctrine()
                 ->getManager()
                 ->getRepository(Message::class)
-                ->findBy(array(),array('postDate' => 'ASC'));
-            $mymsg=[];
-            $othersmsg=[];
-            foreach($message as $i){
-                if($i->getUser()->getId()==$user1->getId()){
-                    $mymsg[]=$i;
-                }
-                else{
-                    $othersmsg[]=$i;
+                ->findBy(array(), array('postDate' => 'ASC'));
+            $mymsg = [];
+            $othersmsg = [];
+            foreach ($message as $i) {
+                if ($i->getUser()->getId() == $user1->getId()) {
+                    $mymsg[] = $i;
+                } else {
+                    $othersmsg[] = $i;
                 }
             }
             return $this->render('thread/index.html.twig', [
@@ -70,6 +74,15 @@ class ThreadController extends AbstractController
 
             ]);
         }
+            else{
+                return $this->render('thread/index.html.twig', [
+                    'threads' => $threadRepository->findDisplay(),
+                    'threadType' => $threadType
+    
+                ]);
+            }
+        
+    }
         else {
             return $this->render("/403.html.twig");
         }
