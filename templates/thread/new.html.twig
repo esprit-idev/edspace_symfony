@@ -97,7 +97,9 @@
 
 
 {% block custom %}
+    {% if  is_granted ('ROLE_STUDENT') %}
     {% include "conversation.html.twig" %}
+    {% endif %} 
     <h1>Create new Thread</h1>
     <div style="width: 400px; margin-left : 120px">
         {{ include('thread/_form.html.twig') }}

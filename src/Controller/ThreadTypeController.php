@@ -26,10 +26,15 @@ class ThreadTypeController extends AbstractController
      */
     public function index(ThreadTypeRepository $threadTypeRepository): Response
     {
-        
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent){
         return $this->render('thread_type/index.html.twig', [
             'thread_types' => $threadTypeRepository->findDisplay(),
         ]);
+    }
+    else{
+        return $this->render('403.html.twig');
+    }
     }
 
     /**
@@ -37,6 +42,7 @@ class ThreadTypeController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        
         $threadType = new ThreadType();
         $form = $this->createForm(ThreadTypeType::class, $threadType);
         $form->handleRequest($request);
@@ -106,6 +112,10 @@ class ThreadTypeController extends AbstractController
     public function search(ThreadTypeRepository $threadTypeRepository,$id){
         $threadType= $threadTypeRepository->find($id);
         $threads = $threadTypeRepository->findThreads($id);
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        if($this->getUser()!= null){
+            if($hasAccessStudent){
+        
         $em=$this->getDoctrine()->getManager();
         $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
         $em1=$this->getDoctrine()->getRepository(User::class);
@@ -136,7 +146,15 @@ class ThreadTypeController extends AbstractController
             'message'=> $message,
             'mymsg' => $mymsg,
             'others' =>$othersmsg,
+        ]);}
+    else{
+        return $this->render('thread_type/showThreads.html.twig', [
+            'threadType' => $threadType,
+            'threads' => $threads,
+            
         ]);
+    }}
+        else{ return $this->render("/403.html.twig");}
     }
     /**
      * @Route("/getAll", name="getAllTT")

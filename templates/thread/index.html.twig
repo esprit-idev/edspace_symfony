@@ -101,9 +101,9 @@
 {% endblock %}
 
 {% block custom %}
-    {% if app.user.roles == "[\"ROLE_STUDENT\"]" %}
+    {% if  is_granted ('ROLE_STUDENT') %}
     {% include "conversation.html.twig" %}
-    {% endif %}
+    {% endif %} 
     <div class="container-fluid " style="background-color : #f2f2f2">
         <div class="container-fluid">
 
