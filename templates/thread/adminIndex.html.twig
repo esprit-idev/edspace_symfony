@@ -21,7 +21,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Dashboard</h1>
+                        <h1 class="m-0">Thread</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -38,13 +38,13 @@
         <!-- Main content -->
 <section class="content">
     <div style="margin-left: 1000px">
-        <a href="{{ path('thread_new') }}" class="btn btn-secondary">Create new</a>
+        <a href="{{ path('thread_new') }}" class="btn btn-secondary">Créer un nouveau</a>
     </div>
     <table class="table table-bordered">
         <thead>
             <tr>
             <th scope="col">Question</th>
-            <th scope="col">User</th>
+            <th scope="col">Utilisateur</th>
             <th scope="col">Topic</th>
             </tr>
         </thead>
@@ -77,7 +77,7 @@
                 </tr>
                 {% else %}
                         <tr>
-                            <td colspan="3">no records found</td>
+                            <td colspan="3">Pas de thread</td>
                         </tr>
                     
                 {% endfor %}
@@ -94,7 +94,7 @@
                 <tr>
                 
                 <th scope="col">Question</th>
-                <th scope="col">User</th>
+                <th scope="col">Utilisateur</th>
                 <th scope="col">Topic</th>
                 
                 </tr>
@@ -124,13 +124,13 @@
                         <td> {{thread.user}} </td>
                         <td> {{thread.threadtype}} </td>
                         <td>
-                        <a href="{{ path('thread_reactivate', {'id': thread.id})}}" class="btn btn-outline-success"> Reactivate </a>
+                        <a href="{{ path('thread_reactivate', {'id': thread.id})}}" class="btn btn-outline-success"> Reactiver </a>
                         </td>
                 
                 </tr>
                 {% else %}
                         <tr>
-                            <td colspan="3">no records found</td>
+                            <td colspan="3">Pas de thread</td>
                         </tr>
                     
                 {% endfor %}
