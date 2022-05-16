@@ -44,8 +44,8 @@
         </thead>
         <tr {% for category in categories %}>
             <td class="col-sm-4">{{category.categoryName}}</td>
-            <td class="col-sm-2"><a href="{{ path("updateCategoryEmploi",{'id':category.id}) }}" class="btn btn-info">Modifier</a></td>
-            <td class="col-sm-2"><button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal3{{category.id}}">Supprimer</button></td>
+            <td class="col-sm-2"><a href="{{ path("updateCategoryEmploi",{'id':category.id}) }}" class="btn btn-info"><i class="fas fa-pen"></i></a></td>
+            <td class="col-sm-2"><button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal3{{category.id}}"><i class="fas fa-trash"></i></button></td>
             <div class="modal fade" id="exampleModal3{{category.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
