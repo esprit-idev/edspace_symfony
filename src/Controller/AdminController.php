@@ -81,18 +81,24 @@ class AdminController extends AbstractController
             $hash=$encoder->encodePassword($admin ,$admin->getPassword());
             $admin->setPassword($hash);
             $admin->setRoles(["ROLE_ADMIN"]);
+            $file=
+            $admin->setImage("userphoto.png");
             $em=$this->getDoctrine()->getManager();
             $em->persist($admin);
             $em->flush();
             return $this->redirectToRoute('afficheA');
         }
-        //if ($hasAccessAgent){
+
+        if ($hasAccessAgent){
         return $this->render('admin/add.html.twig',[
             'form'=>$form->createView()
-        ]);//}
-        /*elseif ($hasAccessStudent) {
-            return $this->render('/403.html.twig');}*/
+        ]);}
+        elseif ($hasAccessStudent) {
+            return $this->render('/403.html.twig');}
     }
+
+
+
     /**
      * @Route("admin/update/{id}",name="updateA")
      */
@@ -133,16 +139,35 @@ class AdminController extends AbstractController
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/addAdminJSON",name="addAdminJSON")
      */
-    public function addAdminJSON(NormalizerInterface $normalizer, Request $request):Response
+    public function addAdminJSON(NormalizerInterface $normalizer, Request $request,UserPasswordEncoderInterface $encoder):Response
     {
         $em = $this->getDoctrine()->getManager();
-        $admin = new User();
-        $admin->setUsername($request->get('username'));
-        $admin->setPrenom($request->get('prenom'));
-        $admin->setEmail($request->get('email'));
-        $admin->setPassword($request->get('password'));
+        /*  $admin = new User();
+          $admin->setUsername($request->get('username'));
+          $admin->setPrenom($request->get('prenom'));
+          $admin->setEmail($request->get('email'));
+         $admin->setPassword($request->get('password'));*/
+
+       /* $hash=$encoder->encodePassword($admin ,$admin->getPassword());
+        $admin->setPassword($hash);*/
+        $email =$request->query->get("email");
+        $username=$request->query->get("username");
+        $prenom=$request->query->get("prenom");
+        $password=$request->query->get("password");
+
+
+        if(!filter_var($email , FILTER_VALIDATE_EMAIL)){
+            return new Response("email invalid.");
+        }
+            $admin = new User();
+        $admin->setUsername($username);
+        $admin->setEmail($email);
+        $admin->setPrenom($prenom);
+        $admin->setPassword($encoder->encodePassword($admin , $password));
        // $admin->setIsBanned($request->get('isBanned'));
         $admin->setRoles(["ROLE_ADMIN"]);
+        //$admin->setIsVerified(true);
+
 
         $em->persist($admin);
         $em->flush();
@@ -156,14 +181,16 @@ class AdminController extends AbstractController
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/updateAdminJSON{id}",name="updateAdminJSON")
      */
-    public function updateAdminJSON(UserRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    public function updateAdminJSON(UserRepository $repository, NormalizerInterface $normalizer, Request $request,$id,UserPasswordEncoderInterface $encoder):Response
     {
         $em = $this->getDoctrine()->getManager();
         $admin = $repository->find($id);
+        $password=$request->query->get("password");
         $admin->setUsername($request->get('username'));
         $admin->setPrenom($request->get('prenom'));
         $admin->setEmail($request->get('email'));
-        $admin->setPassword($request->get('password'));
+        $admin->setPassword($encoder->encodePassword($admin , $password));
+       // $admin->setPassword($request->get('password'));
         $em->flush();
 
         $jsonContent = $normalizer->normalize($admin,'json',['groups'=>'post:read']);
