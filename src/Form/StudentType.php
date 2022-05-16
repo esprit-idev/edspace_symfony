@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -20,29 +21,27 @@ class StudentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username')
-            ->add('prenom')
-            ->add('email',EmailType::class,[
-                    'label' => 'Mot de passe',
-
+            ->add('username', TextType::class ,
+                ['label' => 'nom',
+                    'empty_data' => ''])
+            ->add('prenom', TextType::class ,
+                ['label' => 'prenom',
+                    'empty_data' => ''])
+            ->add('email', EmailType::class , [
+                'label' => 'email',
+                'empty_data' => '',
                 'constraints'=>[
                     new NotBlank([
-                        'message'=>'merci de saisir une adresse email'
+                        'message'=>'Merci de saisir une adresse email'
                     ])
-                    /*new UniqueEntity([
-                        'message'=>'adresse mail est deja existe veuillez saisir une autre adresse '
-                    ]),*/
-                   /* new EmailType([
-                        'message'=>'merci de saisir une adresse email valide'
-                    ])*/
                 ],
                 'required'=>true,
                 'attr'=>[
                     'class'=>'form-control'
                 ]
-
             ])
             ->add('password', PasswordType::class,[
+                'label' => 'Mot de passe',
                 'empty_data' => '',
                 /*'constraints'=>[
                     new NotBlank([
@@ -67,10 +66,16 @@ class StudentType extends AbstractType
             ])*/
 
             ->add('classe',EntityType::class,[
+                'label' => 'Niveau',
+                'class'=>Classe::class,
+                'choice_label'=>'niveau'
+            ])
+            ->add('classe',EntityType::class,[
                 'class'=>Classe::class,
                 'choice_label'=>'classe'
             ])
-            ->add('Ajouter',SubmitType::class);
+            ->add('Ajouter',SubmitType::class)
+
 
     }
 
