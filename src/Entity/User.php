@@ -25,6 +25,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups("students")
+     * @Groups("message")
      */
     private $id;
 
