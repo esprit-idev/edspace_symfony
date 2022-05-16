@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\CategorieNews;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,6 +29,9 @@ class CategorieNewsFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CategorieNews::class,
+            'constraints' => [
+                new UniqueEntity(['fields'=>'categoryName','entityClass'=>'App\Entity\CategorieNews','message' => 'Cette categorie existe déjà' ])
+            ],
         ]);
     }
 }
