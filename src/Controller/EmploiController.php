@@ -366,7 +366,7 @@ class EmploiController extends AbstractController
         $emploi->setImage($request->get("image"));
         $em->flush();
 
-        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>['emplois','categoriesEmploi']]);
+        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>'post:read']);
         return new Response("modified successfully".json_encode($jsonContent));
     }
 

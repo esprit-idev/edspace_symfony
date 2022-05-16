@@ -50,7 +50,7 @@ class Emploi
 
      /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("emploiimg")
+     * @Groups("emplois")
      */
     private $image;
 
