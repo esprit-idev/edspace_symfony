@@ -6,6 +6,7 @@ use App\Entity\Document;
 use App\Entity\Matiere;
 use App\Entity\Niveau;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -70,6 +71,10 @@ class DocumentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Document::class,
+
+            'constraints' => [
+                new UniqueEntity(['fields' => ['nom'], 'entityClass' => 'App\Entity\Document', 'message' => 'Un document avec le même nom existe déjà'])
+            ],
         ]);
     }
 }
