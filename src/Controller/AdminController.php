@@ -70,9 +70,9 @@ class AdminController extends AbstractController
      * @Route ("/admin/add", name="ajoutA")
      */
     public function add(Request $request, UserPasswordEncoderInterface $encoder){
-       // $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
-       // $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
-      //  $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $admin=new User();
         $form=$this->createForm(AdminType::class,$admin);
         $form->add('Ajouter',SubmitType::class);
@@ -88,13 +88,17 @@ class AdminController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('afficheA');
         }
-       // if ($hasAccessAgent){
+
+        if ($hasAccessAgent){
         return $this->render('admin/add.html.twig',[
             'form'=>$form->createView()
         ]);}
-       /* elseif ($hasAccessStudent) {
+        elseif ($hasAccessStudent) {
             return $this->render('/403.html.twig');}
-    }*/
+    }
+
+
+
     /**
      * @Route("admin/update/{id}",name="updateA")
      */
@@ -198,7 +202,7 @@ class AdminController extends AbstractController
     /**
      * @param UserRepository $repository
      * @return \Symfony\component\httpFoundation\Response
-     * @Route("/deleteAdminJson/{id}",name="deleteStudent")
+     * @Route("/deleteAdminJson/{id}",name="deleteA")
      */
     function deleteAdminJson(NormalizerInterface $normalizer,$id): Response
     {

@@ -9,6 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
+use App\Repository\ClasseRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mercure\PublisherInterface;
@@ -157,9 +159,10 @@ class ConversationController extends AbstractController
      * @Route ("/m",name="m")
      * @param Request $request
      */
-    public function viewmobile(Request $request,NormalizerInterface $normalizer)
+    public function viewmobile(Request $request,NormalizerInterface $normalizer,UserRepository $userRepository,ClasseRepository $classeRepository)
     {
-        $cid=$request->query->get("cid");
+        $user=$userRepository->find($request->get("cid"));
+        $cid=$user->getClasse()->getId();
         $datafinal = [];
         $data = $this->getDoctrine()->getRepository(Message::class)->findBy(
             ['classe' => $cid],

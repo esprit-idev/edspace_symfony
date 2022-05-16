@@ -31,7 +31,7 @@
                                 <a class="float-right" data-toggle="modal" title="Ignorer" style="color: grey" href="#" data-target="#exampleModalIgnore{{ d.id }}"><i class="fas fa-minus float-right" style="margin-right: 10px"></i></a>
                                 <strong style="color: indianred" >(Nb de signalements: {{ d.signalements }})</strong>
                                 </br></br>
-                                {% if d.fichier !=null %}
+                                {% if d.url ==null %}
                                     <a target="_blank" href="{{ path("apercuDocument",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }}</h3></a>
                                 {% else %}
                                     <a target="_blank" href="{{ path("apercuUrl",{'id':d.id}) }}"><h3 class="card-title">{{ d.nom }}</h3></a>

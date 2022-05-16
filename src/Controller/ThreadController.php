@@ -36,26 +36,30 @@ class ThreadController extends AbstractController
     public function index(ThreadRepository $threadRepository,UserRepository $userRepository,SessionInterface $session,ThreadTypeRepository $threadTypeRepository):Response
     {
         $threadType = $threadTypeRepository->findByDisplay(0);
-        if($this->getUser()!= null){
-            $em=$this->getDoctrine()->getManager();
-            $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
-            $em1=$this->getDoctrine()->getRepository(User::class);
-            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        
 
-            $message=$this
+        if($this->getUser()!= null){
+            if($hasAccessStudent){
+            $em = $this->getDoctrine()->getManager();
+            $user1 = $em->getRepository(User::class)->find($this->getUser()->getId());
+            $em1 = $this->getDoctrine()->getRepository(User::class);
+            $memebers = $em1->findBy(['classe' => $user1->getClasse()->getId()]);
+            $classe = $em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+
+            $message = $this
                 ->getDoctrine()
                 ->getManager()
                 ->getRepository(Message::class)
-                ->findBy(array(),array('postDate' => 'ASC'));
-            $mymsg=[];
-            $othersmsg=[];
-            foreach($message as $i){
-                if($i->getUser()->getId()==$user1->getId()){
-                    $mymsg[]=$i;
-                }
-                else{
-                    $othersmsg[]=$i;
+                ->findBy(array(), array('postDate' => 'ASC'));
+            $mymsg = [];
+            $othersmsg = [];
+            foreach ($message as $i) {
+                if ($i->getUser()->getId() == $user1->getId()) {
+                    $mymsg[] = $i;
+                } else {
+                    $othersmsg[] = $i;
                 }
             }
             return $this->render('thread/index.html.twig', [
@@ -70,6 +74,15 @@ class ThreadController extends AbstractController
 
             ]);
         }
+            else{
+                return $this->render('thread/index.html.twig', [
+                    'threads' => $threadRepository->findDisplay(),
+                    'threadType' => $threadType
+    
+                ]);
+            }
+        
+    }
         else {
             return $this->render("/403.html.twig");
         }
@@ -80,6 +93,7 @@ class ThreadController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager,SessionInterface $session,UserRepository $userRepository): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
         $thread = new Thread();
         $form = $this->createForm(ThreadType::class, $thread);
         $form->handleRequest($request);
@@ -97,7 +111,7 @@ class ThreadController extends AbstractController
             return $this->redirectToRoute('thread_index', [], Response::HTTP_SEE_OTHER);
         }
         if($this->getUser()!= null){
-
+            if($hasAccessStudent){
             $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
             $em1=$this->getDoctrine()->getRepository(User::class);
             $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
@@ -127,7 +141,14 @@ class ThreadController extends AbstractController
                 'message'=> $message,
                 'mymsg' => $mymsg,
                 'others' =>$othersmsg,
-            ]);
+            ]);}
+            else{
+                return $this->render('thread/new.html.twig', [
+                    'thread' => $thread,
+                    'form' => $form->createView(),
+                    
+                ]);
+            }
         }
         else {
             return $this->render("/403.html.twig");
@@ -141,10 +162,12 @@ class ThreadController extends AbstractController
      */
     public function show(Thread $thread,ThreadRepository $threadRepository): Response
     {
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
         if($thread->getDisplay() == 0){
             $form = $this->createForm(ReponseType::class);
             $reponses = $threadRepository->getReponses($thread->getId());
             if($this->getUser()!= null){
+                if($hasAccessStudent){
                 $em=$this->getDoctrine()->getManager();
                 $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
                 $em1=$this->getDoctrine()->getRepository(User::class);
@@ -176,7 +199,14 @@ class ThreadController extends AbstractController
                     'mymsg' => $mymsg,
                     'others' =>$othersmsg,
                     'reponses' => $reponses
-                ]);
+                ]);}
+                else{
+                    return $this->render('thread/show.html.twig', [
+                        'thread' => $thread,
+                        'form' => $form->createView(),
+                        'reponses' => $reponses
+                    ]);
+                }
             }
         }
             else {
@@ -184,6 +214,7 @@ class ThreadController extends AbstractController
                     $form = $this->createForm(ReponseType::class);
             $reponses = $threadRepository->getReponses($thread->getId());
             if($this->getUser()!= null){
+                if($hasAccessStudent){
                 $em=$this->getDoctrine()->getManager();
                 $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
                 $em1=$this->getDoctrine()->getRepository(User::class);
@@ -215,8 +246,14 @@ class ThreadController extends AbstractController
                     'mymsg' => $mymsg,
                     'others' =>$othersmsg,
                     'reponses' => $reponses
-                ]);
-
+                ]);}
+                else{   
+                    return $this->render('thread/show.html.twig', [
+                        'thread' => $thread,
+                        'form' => $form->createView(),
+                        'reponses' => $reponses
+                    ]);
+                }
                 }
             }
             else
@@ -238,8 +275,9 @@ class ThreadController extends AbstractController
 
             return $this->redirectToRoute('thread_index', [], Response::HTTP_SEE_OTHER);
         }
-
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
         if($this->getUser()!= null){
+            if($hasAccessStudent){
             $em=$this->getDoctrine()->getManager();
             $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
             $em1=$this->getDoctrine()->getRepository(User::class);
@@ -270,7 +308,13 @@ class ThreadController extends AbstractController
                 'message'=> $message,
                 'mymsg' => $mymsg,
                 'others' =>$othersmsg,
-            ]);
+            ]);}
+            else{
+                return $this->render('thread/new.html.twig', [
+                    'thread' => $thread,
+                    'form' => $form->createView(),
+                ]);
+            }
         }
         else {
             return $this->render("/403.html.twig");
@@ -310,10 +354,17 @@ class ThreadController extends AbstractController
      */
     public function showAllThreads(ThreadRepository $threadRepository): Response
     {
-        return $this->render('thread/adminIndex.html.twig', [
-            'threads' => $threadRepository->findDisplay(),
-            'threadss' => $threadRepository->findByDisplay(1)
-        ]);
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent){
+            return $this->render('thread/adminIndex.html.twig', [
+                'threads' => $threadRepository->findDisplay(),
+                'threadss' => $threadRepository->findByDisplay(1)
+            ]);
+        }
+        else{
+            return $this->render('403.html.twig');
+        }
+        
     }
     /**
      * @Route("/json", name="json_admin", methods={"GET"})
@@ -362,10 +413,14 @@ class ThreadController extends AbstractController
      * @Route("/myThread",name="thread_mine", methods={"GET"})
      */
     public function getThreads(ThreadRepository $threadRepository,SessionInterface $session,UserRepository $userRepository,ThreadTypeRepository $threadTypeRepository){
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        
+        
         $user = $userRepository->find($this->getUser()->getId());
         $threadType = $threadTypeRepository->findByDisplay(0);
         $threads = $threadRepository->findByUser($user);
         if($this->getUser()!= null){
+            if($hasAccessStudent){
             $em=$this->getDoctrine()->getManager();
             $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
             $em1=$this->getDoctrine()->getRepository(User::class);
@@ -398,7 +453,14 @@ class ThreadController extends AbstractController
                 'threads' => $threads,
                 'user' => $user,
                 'threadType' => $threadType
-            ]);
+            ]);}
+            else{
+                return $this->render('thread/myThreads.html.twig', [
+                    'threads' => $threads,
+                    'user' => $user,
+                    'threadType' => $threadType
+                ]);
+            }
         }
         else {
             return $this->render("/403.html.twig");
@@ -532,6 +594,18 @@ class ThreadController extends AbstractController
         $thread->setQuestion($content);
         $entityManager->persist($thread);
         $entityManager->flush();
+        return new Response("202");
+    }
+    /**
+     * @Route("/verifyJSON/{id}",name="thread_verifyJSON")
+     */
+    public function verifyJSON(ThreadRepository $threadRepository,$id){
+        $thread = $threadRepository->find($id);
+        $thread->setVerified(1);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($thread);
+        $em->flush();
+        
         return new Response("202");
     }
 }

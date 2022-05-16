@@ -10,12 +10,6 @@
     <script src="{{ asset('bundles/mercuryseriesflashy/js/flashy.js') }}"></script>
     </br>
     <div class="container" style="text-align:left;font-size: 20px;">{{ form(f,{'attr':{'novalidate':'novalidate'}}) }}</div>
-{# {{ form_start(f,{'attr':{'novalidate':'novalidate'}}) }}
-        {{ form_row(f.nom, { 'attr':{'disabled':'disabled'} }) }}
-        {{ form_row(f.fichier, { 'attr':{'disabled':'disabled'} }) }}
-        {{ form_row(f.niveau) }}
-        {{ form_row(f.matiere) }}
-    {{ form_end(f) }}#}
 
     </br>
     {{ include('@MercurySeriesFlashy/flashy.html.twig') }}

@@ -28,11 +28,11 @@ class DocumentType extends AbstractType
                     'label' => "Nom du document ",
                 ])
             ->add('fichier',FileType::class,[
+                "mapped" => false,
                 'data_class' => null,
                 'label'=> 'Choisissez votre document ',
                 'constraints'=>[new NotBlank(['message'=>"L'attachement d'un fichier est requis"]),
                     new File([
-                        'maxSize' => "327680k",
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
@@ -42,9 +42,9 @@ class DocumentType extends AbstractType
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.ms-excel',
                             'application/pdf',
                             'application/zip',
-                            'application/x-rar'
+                            'application/x-rar',
                         ],
-                        'mimeTypesMessage'=>"Le fiichier importé est trop large"])
+                        'mimeTypesMessage'=>"Fichier invalide"])
                 ],
             ])
 
