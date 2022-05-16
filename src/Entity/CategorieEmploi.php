@@ -18,6 +18,7 @@ class CategorieEmploi
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("categoriesEmploi")
      */
     private $id;
 
