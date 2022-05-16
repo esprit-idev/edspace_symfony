@@ -96,7 +96,9 @@
 
 {% endblock %}
 {% block custom %}
+    {% if  is_granted ('ROLE_STUDENT') %}
     {% include "conversation.html.twig" %}
+    {% endif %} 
     <div class="input-group">
 
         {{ render(controller('App\\Controller\\SearchController::searchBar')) }}

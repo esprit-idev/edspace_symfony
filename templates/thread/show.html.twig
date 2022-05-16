@@ -102,7 +102,9 @@
     {% endblock %}
 
 {% block custom %}
+    {% if  is_granted ('ROLE_STUDENT') %}
     {% include "conversation.html.twig" %}
+    {% endif %} 
     <div class="container bootdey">
         <div class="col-md-12 bootstrap snippets">
             <div class="panel">

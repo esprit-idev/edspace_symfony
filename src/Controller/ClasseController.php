@@ -60,7 +60,7 @@ class ClasseController extends AbstractController
 
 
 
-       /**
+    /**
      * @Route("/listc", name="listc")
      */
     public function addett(): Response
@@ -514,7 +514,29 @@ return new Response('success');
     }
 
 
+     /**
+     * @return Response
+     * @Route ("/classefromuid",name="classefromuid")
+     * @param Request $request
+     */
+    function classefromuid(Request $request, ClasseRepository $repository){
 
+
+        
+            
+        $em2=$this->getDoctrine()->getRepository(Classe::class);
+         $em=$this->getDoctrine()->getManager();
+         $user=$em->getRepository(User::class)->findOneBy(['id' => $request->get('uid')]);
+             $classe=$user->getClasse()->getId();
+             $datafinal[]    = [
+                'classe' => $classe,
+            ];
+ 
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $formatted = $serializer->normalize($datafinal);
+            return new JsonResponse($formatted);
+ 
+     }
 
 
 

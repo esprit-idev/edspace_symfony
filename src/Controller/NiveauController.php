@@ -187,7 +187,7 @@ class NiveauController extends AbstractController
             $em=$this->getDoctrine()->getManager();
             $em->persist($niveau);
             $em->flush();
-            return $this->json('Done');
+            return $this->json($request->query->get("id"));
     
        
     }

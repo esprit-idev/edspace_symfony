@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use App\Entity\Classe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -22,17 +23,37 @@ class StudentType extends AbstractType
             ->add('username')
             ->add('prenom')
             ->add('email',EmailType::class,[
+                    'label' => 'Mot de passe',
+
                 'constraints'=>[
                     new NotBlank([
                         'message'=>'merci de saisir une adresse email'
                     ])
+                    /*new UniqueEntity([
+                        'message'=>'adresse mail est deja existe veuillez saisir une autre adresse '
+                    ]),*/
+                   /* new EmailType([
+                        'message'=>'merci de saisir une adresse email valide'
+                    ])*/
                 ],
                 'required'=>true,
                 'attr'=>[
                     'class'=>'form-control'
                 ]
+
             ])
-            ->add('password', PasswordType::class)
+            ->add('password', PasswordType::class,[
+                'empty_data' => '',
+                /*'constraints'=>[
+                    new NotBlank([
+                        'message'=>'merci de saisir un mot de passe'
+                    ])
+                ],*/
+                'required'=>true,
+                'attr'=>[
+                    'class'=>'form-control'
+                ]
+            ])
             ->add('isBanned')
             /*->add('roles', ChoiceType::class , [
                 'choices'=>[
