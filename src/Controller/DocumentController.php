@@ -354,13 +354,13 @@ class DocumentController extends AbstractController
      */
     function ModifDocumentMine($id,DocumentRepository $repository,Request $request,FlashyNotifier $notifier){
         $hasAccessStudent= $this->isGranted('ROLE_STUDENT');
-        if($hasAccessStudent) {
-            $em=$this->getDoctrine()->getManager();
-            $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
+        $em=$this->getDoctrine()->getManager();
+        $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
+        $classId=$user1->getClasse()->getId();
+        if($hasAccessStudent and $classId!=null) {
             $em1=$this->getDoctrine()->getRepository(User::class);
             $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
-            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
-
+            $classe=$em->getRepository(Classe::class)->find($classId);
             $message=$this
                 ->getDoctrine()
                 ->getManager()
