@@ -70,7 +70,7 @@
                         {% for pub in publications %}
                         <div class="col-lg-5">
                             <div class="portfolio-thumb " data-aos="fade-up">
-                                <a href="{{ path("onePublication",{'id':pub.id,'likes':pub.likes}) }}" class="news-image-hover news-image-hover-warning" data-aos="fade-up">
+                                <a href="{{ path("onePublication",{'id':pub.id}) }}" class="news-image-hover news-image-hover-warning" data-aos="fade-up">
                                     <img src="{{ asset('images/') ~ pub.image}}" class="img-fluid large-news-image news-image" alt="">
                                 </a>
                                 <div class="news-category bg-warning text-white">{{pub.categoryName.getCategoryName()}}</div>

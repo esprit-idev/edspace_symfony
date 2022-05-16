@@ -130,14 +130,14 @@
             <td class="id">{{ n.id }}</td>
             <td class="niveau">{{n.niveau.id}}</td>
             <td class="classe">{{n.classe}}</td>
-            <td id="{{ n.id }}" class="c-item"><a href="#">
-                 <i class="fas fa-wrench"></i> </a></td>
+            <td id="{{ n.id }}" class="c-item"><a href="#" class="btn btn-outline-info">
+                <i class="fas fa-pen"></i></a></td>
 
-            <td class=""><a href="..{{ path('classtoetudiant', {'id': n.id }) }}">
+            <td class=""><a href="..{{ path('classtoetudiant', {'id': n.id }) }}" class="btn btn-outline-info">
                 <i class="fas fa-user-plus"></i> </a></td>
 
-            <td class="t-item" id="{{ n.id }}"><a href="..{{ path('suppClasse', {'id': n.id }) }}">
-                  <i  class="fas fa-trash-alt"></i> </a></td>
+            <td class="t-item" id="{{ n.id }}"><a class="btn btn-outline-danger" href="..{{ path('suppClasse', {'id': n.id }) }}">
+                  <i class="fas fa-trash"></i> </a></td>
         </tr >
         {% endfor %}
         </tbody>
