@@ -6,6 +6,7 @@ use App\Entity\Document;
 use App\Entity\Matiere;
 use App\Entity\Niveau;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,11 +29,11 @@ class DocumentType extends AbstractType
                     'label' => "Nom du document ",
                 ])
             ->add('fichier',FileType::class,[
+                "mapped" => false,
                 'data_class' => null,
                 'label'=> 'Choisissez votre document ',
                 'constraints'=>[new NotBlank(['message'=>"L'attachement d'un fichier est requis"]),
                     new File([
-                        'maxSize' => "327680k",
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
@@ -42,9 +43,9 @@ class DocumentType extends AbstractType
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.ms-excel',
                             'application/pdf',
                             'application/zip',
-                            'application/x-rar'
+                            'application/x-rar',
                         ],
-                        'mimeTypesMessage'=>"Le fiichier importé est trop large"])
+                        'mimeTypesMessage'=>"Fichier invalide"])
                 ],
             ])
 
@@ -70,6 +71,10 @@ class DocumentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Document::class,
+
+            'constraints' => [
+                new UniqueEntity(['fields' => ['nom'], 'entityClass' => 'App\Entity\Document', 'message' => 'Un document avec le même nom existe déjà'])
+            ],
         ]);
     }
 }

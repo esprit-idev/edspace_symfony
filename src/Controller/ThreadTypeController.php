@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\ThreadType;
 use App\Entity\User;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use App\Entity\Message;
 use App\Entity\Classe;
 use App\Form\ThreadTypeType;
@@ -25,10 +26,15 @@ class ThreadTypeController extends AbstractController
      */
     public function index(ThreadTypeRepository $threadTypeRepository): Response
     {
-        
+        $hasAccessAgent = $this->isGranted('ROLE_ADMIN');
+        if($hasAccessAgent){
         return $this->render('thread_type/index.html.twig', [
             'thread_types' => $threadTypeRepository->findDisplay(),
         ]);
+    }
+    else{
+        return $this->render('403.html.twig');
+    }
     }
 
     /**
@@ -36,6 +42,7 @@ class ThreadTypeController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        
         $threadType = new ThreadType();
         $form = $this->createForm(ThreadTypeType::class, $threadType);
         $form->handleRequest($request);
@@ -105,6 +112,10 @@ class ThreadTypeController extends AbstractController
     public function search(ThreadTypeRepository $threadTypeRepository,$id){
         $threadType= $threadTypeRepository->find($id);
         $threads = $threadTypeRepository->findThreads($id);
+        $hasAccessStudent = $this->isGranted('ROLE_STUDENT');
+        if($this->getUser()!= null){
+            if($hasAccessStudent){
+        
         $em=$this->getDoctrine()->getManager();
         $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
         $em1=$this->getDoctrine()->getRepository(User::class);
@@ -135,7 +146,55 @@ class ThreadTypeController extends AbstractController
             'message'=> $message,
             'mymsg' => $mymsg,
             'others' =>$othersmsg,
+        ]);}
+    else{
+        return $this->render('thread_type/showThreads.html.twig', [
+            'threadType' => $threadType,
+            'threads' => $threads,
+            
         ]);
+    }}
+        else{ return $this->render("/403.html.twig");}
     }
-    
+    /**
+     * @Route("/getAll", name="getAllTT")
+     */
+    public function getAllReponses(NormalizerInterface $norm, ThreadTypeRepository $threadTypeRepository){
+        $reponses = $threadTypeRepository->findDisplay();
+        $jsonContent = $norm->normalize($reponses,'json',['groups'=>'post:read']);
+        return new Response(json_encode($jsonContent));
+    }
+    /**
+     * @Route("/addTopic/{question}", name="addTopic")
+     */
+    public function addTopic(EntityManagerInterface $entityManager,ThreadTypeRepository $threadTypeRepository,$question)
+    {
+        $topic = new ThreadType();
+        $topic->setContent($question);
+        $topic->setDisplay(false);
+        $entityManager->persist($topic);
+        $entityManager->flush();
+        return new Response("202");
+    }
+
+    /**
+     * @Route("/UpdateJSON/{id}/{content}", name="topic_updateJSON")
+     */
+    public function updateThread($id,$content,ThreadTypeRepository $threadTypeRepository, EntityManagerInterface $entityManager){
+        $topic = $threadTypeRepository->find($id);
+        $topic->setContent($content);
+        $entityManager->persist($topic);
+        $entityManager->flush();
+        return new Response("202");
+    }
+    /**
+     * @Route("/deleteJSON/{id}", name="topic_deleteJSON")
+     */
+    public function deleteJSON($id, ThreadTypeRepository $threadTypeRepository,EntityManagerInterface $entityManager){
+        $threadType = $threadTypeRepository->find($id);
+        $threadType->setDisplay(true);
+        $entityManager->persist($threadType);
+        $entityManager->flush();
+        return new Response("202");
+    }
 }

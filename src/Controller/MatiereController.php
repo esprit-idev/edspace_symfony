@@ -104,7 +104,7 @@ class MatiereController extends AbstractController
      * @param NormalizerInterface $normalizer
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/allMatieres",name="allMatieres")
+     * @Route ("/allMatieres")
      */
     function AllMatieresJSON(NormalizerInterface $normalizer, MatiereRepository $repository): Response
     {
@@ -116,7 +116,7 @@ class MatiereController extends AbstractController
     /**
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/addMatiere/new",name="addMatiere")
+     * @Route ("/addMatiere/new")
      */
     public function addMatiereJSON(NormalizerInterface $normalizer, Request $request,NiveauRepository $niveauRepository,MatiereRepository $matiereRepository):Response
     {
@@ -136,7 +136,7 @@ class MatiereController extends AbstractController
      * @param $id
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/deleteMatiere/{id}",name="deleteMatiere")
+     * @Route ("/deleteMatiere/{id}")
      */
     function DeleteMatiereJSON(NormalizerInterface $normalizer,$id): Response
     {
@@ -151,7 +151,7 @@ class MatiereController extends AbstractController
     /**
      * @return Response
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     * @Route ("/updateMatiere/{id}",name="updateMatiere")
+     * @Route ("/updateMatiere/{id}")
      */
     public function updateMatiereJSON(NiveauRepository $niveauRepository,MatiereRepository $matiereRepository, NormalizerInterface $normalizer, Request $request,$id):Response
     {

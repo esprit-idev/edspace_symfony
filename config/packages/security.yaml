@@ -1,8 +1,8 @@
 security:
     encoders:
         App\Entity\user:
-            algorithm: plaintext
-            #algorithm: bcrypt
+            #algorithm: plaintext
+            algorithm: bcrypt
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:

@@ -169,7 +169,7 @@ public function resetPassword($token ,Request $request,UserPasswordEncoderInterf
 }
 
     /**
-     * @Route("/loginJson" , name="app_login")
+     * @Route("/loginJson" , name="login")
      */
     public function loginJson(Request $request , NormalizerInterface $normalizer){
 $email = $request->query->get("email");
@@ -178,16 +178,9 @@ $em=$this->getDoctrine()->getManager();
 $user=$em->getRepository(User::class)->findOneBy(['email'=>$email]) ;
   if($user){
       if(password_verify($password,$user->getPassword())){
-         // if($user->getRoles()==["ROLE_ADMIN"]){
 
-         // $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'students']);
-          //return new Response("Admin".json_encode($jsonContent));
-      //}
-          //else{
-              $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'students']);
+              $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'post:read']);
               return new Response(json_encode($jsonContent));
-         // }
-
       }
       else {
           return new Response("password not found");
@@ -199,7 +192,7 @@ else {
     }
 
 /**
- * @Route("/getPasswordByEmail", name="app_password")
+ * @Route("/getPasswordByEmail", name="password")
  */
 
 public function getPasswordByEmail(Request $request , NormalizerInterface $normalizer){
@@ -210,7 +203,7 @@ public function getPasswordByEmail(Request $request , NormalizerInterface $norma
         //$serializer = new Serialiser([new ObjectNormalizer()]);
         //$formatted =$serializer->normalize($password);
         //return new JsonResponse($formatted);
-        $jsonContent=$normalizer->normalize($password, 'json', ['groups'=>'students']);
+        $jsonContent=$normalizer->normalize($password, 'json', ['groups'=>'post:read']);
         return new Response(json_encode($jsonContent));
 
     }

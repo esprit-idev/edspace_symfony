@@ -43,11 +43,6 @@ class Document
     private $proprietaire;
 
     /**
-     * @ORM\Column(type="blob", nullable=true)
-     */
-    private $fichier;
-
-    /**
      * @ORM\Column(type="string", length=255)
      * @Groups("post:read")
      */
@@ -87,12 +82,6 @@ class Document
      */
     private $url;
 
-    /**
-     * @ORM\Column(type="string", length=300000, nullable=true)
-     * @Groups("post:read")
-     */
-    private $base64;
-
 
     public function __construct()
     {
@@ -103,18 +92,6 @@ class Document
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getFichier()
-    {
-        return $this->fichier;
-    }
-
-    public function setFichier($fichier)
-    {
-        $this->fichier = $fichier;
-
-        return $this;
     }
 
     public function getDateInsert(): ?string
@@ -238,18 +215,6 @@ class Document
     public function setUrl(?string $url): self
     {
         $this->url = $url;
-
-        return $this;
-    }
-
-    public function getBase64(): ?string
-    {
-        return $this->base64;
-    }
-
-    public function setBase64(?string $base64): self
-    {
-        $this->base64 = $base64;
 
         return $this;
     }

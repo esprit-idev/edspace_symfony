@@ -166,7 +166,7 @@ class CategorieEmploiController extends AbstractController
         $em->flush();
 
         $jsonContent = $normalizer->normalize($category,'json',['groups'=>'post:read']);
-        return new Response(json_encode($jsonContent, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT|JSON_UNESCAPED_LINE_TERMINATORS));
+        return new Response(json_encode($jsonContent));
     }
 
      /**

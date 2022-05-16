@@ -335,7 +335,7 @@ class EmploiController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $emploi = new Emploi();
         $emploi->setTitle($request->get('title'));
-        $emploi->setContent($request->get('content'))->rep;
+        $emploi->setContent($request->get('content'));
         $emploi->setDate(new DateTime());
         $category=$catRepo->findOneBy(array('categoryName'=>$request->get('categoryName')));
         $emploi->setCategoryName($category);
@@ -366,7 +366,7 @@ class EmploiController extends AbstractController
         $emploi->setImage($request->get("image"));
         $em->flush();
 
-        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>['emplois','categoriesEmploi']]);
+        $jsonContent = $normalizer->normalize($emploi,'json',['groups'=>'post:read']);
         return new Response("modified successfully".json_encode($jsonContent));
     }
 

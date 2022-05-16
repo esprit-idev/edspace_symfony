@@ -28,7 +28,7 @@ class Emploi
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=6500)
      * @Assert\NotBlank(message="ajouter une discription")
      * @Groups("emplois")
      */
@@ -50,7 +50,7 @@ class Emploi
 
      /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("emploiimg")
+     * @Groups("emplois")
      */
     private $image;
 
