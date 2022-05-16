@@ -123,6 +123,7 @@
                     {% endif %}
                         <td> {{thread.user}} </td>
                         <td> {{thread.threadtype}} </td>
+                        <td>
                         <a href="{{ path('thread_reactivate', {'id': thread.id})}}" class="btn btn-outline-success"> Reactivate </a>
                         </td>
                 

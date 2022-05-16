@@ -49,9 +49,13 @@ class StudentController extends Controller
             // Items per page
             4
         );
-       
+        if($hasAccessStudent){
+            return $this->render ('student/afficheFront.html.twig',['etudiant'=>$etudiant]);
+        }
+        if($hasAccessAgent){
             return $this->render ('student/afficheBack.html.twig',['etudiant'=>$etudiant]);
         }
+    }
 
 
     /**
@@ -88,6 +92,7 @@ class StudentController extends Controller
             $hash=$encoder->encodePassword($student ,$student->getPassword());
             $student->setPassword($hash);
             $student->setRoles(["ROLE_STUDENT"]);
+            $student->setImage("userphoto.png");
            // $student->setActivationToken(md5(uniqid()));
             $em=$this->getDoctrine()->getManager();
             $em->persist($student);
@@ -135,17 +140,25 @@ class StudentController extends Controller
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/addStudentJSON",name="addStudentJSON")
      */
-    public function addStudentJSON(NormalizerInterface $normalizer, Request $request):Response
+    public function addStudentJSON(NormalizerInterface $normalizer, Request $request,UserPasswordEncoderInterface $encoder):Response
     {
         $em = $this->getDoctrine()->getManager();
+        $email =$request->query->get("email");
+        $username=$request->query->get("username");
+        $prenom=$request->query->get("prenom");
+        $password=$request->query->get("password");
+
+
+        if(!filter_var($email , FILTER_VALIDATE_EMAIL)){
+            return new Response("email invalid.");
+        }
         $student = new User();
-        $student->setUsername($request->get('username'));
-        $student->setPrenom($request->get('prenom'));
-        $student->setEmail($request->get('email'));
-        $student->setPassword($request->get('password'));
-        $student->setIsBanned($request->get('isBanned'));
-        $student->setRoles(["ROLE_STUDENT"]);
-       // $student->setImage($request->get('image'));
+        $student->setUsername($username);
+        $student->setEmail($email);
+        $student->setPrenom($prenom);
+        $student->setPassword($encoder->encodePassword($student , $password));
+        // $admin->setIsBanned($request->get('isBanned'));
+        $student->setRoles(["ROLE_Student"]);
 
         $em->persist($student);
         $em->flush();
@@ -172,14 +185,16 @@ class StudentController extends Controller
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      * @Route ("/updateStudentJSON/{id}",name="updateStudentJSON")
      */
-    public function updateStudentJSON(UserRepository $repository, NormalizerInterface $normalizer, Request $request,$id):Response
+    public function updateStudentJSON(UserRepository $repository, NormalizerInterface $normalizer, Request $request,$id,UserPasswordEncoderInterface $encoder):Response
     {
         $em = $this->getDoctrine()->getManager();
         $student = $repository->find($id);
+        $password=$request->query->get("password");
         $student->setUsername($request->get('username'));
         $student->setPrenom($request->get('prenom'));
         $student->setEmail($request->get('email'));
-        $student->setPassword($request->get('password'));
+       // $student->setPassword($request->get('password'));
+        $student->setPassword($encoder->encodePassword($student , $password));
         $student->setIsBanned($request->get('isBanned'));
         $em->flush();
 

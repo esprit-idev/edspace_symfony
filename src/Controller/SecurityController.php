@@ -178,16 +178,9 @@ $em=$this->getDoctrine()->getManager();
 $user=$em->getRepository(User::class)->findOneBy(['email'=>$email]) ;
   if($user){
       if(password_verify($password,$user->getPassword())){
-         // if($user->getRoles()==["ROLE_ADMIN"]){
 
-         // $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'students']);
-          //return new Response("Admin".json_encode($jsonContent));
-      //}
-          //else{
               $jsonContent=$normalizer->normalize($user, 'json', ['groups'=>'post:read']);
               return new Response(json_encode($jsonContent));
-         // }
-
       }
       else {
           return new Response("password not found");

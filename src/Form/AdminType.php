@@ -29,7 +29,18 @@ class AdminType extends AbstractType
                     'class'=>'form-control'
                 ]
             ])
-            ->add('password', PasswordType::class);
+            ->add('password', PasswordType::class ,  [
+                'empty_data' => '',
+                /*'constraints'=>[
+                    new NotBlank([
+                        'message'=>'Merci de saisir un mot de passe'
+                    ])
+                ],*/
+                'required'=>true,
+                'attr'=>[
+                    'class'=>'form-control'
+                ]
+            ]);
 
     }
 
