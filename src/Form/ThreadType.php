@@ -14,7 +14,7 @@ class ThreadType extends AbstractType
     {
         $builder
             ->add('question',TextType::class,[
-                'label'=>"What's on your mind ?",
+                'label'=>"Qu'est ce que vous en pensez ?",
             ])
             ->add('threadType')
             

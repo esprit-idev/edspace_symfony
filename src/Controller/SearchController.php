@@ -32,9 +32,9 @@ class SearchController extends AbstractController
                 'attr' => [
                     'style' => 'width : 100%',
                     'aria-describedby' => 'search-addon',
-                    'aria-label' => 'Search',
+                    'aria-label' => 'Rechercher',
                     'class'=>'form-control rounded',
-                    'placeholder' => 'What are you looking for ?'
+                    'placeholder' => 'Qu\'est ce que vous chercher ?'
                 ]
             ])
             ->add('search',SubmitType::class, [

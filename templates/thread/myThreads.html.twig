@@ -154,7 +154,7 @@
                     {% else %}
                         <tr>
                             <td colspan="3"> <div class="error-details card row-hover pos-relative py-3 px-3 mb-1 border-danger border-top-0 border-right-0 border-bottom-0 rounded-1">
-                                    Sorry, You have no threads<a class="btn btn-lg btn-block btn-success rounded-1 py-2 mb-3 bg-op-2 roboto-bold" href="{{ path('thread_new') }}"> Try making one ! </a>
+                                    Pas de thread..<a class="btn btn-lg btn-block btn-success rounded-1 py-2 mb-3 bg-op-2 roboto-bold" href="{{ path('thread_new') }}"> Essayer d'ajouter une Thread ! </a>
                                 </div></td>
                         </tr>
                     {% endfor %}
@@ -168,7 +168,7 @@
 
                             <div class="bg-white mb-3">
                                 <h4 class="px-3 py-4 op-5 m-0">
-                                    Active Topics
+                                    Mes Topics
                                 </h4>
                                 <hr class="m-0">
 
@@ -177,10 +177,10 @@
                                 <hr class="m-0">
                                 <div class="pos-relative px-3 py-3">
                                     <h6 class="text-primary text-sm">
-                                        <a href="#" class="text-primary">
+                                        
                                             {% for thread in threads %}
                                                 #{{thread.threadtype}}<br>
-                                            {% endfor  %} </a>
+                                            {% endfor  %} 
                                     </h6>
 
                                 </div>
