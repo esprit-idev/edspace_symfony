@@ -3,8 +3,9 @@
 namespace App\Form;
 
 use App\Entity\User;
+
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,9 +17,14 @@ class AdminType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username')
-            ->add('prenom')
+            ->add('username' , TextType::class ,
+                 ['empty_data' => '']
+            )
+            ->add('prenom' , TextType::class ,
+                  ['empty_data' => '']
+                )
             ->add('email', EmailType::class , [
+                'empty_data' => '',
                 'constraints'=>[
                     new NotBlank([
                         'message'=>'Merci de saisir une adresse email'

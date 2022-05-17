@@ -96,7 +96,9 @@ class PublicationNewsController extends AbstractController
         $likes = $publication->getLikes();
         $views = $publication->getVues();
         $comments = $publication->getComments();
-        $comment = count(array($comments));
+        $arrayofComments = array();
+        array_push($arrayofComments,$comments);
+        $countc = count(array($comments));
             //messages
        
         $em=$this->getDoctrine()->getManager();
@@ -142,8 +144,8 @@ class PublicationNewsController extends AbstractController
             'publication_image' => $publication->getImage(),
             'likes' => $likes,
             'id' => $id,
-            'comments' =>$comments,
-            'num' => $comment,
+            'comments' =>$arrayofComments,
+            'num' => $countc,
             'views' =>$views,
             'user' => $user1,
             'classe'=> $classe,
@@ -356,17 +358,16 @@ class PublicationNewsController extends AbstractController
             $publication = $repo->find($id);
             $likes = $publication->getLikes();
             $views = $publication->getVues();
+            $arrayofComments = array();
             $comments = $publication->getComments();
-            $comment = count(array($comments));
-
+            array_push($arrayofComments,$comments);
+            $countc = count(array($arrayofComments));
             if($request->isMethod('POST')){
-                $comment = $request->get('comment');
-                $publication->setComments($comment);
+                $newComment = $request->get('comment');
+                array_push($arrayofComments,$newComment);
+                $publication->setComments($comments);
+                $this->$countc = count(array($arrayofComments));
                 $em->flush();
-            }
-            $array = array();
-            Foreach($publications as $pub){
-                array_push($array, $pub->getComments());
             }
         }else{
             return $this->render('/403.html.twig');
@@ -379,9 +380,9 @@ class PublicationNewsController extends AbstractController
             'publication_image' => $publication->getImage(),
             'likes' => $likes,
             'id' => $id,
-            'comments' => $array,
+            'comments' => $arrayofComments,
             'views' =>$views,
-            'num' => $comment,
+            'num' => $countc,
             'user' => $user1,
             'classe'=> $classe,
             'message'=> $message,
@@ -421,15 +422,18 @@ class PublicationNewsController extends AbstractController
             $publication = $repo->find($id);
             $nextPublication = $repo->getPreviousUser($publication->getTitle());
             $likes = $publication->getLikes();
+            
             $views = $publication->getVues();
             $comments = $publication->getComments();
-            $comment = count(array($comments));
+            $arrayofComments = array();
+            array_push($arrayofComments,$comments);
+            $countc = count(array($comments));
             if($pageWasRefreshed){
+                $views = $publication->increment();
                 $likes = $publication->getLikes();
                 $comments = $publication->getComments();
-                $em->flush();
             }else{
-                $likes = $publication->incrementLikes();
+                $this->$likes = $publication->incrementLikes();
                 $em->flush();
             }
                 $templateName = 'publication_news/front/onePublication_FO.html.twig';
@@ -445,7 +449,7 @@ class PublicationNewsController extends AbstractController
             'id' => $id,
             'comments' =>$publication->getComments(),
             'views' =>$views,
-            'num' => $comment,
+            'num' => $countc,
             'user' => $user1,
             'classe'=> $classe,
             'message'=> $message,
@@ -546,4 +550,14 @@ class PublicationNewsController extends AbstractController
         return new Response("deleted successfully".json_encode($jsonContent));
     }
 
+public function incrementlikess($id,PublicationNewsRepository $repository){
+    $count = 0;
+    $publication = $repository->find($id);
+    $likes = $publication->getLikes();
+    if($this->$count = 0){
+        $this->$likes = $likes + 1;
+        $repository->updateLike($likes,$id);
+    }
+    $this->$count++;
+}
 }

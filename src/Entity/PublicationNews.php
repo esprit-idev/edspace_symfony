@@ -201,6 +201,6 @@ class PublicationNews
        return ++ $this->vues;
     }
     public function incrementLikes(){
-        return ++ $this->likes;
+        return  $this->likes + 1;
      }
 }

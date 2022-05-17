@@ -6,7 +6,7 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="index3.html" class="nav-link">Liste des etudiants</a>
+            <a href="index3.html" class="nav-link">Liste des administreurs</a>
         </li>
     </ul>
 {% endblock%}
@@ -25,8 +25,8 @@
                     <th>Nom</th>
                     <th>Adresse</th>
                     <th>Role</th>
-                        <th>Update</th>
-                        <th>Delete</th>
+                        <th>Mise a jour</th>
+                        <th>Supprimer</th>
                 </tr>
                 <tr {% for a in admin%}>
                     <td>{{ a.id }}</td>

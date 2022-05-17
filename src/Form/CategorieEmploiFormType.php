@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\CategorieEmploi;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -26,6 +27,9 @@ class CategorieEmploiFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CategorieEmploi::class,
+            'constraints' => [
+                new UniqueEntity(['fields'=>'categoryName','entityClass'=>'App\Entity\CategorieEmploi','message' => 'Cette categorie existe déjà' ])
+            ],
         ]);
     }
 }

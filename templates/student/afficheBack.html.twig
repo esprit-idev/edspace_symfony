@@ -1,5 +1,5 @@
 {% extends "backOffice.html.twig" %}
-{% block title %}<title>Liste des Admins</title>{% endblock %}
+{% block title %}<title>Liste des Etudiants</title>{% endblock %}
 {% block leftNavBar %}
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -27,8 +27,8 @@
                     <th>Classe</th>
                     <th>Role</th>
                     <th>Status</th>
-                    <th>Update</th>
-                    <th>Delete</th>
+                    <th>Mise a jour</th>
+                    <th>supprimer</th>
 
                 </tr>
                 <tr {% for e in etudiant%}>
@@ -36,7 +36,11 @@
                     <td>{{ e.username }}</td>
                     <td>{{ e.prenom }}</td>
                     <td>{{ e.email }}</td>
+                  {% if e.classe !=null  %}
                     <td>{{ e.classe.classe }}</td>
+                    {% else %}
+                    <td>Null</td>
+                    {% endif %}
                     <td>
                         {% for role in e.roles %}
                             {{ role }}

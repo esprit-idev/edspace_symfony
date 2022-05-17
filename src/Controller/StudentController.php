@@ -50,9 +50,36 @@ class StudentController extends Controller
             4
         );
         if($hasAccessStudent){
-            return $this->render ('student/afficheFront.html.twig',['etudiant'=>$etudiant]);
+
+$em=$this->getDoctrine()->getManager();
+            $user1=$em->getRepository(User::class)->find($this->getUser()->getId());
+            $em1=$this->getDoctrine()->getRepository(User::class);
+            $memebers=$em1->findBy(['classe'=> $user1->getClasse()->getId()]);
+            $classe=$em->getRepository(Classe::class)->find($user1->getClasse()->getId());
+
+            $message=$this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository(Message::class)
+                ->findBy(array(),array('postDate' => 'ASC'));
+            $mymsg=[];
+            $othersmsg=[];
+            foreach($message as $i){
+                if($i->getUser()->getId()==$user1->getId()){
+                    $mymsg[]=$i;
+                }
+                else{
+                    $othersmsg[]=$i;
+                }
+            }
+            return $this->render ('student/afficheFront.html.twig',['etudiant'=>$etudiant , 'memebers'=> $memebers,
+                'user' => $user1,
+                'classe'=> $classe,
+                'message'=> $message,
+                'mymsg' => $mymsg,
+                'others' =>$othersmsg]);
         }
-        if($hasAccessAgent){
+        else{
             return $this->render ('student/afficheBack.html.twig',['etudiant'=>$etudiant]);
         }
     }
