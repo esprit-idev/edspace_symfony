@@ -20,7 +20,7 @@ class Matiere
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le nom de la matière est requis")
      * @Assert\Regex(
-     *     pattern="/^[a-zA-Z0-9 éèçà]+$/",
+     *     pattern="/^[a-zA-Z0-9éèçà]+$/",
      *     message="Veuillez saisir un nom valide (ex:CCCA3)"
      * )
      * @Groups("post:read")
