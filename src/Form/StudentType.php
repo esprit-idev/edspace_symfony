@@ -74,7 +74,7 @@ class StudentType extends AbstractType
                 'class'=>Classe::class,
                 'choice_label'=>'classe'
             ])
-            ->add('Ajouter',SubmitType::class)
+            ->add('Ajouter',SubmitType::class);
 
 
     }
