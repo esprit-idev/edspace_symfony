@@ -247,7 +247,7 @@ class ClubPubController extends Controller
                 if ($fileUploaded != null) {
                     $nameFileUploaded = md5(uniqid()) . '.' . $fileUploaded->guessExtension();
                     $fileUploaded->move($this->getParameter('PubFiles_directory'), $nameFileUploaded);
-                    $pub->setPubFileName($fileUploaded->getClientOriginalName());
+                    $pub->setPubFileName($nameFileUploaded);
                     $pub->setPubFile(file_get_contents($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
                     $pub->setTypeFichier(mime_content_type($this->getParameter('PubFiles_directory') . '/' . $nameFileUploaded));
                 }
@@ -275,12 +275,9 @@ class ClubPubController extends Controller
     public function DisplayPubFile($id, ClubPubRepository $repository)
     {
         $pub = $repository->find($id);
-        if (!$pub->getPubFile()) {
-            throw $this->createNotFoundException("File with ID $id does not exist!");
-        }
-        $fic = stream_get_contents($pub->getPubFile()); //returns file stored as mysql blob
-        $response = new Response($fic, 200, array('Content-Type' => $pub->getTypeFichier()));
-        return $response;
+      
+        return $this->render("club_pub/apercuFile.html.twig", ["pub" => $pub]);
+
     }
 
     /**
@@ -418,8 +415,8 @@ class ClubPubController extends Controller
             echo json_encode($named_array);
         }
     }
-	
-	/**
+
+    /**
      * @Route("/EnAttenteClubPubs/{clubId}", name="EnAttenteClubPubs")
      */
     public function EnAttenteClubPubs(NormalizerInterface $normalizer, ClubPubRepository $rep, $clubId): Response
@@ -428,7 +425,8 @@ class ClubPubController extends Controller
         $jsonContent = $normalizer->normalize($pubs, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
-	/**
+
+    /**
      * @Route("/RefusedClubPubs/{clubId}", name="RefusedClubPubs")
      */
     public function RefusedClubPubs(NormalizerInterface $normalizer, ClubPubRepository $rep, $clubId): Response
@@ -437,11 +435,11 @@ class ClubPubController extends Controller
         $jsonContent = $normalizer->normalize($pubs, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
-	
-	 /**
+
+    /**
      * @Route("/uploadClubPic/{clubId}", name="uploadClubPic")
      */
-    public function uploadClubPic(ClubRepository $rep,$clubId)
+    public function uploadClubPic(ClubRepository $rep, $clubId)
     {
         $allowedExts = array("jpeg", "jpg", "png");
         $temp = explode(".", $_FILES["file"]["name"]);
@@ -454,12 +452,12 @@ class ClubPubController extends Controller
             } else {
                 move_uploaded_file($_FILES["file"]["tmp_name"], "ClubPictures/" . $_FILES["file"]["name"]);
                 $named_array = array("Response" => array(array("Status" => "ok")));
-				
-				$club=$rep->find($clubId);
-				$club->setClubPic($_FILES["file"]["name"]);
-				$em = $this->getDoctrine()->getManager();
-        
-        $em->flush();
+
+                $club = $rep->find($clubId);
+                $club->setClubPic($_FILES["file"]["name"]);
+                $em = $this->getDoctrine()->getManager();
+
+                $em->flush();
                 echo json_encode($named_array);
             }
         } else {
@@ -467,12 +465,12 @@ class ClubPubController extends Controller
             echo json_encode($named_array);
         }
     }
-	
-	
+
+
     /**
      * @Route("/acceptRefusePubJSON/{idpub}/{value}", name="acceptRefusePubJSON")
      */
-    public function acceptRefusePubJSON(NormalizerInterface $normalizer,ClubPubRepository $clubPubRepository,  $idpub, $value, Request $request)
+    public function acceptRefusePubJSON(NormalizerInterface $normalizer, ClubPubRepository $clubPubRepository, $idpub, $value, Request $request)
     {
         $pub = $clubPubRepository->find($idpub);
         if (strtoupper($value) == 'ACCEPT') {
@@ -487,7 +485,7 @@ class ClubPubController extends Controller
 
         }
 
-$jsonContent = $normalizer->normalize($pub, 'json', ['groups' => 'post:read']);
+        $jsonContent = $normalizer->normalize($pub, 'json', ['groups' => 'post:read']);
         return new Response(json_encode($jsonContent));
     }
 }

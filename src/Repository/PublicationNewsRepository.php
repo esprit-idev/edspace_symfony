@@ -129,5 +129,13 @@ public function limitPublications(){
             ->getQuery()
             ->getResult();
 }
-
+public function updateLike($likes, $id){
+    return $this->createQueryBuilder('u')
+        ->update()
+        ->set('u.likes', $likes)
+        ->where('u.id = :id')
+        ->setParameter('id', $id)
+        ->getQuery()
+        ->execute();
+}
 }

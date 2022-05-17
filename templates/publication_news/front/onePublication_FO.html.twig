@@ -78,8 +78,8 @@
                                 <a href="#" class="social-share-icons bi-twitter mx-3" ></a>
                                 <a href="#" class="social-share-icons bi-envelope"></a>
                         </div>
-                        <div class="social-share d-flex flex-row mt-4">
-                                <div class="mr-2"><a href="{{path('onePublicationLikes', {id: id, likes : likes}) }}"  class="social-share-icon p-2" id="likes" type="button" name='likes'><span class="social-share-icon bi-hand-thumbs-up pr-2"></span> {{likes}} aiment ça </a></div>
+                        <div class="social-share d-flex flex-row mt-5">
+                                <div class="mr-2"><a href="{{path('onePublicationLikes', {id: id, likes : likes}) }}"  class="social-share-icon pr-2" id="likes" type="button" name='likes'><span class="social-share-icon bi-hand-thumbs-up"></span> {{likes}} aiment ça </a></div>
                                 <div class="mr-2"><a href="#" class="social-share-icon p-2"><span class="social-share-icon bi-chat pr-2 "></span>{{num}}  Commentaires</a></div>
                                 <div class="mr-2"><a href="#" class="social-share-icon p-2"><span class="social-share-icon bi-eye pr-2"></span> {{views}}  Vues</a></div>
                         </div>
@@ -92,20 +92,20 @@
                                 </div>
                                 </form>
                                 <div>
-                                {% for c in comments %}
-                                <ul class="list-group list-group-flush comments">
-                                    {% if c is not null %}
-                                    <div class="">
-                                        <div class="li-div row">
-                                        <li>
-                                        <img src="{{ asset('images/') ~ publication_image}}" class="img-fluid profile-img mr-4" alt=""/>
-                                        {{c}}
-                                        </li></div>
-                                    </div>
-                                </ul>
-                                {% endif %}
-                                {% endfor %}
-                        </div>
+                                    {% for c in comments %}
+                                    <ul class="list-group list-group-flush comments">
+                                        {% if c is not null %}
+                                        <div class="">
+                                            <div class="li-div row">
+                                            <li>
+                                            <img src="{{ asset('images/') ~ publication_image}}" class="img-fluid profile-img mr-4" alt=""/>
+                                            {{c}}
+                                            </li></div>
+                                        </div>
+                                    </ul>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
                         
                         </div>
                     </div>
@@ -158,4 +158,8 @@
         <script src=" {{ asset('/frontOffice/js/jquery.magnific-popup.min.js') }}"></script>
         <script src=" {{ asset('/frontOffice/js/magnific-popup-options.js') }}"></script>
         <script src=" {{ asset('/frontOffice/js/custom.js') }}"></script>
+
+        function liking(){
+
+        }
 {% endblock js %}
